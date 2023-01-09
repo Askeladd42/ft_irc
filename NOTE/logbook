@@ -1,0 +1,23 @@
+
+
+
+mmercore
+	Sat 07 Jan 2023 06:43:19 PM CET
+Salut tout le monde !
+J'ai fait une structure assez rudimentaire pour le projet.
+- Makefile un peu pimp: faites make log pour lire le logbook, make note pour ecrire dedans.
+Y'a aussi un logo un peu cool et un compteur d'actions pour avoir un % tout le long du make
+(ca fonctionne en faisant un run dry du makefile et en comptant le nombre de ECHO)
+Utilisez le log pour prevenir tout le monde de ce qui se passe dans le projet !
+- NOTE contient des trucs cool a partager, des articles, etc, ainsi que le log
+- J'ai mis une structure au .h dans INCL et ajoute define et typedef, dites si vous voulez les
+utiliser.
+
+Bisous et a Lundi !
+
+
+cmaginot
+	Mon Jan  9 02:35:19 PM CET 2023
+J'ai rajouter le fichier draw.io et l'original que je vous avez envoyer sur discord, j'essayerais de le finir mais c'est surtout une sorte de memo avec le sujet resumer en points cles et 2-3 info que j'ai trouver par rapport au sujet :3
+
+A tout a l'heure
