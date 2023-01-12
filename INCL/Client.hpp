@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/01/12 16:22:42 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/12 16:39:39 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class Client {
 		Client();
 	private:
 		Client(const Client &other);		//copy member function
-		Client				&operator(const Client &other);
+		Client				&operator=(const Client &other);
 	public:
 		Client(const int fd);
 		virtual ~Client();
@@ -53,6 +53,6 @@ class Client {
 		const std::string	&get_hostname() const;
 };
 
-std::ostream		&operator<<(std::ostream &ost, const Client &other);
+std::ostream				&operator<<(std::ostream &ost, const Client &other);
 
 #endif
