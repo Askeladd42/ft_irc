@@ -3,16 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:26:22 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/11 12:51:30 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/11 18:45:14 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../INCL/ft_irc.hpp"
 
+/* poll() reference source : http://manpagesfr.free.fr/man/man2/poll.2.html */
+
+
 int	main(int ac, char **av, char **envp) {
+	(void)ac, (void)av, (void)envp;
 	struct pollfd fds[1];
 	fds[0].fd = 0;
 	fds[0].events = POLLIN;
