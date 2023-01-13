@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/01/13 13:51:41 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/13 15:17:50 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,11 @@ const std::string	&Client::get_realname() const {
 
 const std::string	&Client::get_hostname() const {
 	return (this->_hostname);
+}
+
+std::ostream		&operator<<(std::ostream &ost, const Client &other) {
+	ost << "Client's username : " << other.get_username() << std::endl 
+	<< "Client's nickname : " << other.get_nickname() << std::endl
+	<< "Client's status : " << other.get_status();
+	return ost;
 }
