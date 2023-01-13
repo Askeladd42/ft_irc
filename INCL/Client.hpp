@@ -6,13 +6,14 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/01/13 11:57:49 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/13 13:35:51 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __CLIENT_HPP__
 # define __CLIENT_HPP__
 
+# include <iostream>
 # include <vector>
 # include <fcntl.h>
 

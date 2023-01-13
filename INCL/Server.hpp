@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:40:58 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/11 18:44:52 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/01/13 13:07:51 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,21 @@ typedef struct	e_sock_conf {
 	.protocol=0}
 
 class server {
-		server(int port=DEFAULT_PORT, str password=DEFAULT_PWD);
+		server(int port=DEFAULT_PORT, std::string password=DEFAULT_PWD);
 		~server();
 
-		str		get_password() const;
-		void	set_password(str password=DEFAULT_PWD);
+		std::string	get_password() const;
+		void		set_password(std::string password=DEFAULT_PWD);
 
-		int		get_port() const;
-		void	set_port(int port=DEFAULT_PORT);
+		int			get_port() const;
+		void		set_port(int port=DEFAULT_PORT);
 		
-		int		get_socketfd()	const;
-		void	set_socketfd(int socketfd=-1, t_sock_conf sock_conf=DEFAULT_SC);
+		int			get_socketfd() const;
+		void		set_socketfd(int socketfd=-1, t_sock_conf sock_conf=DEFAULT_SC);
 	private:
-		str password;
-		int	port;
-		int	socketfd;
+		std::string	password;
+		int			port;
+		int			socketfd;
 };
 
 #endif
