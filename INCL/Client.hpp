@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/01/12 16:39:39 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/13 11:57:49 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,11 @@ class Client {
 
 		//setter member functions
 		void				set_status(const int newStatus);
-		void				set_nickname(const int newStatus);
-		void				set_username(const int newStatus);
-		void				set_realname(const int newStatus);
-		void				set_hostname(const int newStatus);	//temporary, may bereplaced/deleted later
-		void				set_hostaddr(const int newStatus);	//temporary, may bereplaced/deleted later
-		void				set_status(const int newStatus);
+		void				set_nickname(const int newNick);
+		void				set_username(const int newUser);
+		void				set_realname(const int newReal);
+		void				set_hostname(const int newHost);	//temporary, may bereplaced/deleted later
+		void				set_hostaddr(const int newAddr);	//temporary, may bereplaced/deleted later
 
 		//getter member functions
 		int					get_fd() const;

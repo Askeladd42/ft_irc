@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:26:22 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/11 18:45:14 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/01/13 11:50:55 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 int	main(int ac, char **av, char **envp) {
 	(void)ac, (void)av, (void)envp;
-	struct pollfd fds[1];
+	struct pollfd	fds[1];
 	fds[0].fd = 0;
 	fds[0].events = POLLIN;
 
@@ -28,7 +28,7 @@ int	main(int ac, char **av, char **envp) {
 			return 1;
 		}
 		if (fds[0].revents & POLLIN) {
-			char buf[1024];
+			char	buf[1024];
 			std::cin.getline(buf, sizeof(buf));
 			std::cout << "input: " << buf << std::endl;
 		}
