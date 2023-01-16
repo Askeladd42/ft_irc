@@ -1,40 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
+/*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/01/13 13:35:51 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/16 14:31:34 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __CLIENT_HPP__
-# define __CLIENT_HPP__
+#ifndef __USER_HPP__
+# define __USER_HPP__
 
 # include <iostream>
 # include <vector>
 # include <fcntl.h>
 
-class Client {
+class User {
 	protected:
-		int					_fd;		// fd of the client
-		int					_status;	// client's status
+		int					_fd;		// fd of the User
+		int					_status;	// User's status
 		std::string			_nickname;
 		std::string			_username;
 		std::string			_realname;
 		std::string			_hostname;
 		std::string			_hostaddr;
-		//std::string		_buffer;	client's buffer, may change later
+		//std::string		_buffer;	User's buffer, may change later
 
-		Client();
+		User();
 	private:
-		Client(const Client &other);		//copy member function
-		Client				&operator=(const Client &other);
+		User(const User &other);		//copy member function
+		User				&operator=(const User &other);
 	public:
-		Client(const int fd);
-		virtual ~Client();
+		User(const int fd);
+		virtual ~User();
 
 		//setter member functions
 		void				set_status(const int newStatus);
@@ -53,6 +53,6 @@ class Client {
 		const std::string	&get_hostname() const;
 };
 
-std::ostream				&operator<<(std::ostream &ost, const Client &other);
+std::ostream				&operator<<(std::ostream &ost, const User &other);
 
 #endif

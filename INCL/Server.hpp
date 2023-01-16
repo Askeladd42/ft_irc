@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:40:58 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/13 13:07:51 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/16 15:26:39 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ typedef struct	e_sock_conf {
 	int	protocol;
 }				t_sock_conf;
 
+typedef enum e_serv_error {
+	nothing = 0,
+	syscall_fail,
+	socket_fail
+}							t_serv_error;
+
 // 	Domain:
 // Pour l'instant AF_LOCAL (alias pour AF_UNIX)
 // Pour le vrai projet il faudra passer sur AF_INET (IPV4)
@@ -41,9 +47,13 @@ typedef struct	e_sock_conf {
 	.type=SOCK_STREAM,\
 	.protocol=0}
 
-class server {
-		server(int port=DEFAULT_PORT, std::string password=DEFAULT_PWD);
-		~server();
+class Server {
+		// Attribut public: La classe a t'elle rencontre
+		// Un pb ?
+		t_serv_error	errval = 0;
+
+		Server(int port=DEFAULT_PORT, std::string password=DEFAULT_PWD, t_sock_conf sock_conf=DEFAULT_SC);
+		~Server();
 
 		std::string	get_password() const;
 		void		set_password(std::string password=DEFAULT_PWD);
@@ -54,9 +64,9 @@ class server {
 		int			get_socketfd() const;
 		void		set_socketfd(int socketfd=-1, t_sock_conf sock_conf=DEFAULT_SC);
 	private:
-		std::string	password;
-		int			port;
-		int			socketfd;
+		std::string	_password;
+		int			_port;
+		int			_socketfd;
 };
 
 #endif

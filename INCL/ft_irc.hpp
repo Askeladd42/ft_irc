@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:24:09 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/11 18:44:00 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/01/16 15:28:32 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@
 # include <unistd.h>			/*unistd		=>		lseek,fstat,fcntl	  */
 # include <poll.h>				/*poll			=>		poll				  */
 
-# include "Client.hpp"			/* class Client header/template file */
+# include "User.hpp"			/* class Client header/template file */
 # include "Channel.hpp"			/* class Channel header/template file */
 //		DEFINES
 # define PRINT	std::cout <<
+# define PRERR	std::cerr <<
 # define ENDL	<< std::endl
 
 //# define DEFINE	# define // Ne marche pas, se renseigner pk

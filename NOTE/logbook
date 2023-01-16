@@ -33,3 +33,15 @@ Ajout des include pour les fonctions autorisees dans le .h
 mmercore
 	Mon Jan  9 03:47:58 PM CET 2023
 Ajout de .gitignore
+
+
+
+cmaginot
+	Mon Jan 16 03:00:59 PM CET 2023
+Mini norme, compilable, rename client in User
+
+
+
+mmercore
+	Mon Jan 16 03:47:43 PM CET 2023
+Ajout de Cerr, trucs sur server

@@ -1,15 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.cpp                                         :+:      :+:    :+:   */
+/*   Messages.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/13 13:18:02 by plam             ###   ########.fr       */
+/*   Created: 2023/01/16 17:40:50 by plam              #+#    #+#             */
+/*   Updated: 2023/01/16 17:44:50 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../INCL/ft_irc.hpp"
+#ifndef __MESSAGES_HPP__
+# define __MESSAGES_HPP__
 
-void	server(int port, int password) { }
+# include "ft_irc.hpp"
+
+class Messages {
+	private:
+		
+	public:
+		Messages();
+		~Messages();
+};
+
+#endif
