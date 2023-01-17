@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Messages.hpp                                       :+:      :+:    :+:   */
+/*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 17:40:50 by plam              #+#    #+#             */
-/*   Updated: 2023/01/16 17:44:50 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/17 17:58:34 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __MESSAGES_HPP__
 # define __MESSAGES_HPP__
 
-# include "ft_irc.hpp"
+# include "User.hpp"
+# include "Server.hpp"
 
-class Messages {
+class Message {
 	private:
-		
+		 
 	public:
-		Messages();
-		~Messages();
+		Message();
+		~Message();
+		Message(const Message &other);
+		&operator=(const Message &other);
 };
 
 #endif
