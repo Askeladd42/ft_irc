@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 17:40:50 by plam              #+#    #+#             */
-/*   Updated: 2023/01/19 16:36:07 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/19 16:49:01 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ class Message {
 **	
 		**	Most IRC servers limit messages to 512 bytes in length, including the trailing CR-LF characters. Implementations which include message tags need to allow additional bytes for the tags section of a message; clients must allow 8191 additional bytes and servers must allow 4096 additional bytes.
 		*/
+
+		void	Ping(Token &tkn);	// temporary adding them here, need more development before fully implementation
+		void	Pong(Token &tkn, Server &svr);	// temporary adding them here, need more development before fully implementation
 
 };
 
