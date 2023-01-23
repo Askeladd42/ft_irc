@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 17:40:50 by plam              #+#    #+#             */
-/*   Updated: 2023/01/20 15:37:40 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/23 15:32:33 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ class Message {
 		**	clients must allow 8191 additional bytes and servers must allow 4096 additional bytes.
 		*/
 
-		void	Ping(Token &tkn);	// temporary adding them here, need more development before fully implementation
+		void	Ping(Token &tkn);	// temporary adding them here, need more development before fully implementation, also have to implement the Token class/structure (?)
 		/*
 		** The PING command is sent by either clients or servers to check the other side of the connection is still connected and/or to check for connection latency, at the application layer.
 
