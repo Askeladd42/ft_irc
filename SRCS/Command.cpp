@@ -6,11 +6,21 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/25 10:38:13 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/01/25 11:47:53 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../INCL/Command.hpp"
+
+User::User()
+{
+
+}
+
+User::~User()
+{
+
+}
 
 Reply::Reply()
 {
@@ -73,7 +83,7 @@ std::vector<Reply>	Server::command(User &user, std::string commandName, std::vec
 		{"WALLOPS", &Server::wallops}
 	};
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 40; i++)
 	{
 		if (t[i].commandName == commandName)
 			return (this->*t[i].commands) (user, args);
@@ -132,17 +142,19 @@ std::vector<Reply>	Server::pass(User &user, std::vector<std::string> args)
 	(void)args;
 	
 	return (reply);
-	// if (strcmp(password, "") == 0)
-	// 	return (ERR_NEEDMOREPARAMS);
+	// std::vector<Reply>	reply;
+	// int 				password = 1;
+
+	// if (args.empty() == true || strcmp(args[password], "") == 0)
+	// 	reply.push_back(ERR_NEEDMOREPARAMS);
 	// else if (user.get_connected() == true)
-	// 	return (ERR_ALREADYREGISTERED);
-	// else if (strcmp(password, this->_password) != 0)
-	// 	return (ERR_PASSWDMISMATCH);
+	// 	reply.push_back(ERR_ALREADYREGISTERED);
+	// else if (strcmp(args[password], this->_password) != 0)
+	// 	reply.push_back(ERR_PASSWDMISMATCH);
 	// else
-	// {
 	// 	user.set_connected();
-	// 	return (0);
-	// }
+
+	// return(reply);
 }
 /*
 Command: PASS
@@ -282,7 +294,7 @@ std::vector<Reply> Server::ping(User &user, std::vector<std::string> args)
 	std::vector<Reply> reply;
 	(void)user;
 	(void)args;
-	
+
 	return (reply);
 }
 /*
@@ -1338,7 +1350,7 @@ std::vector<Reply>	Server::who(User &user, std::vector<std::string> args)
 	std::vector<Reply> reply;
 	(void)user;
 	(void)args;
-	
+	std::cout << "who" << std::endl;
 	return (reply);
 }
 /*
@@ -1801,3 +1813,15 @@ Examples:
                                  upon from Joshua.
 
 */
+
+int main()
+{
+	std::cout << "coucou" << std::endl;
+	Server						s;
+	User						u;
+	std::vector<std::string>	str;
+	std::vector<Reply>			r = s.command(u, "WHO", str);
+	(void)r;
+	std::cout << "UwU" << std::endl;
+	return (0);
+}

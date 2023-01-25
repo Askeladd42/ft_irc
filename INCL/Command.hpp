@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/25 10:37:31 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/01/25 11:28:53 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,16 @@
 //https://modern.ircdocs.horse/#connection-messages
 #include <vector>
 #include <string>
+# include <iostream>
 
 
-class User;
+class User
+{
+	public:
+		User();
+		~User();
+};
+
 class Reply
 {
 	public:
@@ -116,7 +123,7 @@ bool is_a_server(std::string target); // server fonction on server list // may o
 	return false
 */
 
-bool search_modt(std::vector<Reply> &v_reply); // server fonction on message of the day var
+bool search_motd(std::vector<Reply> &v_reply); // server fonction on message of the day var
 /*
 	if _message_of_the_day = ""
 		return (false)
