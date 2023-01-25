@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/25 11:28:53 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/01/25 12:19:30 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,51 @@
 //https://modern.ircdocs.horse/#connection-messages
 #include <vector>
 #include <string>
-# include <iostream>
-
+#include <cstring>
+#include <iostream>
 
 class User
 {
+	private:
+		bool	is_connected;
+
 	public:
 		User();
 		~User();
+		bool	get_connected();
+		void	set_connected();
 };
 
 class Reply
 {
+	private:
+		int			_value;
+		std::string	_message;
+
 	public:
 		Reply();
+		Reply(int value, std::string message);
+		Reply(const Reply &reply);
 		~Reply();
+		Reply		&operator=(const Reply &other);
+		int			get_value() const;
+		std::string	get_message() const;
+
 };
+
+#define ERR_NEEDMOREPARAMS Reply(461, "<client> <command> :Not enough parameters")
+#define ERR_ALREADYREGISTERED Reply(462, "<client> :You may not reregister")
+#define ERR_PASSWDMISMATCH Reply(464, "<client> :Password incorrect")
 
 class Server
 {
+	private:
+		std::string	_password; // TO DELETE
+
+	public:
+		Server(); // TO DELETE
+		~Server(); // TO DELETE
+
 	public :
 		std::vector<Reply>	command(User &user, std::string commandName, std::vector<std::string> args);
 

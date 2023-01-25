@@ -6,13 +6,23 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/25 11:47:53 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/01/25 12:34:30 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../INCL/Command.hpp"
 
-User::User()
+Server::Server():_password("password")
+{
+
+}
+
+Server::~Server()
+{
+
+}
+
+User::User():is_connected(false)
 {
 
 }
@@ -22,14 +32,54 @@ User::~User()
 
 }
 
+bool	User::get_connected()
+{
+	return (is_connected);
+}
+
+void	User::set_connected()
+{
+	is_connected = true;
+}
+
+
 Reply::Reply()
 {
+	this->_value = 0;
+	this->_message = "";
+}
 
+Reply::Reply(int value, std::string message)
+{
+	this->_value = value;
+	this->_message = message;
+}
+
+Reply::Reply(const Reply &other)
+{
+	*this = other;
 }
 
 Reply::~Reply()
 {
 
+}
+
+Reply	&Reply::operator=(const Reply &other)
+{
+	_value = other.get_value();
+	_message = other.get_message();
+	return (*this);
+}
+
+int	Reply::get_value() const
+{
+	return (_value);
+}
+
+std::string	Reply::get_message() const
+{
+	return (_message);
 }
 
 
@@ -137,24 +187,24 @@ specifications.
 
 std::vector<Reply>	Server::pass(User &user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
+	// std::vector<Reply> reply;
+	// (void)user;
+	// (void)args;
 	
-	return (reply);
-	// std::vector<Reply>	reply;
-	// int 				password = 1;
+	// return (reply);
+	std::vector<Reply>	reply;
+	int 				password = 0;
 
-	// if (args.empty() == true || strcmp(args[password], "") == 0)
-	// 	reply.push_back(ERR_NEEDMOREPARAMS);
-	// else if (user.get_connected() == true)
-	// 	reply.push_back(ERR_ALREADYREGISTERED);
-	// else if (strcmp(args[password], this->_password) != 0)
-	// 	reply.push_back(ERR_PASSWDMISMATCH);
-	// else
-	// 	user.set_connected();
+	if (args.empty() == true || args[password].compare(""))
+		reply.push_back(ERR_NEEDMOREPARAMS);
+	else if (user.get_connected() == true)
+		reply.push_back(ERR_ALREADYREGISTERED);
+	else if (args[password].compare(this->_password))
+		reply.push_back(ERR_PASSWDMISMATCH);
+	else
+		user.set_connected();
 
-	// return(reply);
+	return(reply);
 }
 /*
 Command: PASS
@@ -1350,7 +1400,7 @@ std::vector<Reply>	Server::who(User &user, std::vector<std::string> args)
 	std::vector<Reply> reply;
 	(void)user;
 	(void)args;
-	std::cout << "who" << std::endl;
+
 	return (reply);
 }
 /*
@@ -1820,7 +1870,29 @@ int main()
 	Server						s;
 	User						u;
 	std::vector<std::string>	str;
-	std::vector<Reply>			r = s.command(u, "WHO", str);
+	std::vector<Reply>			r;
+
+	std::cout << "user, status connection : " << u.get_connected() << std::endl;
+	r = s.command(u, "PASS", str);
+	std::cout << "user, status connection : " << u.get_connected() << std::endl;
+	std::cout << "reply, value : " << r[0].get_value() << std::endl;
+	r.clear();
+	str.push_back("");
+	r = s.command(u, "PASS", str);
+	std::cout << "user, status connection : " << u.get_connected() << std::endl;
+	std::cout << "reply, value : " << r[0].get_value() << std::endl;
+	r.clear();
+	str[0] = "pass";
+	r = s.command(u, "PASS", str);
+	std::cout << "user, status connection : " << u.get_connected() << std::endl;
+	std::cout << "reply, value : " << r[0].get_value() << std::endl;
+	r.clear();
+	str[0] = "password";
+	r = s.command(u, "PASS", str);
+	std::cout << "user, status connection : " << u.get_connected() << std::endl;
+	std::cout << "reply, value : " << r[0].get_value() << std::endl;
+	r.clear();
+
 	(void)r;
 	std::cout << "UwU" << std::endl;
 	return (0);
