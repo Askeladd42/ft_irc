@@ -6,7 +6,7 @@
 #    By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/01/16 14:37:34 by cmaginot         ###   ########.fr        #
+#    Updated: 2023/01/16 17:45:51 by cmaginot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -172,7 +172,7 @@ $(OBJSFOLDER)	:
 .PHONY:	log
 log			:
 				@echo	"       ==============================`tput setaf 69` Captain's log `tput sgr0`=============================="
-				@cat NOTE/logbook | tr '\n' '\r' | rev | cut -d '@' -f 1 | rev | tr '\r' '\n' | sed "s/mmercore/`tput setaf 69`Mmercore, le beau, le bienheureux`tput sgr0`/" | sed "s/cmaginot/`tput setaf 9`Cmaginot`tput sgr0`/" | sed "s/plam/`tput setaf 9`Plam`tput sgr0`/"
+				@cat NOTE/logbook | tr '\n' '\r' | rev | cut -d '@' -f 1 | rev | tr '\r' '\n' | sed "s/mmercore/`tput setaf 69`Mmercore, le beau, le bienheureux`tput sgr0`/" | sed "s/cmaginot/`tput setaf 5`Cmaginot`tput sgr0`/" | sed "s/plam/`tput setaf 9`Plam`tput sgr0`/"
 
 note		:
 				@echo "\n\n" >> NOTE/logbook
