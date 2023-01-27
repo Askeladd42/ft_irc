@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/25 12:34:30 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/01/27 16:18:53 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,14 @@ Reply::~Reply()
 
 }
 
-Reply	&Reply::operator=(const Reply &other)
+Reply		&Reply::operator=(const Reply &other)
 {
 	_value = other.get_value();
 	_message = other.get_message();
 	return (*this);
 }
 
-int	Reply::get_value() const
+int			Reply::get_value() const
 {
 	return (_value);
 }
@@ -89,7 +89,7 @@ std::string	Reply::get_message() const
 
 std::vector<Reply>	Server::command(User &user, std::string commandName, std::vector<std::string> args)
 {
-	t_command t[] =
+	t_command	t[] =
 	{
 		{"CAP", &Server::cap},
 		{"AUTHENTICATE", &Server::authenticate},
@@ -287,7 +287,7 @@ ERR_NICKCOLLISION (436)
 ERR_NICKCOLLISION (436) don't know what it is
 */
 
-std::vector<Reply> Server::user(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::user(User &user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -339,7 +339,7 @@ ERR_NEEDMOREPARAMS (461)
 ERR_ALREADYREGISTERED (462)
 */
 
-std::vector<Reply> Server::ping(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::ping(User &user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -403,7 +403,7 @@ Numeric Replies:
 None
 */
 
-std::vector<Reply> Server::oper(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::oper(User &user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -492,7 +492,7 @@ Numeric Replies:
 None
 */
 
-std::vector<Reply> Server::error(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::error(User &user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -613,7 +613,7 @@ Message Examples:
   :dan-!d@localhost JOIN #test    ; dan- is joining the channel #test
 */
 
-std::vector<Reply> Server::part(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::part(User &user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -659,7 +659,7 @@ Message Examples:
   :dan-!d@localhost PART #test    ; dan- is leaving the channel #test
 */
 
-std::vector<Reply> Server::topic(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::topic(User &user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -715,7 +715,7 @@ Command Examples:
   TOPIC #test                     ; Checking the topic for "#test"
 */
 
-std::vector<Reply> Server::names(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::names(User &user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -794,9 +794,9 @@ Command Examples:
 								  a topic changed within the last 60 minutes
 */
 
-std::vector<Reply> Server::invite(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::invite(User &user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
+	std::vector<Reply>	reply;
 	(void)user;
 	(void)args;
 	
@@ -843,7 +843,7 @@ Message Examples:
 										to the channel #test
 */
 
-std::vector<Reply> Server::kick(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::kick(User &user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1864,7 +1864,7 @@ Examples:
 
 */
 
-int main()
+int	main()
 {
 	std::cout << "coucou" << std::endl;
 	Server						s;
