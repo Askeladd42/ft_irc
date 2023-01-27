@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:57 by plam              #+#    #+#             */
-/*   Updated: 2023/01/27 16:27:25 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/27 16:28:19 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,12 @@ Channel::Channel(const Channel &other) {
 
 Channel::~Channel();
 
-Channel	&Channel::&operator=(const Channel &other);
+Channel	&Channel::&operator=(const Channel &other) {
+	if (*this != other) {
+
+	}
+	return *this;
+}
 
 void	Channel::add(User &user);
 void	Channel::del(User &user);
