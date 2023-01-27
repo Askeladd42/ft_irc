@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:57 by plam              #+#    #+#             */
-/*   Updated: 2023/01/27 16:28:19 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/27 16:39:46 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,4 @@ Channel	&Channel::&operator=(const Channel &other) {
 }
 
 void	Channel::add(User &user);
-void	Channel::del(User &user);
+//void	Channel::del(User &user);
