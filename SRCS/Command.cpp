@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/27 16:18:53 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/30 16:37:38 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,10 @@ Reply::~Reply()
 
 Reply		&Reply::operator=(const Reply &other)
 {
-	_value = other.get_value();
-	_message = other.get_message();
+	if (this != &other) {
+		_value = other.get_value();
+		_message = other.get_message();
+	}
 	return (*this);
 }
 
