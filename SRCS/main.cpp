@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:26:22 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/13 11:50:55 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/30 16:32:07 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	main(int ac, char **av, char **envp) {
 	fds[0].fd = 0;
 	fds[0].events = POLLIN;
 
+	Server a;
 	while (true) {
 		int	ret = poll(fds, 1, -1);
 		if	(ret == -1) {

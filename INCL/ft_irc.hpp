@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:24:09 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/16 15:28:32 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/01/30 16:31:46 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 
 # include <unistd.h>			/*unistd		=>		lseek,fstat,fcntl	  */
 # include <poll.h>				/*poll			=>		poll				  */
+
+#include <netinet/in.h>			/*netinet/in	=>		pour sockaddr_in	  */
 
 # include "User.hpp"			/* class Client header/template file */
 # include "Channel.hpp"			/* class Channel header/template file */
