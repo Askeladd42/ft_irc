@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/30 16:42:46 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/01/30 17:12:44 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,9 @@ void	User::set_connected()
 }
 
 
-Reply::Reply()
-{
-	this->_value = 0;
-	this->_message = "";
-}
+Reply::Reply() : _value(0), _message("") { }
 
-Reply::Reply(int value, std::string message)
-{
-	this->_value = value;
-	this->_message = message;
-}
+Reply::Reply(int value, std::string message) : _value(value), _message(message) { }
 
 void	Reply::add_arg(std::string arg)
 {
