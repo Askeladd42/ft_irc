@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/25 12:19:30 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/01/30 17:07:58 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ class User
 		void	set_connected();
 };
 
-class Reply
+class Reply			// PM : to do in Command.cpp
 {
 	private:
-		int			_value;
-		std::string	_message;
+		int				_value;
+		std::string		_message;
 
 	public:
 		Reply();
@@ -41,6 +41,7 @@ class Reply
 		Reply(const Reply &reply);
 		~Reply();
 		Reply		&operator=(const Reply &other);
+		void		add_arg(std::string arg);
 		int			get_value() const;
 		std::string	get_message() const;
 
