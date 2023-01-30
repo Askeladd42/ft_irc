@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/30 17:21:38 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/30 17:27:22 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	Reply::add_arg(std::string arg)
 		if (*it = '<')
 		{
 			_message.erase(i, _message.find('>') - i);
-			_message.insert(arg);		// wrong use, to redo
+			_message.insert(i, arg);
 			break;
 		}
 		else
