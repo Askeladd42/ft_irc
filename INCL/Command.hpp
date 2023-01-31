@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/31 15:36:00 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/31 15:49:11 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class User
 		bool		get_connected();
 		std::string	get_nickname();
 		void		set_connected();
-		void	User::set_nickname(std::string newNick);
+		void		set_nickname(std::string newNick);
 		bool		user_not_registered(); // todo
 };
 
