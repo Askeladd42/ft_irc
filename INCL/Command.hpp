@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/30 17:07:58 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/31 04:52:52 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,19 @@
 class User
 {
 	private:
-		bool	is_connected;
+		bool		_is_connected;
+		std::string	_nickname;
 
 	public:
-		User();
+		User(std::string nickname);
 		~User();
-		bool	get_connected();
-		void	set_connected();
+		bool		get_connected();
+		std::string	get_nickname();
+		void		set_connected();
+		bool		user_not_registered(); // todo
 };
 
-class Reply			// PM : to do in Command.cpp
+class Reply
 {
 	private:
 		int				_value;
@@ -47,9 +50,19 @@ class Reply			// PM : to do in Command.cpp
 
 };
 
+#define NO_REPLY Reply()
+#define ERR_NOORIGIN (409, "<client> :No origin specified")
+#define ERR_UNKNOWNCOMMAND (421, "<client> <command> :Unknown command")
+#define ERR_NONICKNAMEGIVEN Reply(431, "<client> :No Nickname Given")
+#define ERR_ERRONEUSNICKNAME Reply(432, "<client> <nick> :Erroneus nickname")
+#define ERR_NICKNAMEINUSE Reply(433, "<client> <nick> :Nickname is already in use")
+#define ERR_NICKCOLLISION Reply(436, "<client> <nick> :Nickname collision")
+#define ERR_NOTREGISTERED Reply(451, "<client> :You have not registered")
 #define ERR_NEEDMOREPARAMS Reply(461, "<client> <command> :Not enough parameters")
 #define ERR_ALREADYREGISTERED Reply(462, "<client> :You may not reregister")
 #define ERR_PASSWDMISMATCH Reply(464, "<client> :Password incorrect")
+#define ERR_YOUREBANNEDCREEP Reply(465, "<client> :You are banned from this server.")
+
 
 class Server
 {
@@ -123,14 +136,6 @@ typedef struct	s_command
 
 
 // utils TODO :
-bool is_nickname_free(std::string nickname); // server function on user list
-/*
-	search on all user.
-		if someone have this nickname 
-			return false
-		else
-			return true
-*/
 
 bool is_nickname_valid(std::string nickname); // server function on user list
 /*
@@ -141,6 +146,15 @@ bool is_nickname_valid(std::string nickname); // server function on user list
 		if (nickname == forbidden nickname) (optional)
 			return false (optional)
 	return true
+*/
+
+bool is_nickname_free(std::string nickname); // server function on user list
+/*
+	search on all user.
+		if someone have this nickname 
+			return false
+		else
+			return true
 */
 
 bool is_a_server(std::string target); // server fonction on server list // may only return user name due to subject
@@ -162,3 +176,5 @@ bool search_motd(std::vector<Reply> &v_reply); // server fonction on message of 
 	}
 	v_reply.push_back(RPL_ENDOFMOTD);
 */
+
+bool token_is_valid(std::string token)

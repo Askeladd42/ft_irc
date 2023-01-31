@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/30 17:27:22 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/31 04:55:45 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Server::~Server()
 
 }
 
-User::User():is_connected(false)
+User::User(std::string nickname):_is_connected(false), _nickname(nickname)
 {
 
 }
@@ -34,18 +34,29 @@ User::~User()
 
 bool	User::get_connected()
 {
-	return (is_connected);
+	return (_is_connected);
+}
+
+std::string	User::get_nickname()
+{
+	return (_nickname);
 }
 
 void	User::set_connected()
 {
-	is_connected = true;
+	_is_connected = true;
 }
 
 
-Reply::Reply() : _value(0), _message("") { }
+Reply::Reply() : _value(0), _message("")
+{
 
-Reply::Reply(int value, std::string message) : _value(value), _message(message) { }
+}
+
+Reply::Reply(int value, std::string message) : _value(value), _message(message)
+{
+
+}
 
 void	Reply::add_arg(std::string arg)
 {
@@ -53,9 +64,9 @@ void	Reply::add_arg(std::string arg)
 
 	for (std::string::iterator it = _message.begin(); it != _message.end(); it++)
 	{
-		if (*it = '<')
+		if (*it == '<')
 		{
-			_message.erase(i, _message.find('>') - i);
+			_message.erase(i, _message.find('>') - i + 1);
 			_message.insert(i, arg);
 			break;
 		}
@@ -93,11 +104,6 @@ std::string	Reply::get_message() const
 {
 	return (_message);
 }
-
-
-
-
-
 
 std::vector<Reply>	Server::command(User &user, std::string commandName, std::vector<std::string> args)
 {
@@ -150,7 +156,9 @@ std::vector<Reply>	Server::command(User &user, std::string commandName, std::vec
 		if (t[i].commandName == commandName)
 			return (this->*t[i].commands) (user, args);
 	}
-	std::vector<Reply> reply;
+	std::vector<Reply> reply = ERR_UNKNOWNCOMMAND;
+	reply[0].add_arg (user.get_nickname);
+	reply[0].add_arg (commandName);
 	return (reply);
 }
 
@@ -199,23 +207,24 @@ specifications.
 
 std::vector<Reply>	Server::pass(User &user, std::vector<std::string> args)
 {
-	// std::vector<Reply> reply;
-	// (void)user;
-	// (void)args;
-	
-	// return (reply);
 	std::vector<Reply>	reply;
 	int 				password = 0;
 
-	if (args.empty() == true || args[password].compare(""))
+	if (true == false) // check if ban
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (args.empty() == true || args[password].compare("") == 0)
 		reply.push_back(ERR_NEEDMOREPARAMS);
 	else if (user.get_connected() == true)
 		reply.push_back(ERR_ALREADYREGISTERED);
 	else if (args[password].compare(this->_password))
 		reply.push_back(ERR_PASSWDMISMATCH);
 	else
+	{
 		user.set_connected();
-
+		reply.push_back(NO_REPLY);
+	}
+	reply[0].add_arg(user.get_nickname());
+	reply[0].add_arg("PASS");
 	return(reply);
 }
 /*
@@ -248,22 +257,28 @@ ERR_PASSWDMISMATCH (464)
 
 std::vector<Reply>	Server::nick(User &user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
-	
-	return (reply);
-	// if (strcmp(password, "") == 0)
-	// 	return (ERR_NONICKNAMEGIVEN);
-	// else if (is_nickname_valid(nickname) == false)
-	// 	return (ERR_ERRONEUSNICKNAME);
-	// else if (is_nickname_free(nickname) == false)
-	// 	return (ERR_NICKNAMEINUSE);
-	// else
-	// {
-	// 	user.set_nickname(nickname);
-	// 	return (0);
-	// }
+	std::vector<Reply>	reply;
+	int 				nickname = 0;
+
+	if (true == false) // check if ban
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user.get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.empty() == true || args[nickname].compare("") == 0)
+		reply.push_back(ERR_NONICKNAMEGIVEN);
+	else if (is_nickname_valid(args[nickname]) == false)
+		reply.push_back(ERR_ERRONEUSNICKNAME);
+	else if (is_nickname_free(args[nickname]) == false)
+		reply.push_back(ERR_NICKNAMEINUSE);
+	else
+	{
+		reply.push_back(NO_REPLY);
+		reply[0].add_arg(user.get_nickname());
+		reply[0].add_arg(args[0]);
+		user.set_nickname(args[nickname]);
+	}
+	reply[0].add_arg(user.get_nickname())
+	return(reply);
 }
 /*
 Command: NICK
@@ -297,14 +312,32 @@ ERR_NICKCOLLISION (436)
 
 /*
 ERR_NICKCOLLISION (436) don't know what it is
+check return when sucess
 */
 
 std::vector<Reply>	Server::user(User &user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
-	
+	std::vector<Reply>	reply;
+	int 				username = 0;
+	int					realname = 3;
+
+	if (true == false) // check if ban
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user.get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.empty() == true || args[nickname].compare("") == 0 || args.size() < 3 || args[realname].compare(""))
+		reply.push_back(ERR_NEEDMOREPARAMS);
+	else if (user.user_not_registered() == false)
+		reply.push_back(ERR_ALREADYREGISTERED);
+	else
+	{
+		// manage if username > length max and if it's valid, cut it or put default value otherwise
+		reply.push_back(NO_REPLY);
+		reply[0].add_arg(user.get_nickname());
+		reply[0].add_arg(args[0]);
+		user.set_nickname(args[nickname]);
+	}
+	reply[0].add_arg(user.get_nickname())
 	return (reply);
 }
 /*
@@ -353,10 +386,24 @@ ERR_ALREADYREGISTERED (462)
 
 std::vector<Reply>	Server::ping(User &user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
+	std::vector<Reply>	reply;
+	int 				token = 0;
 
+	if (true == false) // check if ban
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user.get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.empty() == true || args[nickname].compare("") == 0)
+		reply.push_back(ERR_NEEDMOREPARAMS);
+	else if (token_is_valid(args[token]) == false)
+		reply.push_back(ERR_NOORIGIN);
+	else
+	{
+		reply.push_back(NO_REPLY);
+		//reply with pong
+	}
+	reply[0].add_arg(user.get_nickname())
+	reply[0].add_arg("PING");
 	return (reply);
 }
 /*
@@ -393,10 +440,20 @@ ERR_NOSUCHSERVER (402)
 
 std::vector<Reply>	Server::pong(User &user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
-	
+	std::vector<Reply>	reply;
+	int					server = 0;
+	int 				token = 1;
+
+	if (true == false) // check if ban
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (args.empty() == true || args.size() < 2 || args[token].compare("") || token_is_valid(args[token]) == false)
+		;
+	else
+	{
+		//pong
+	}
+	reply[0].add_arg(user.get_nickname())
+	reply[0].add_arg("PING");
 	return (reply);
 }
 /*
@@ -1880,7 +1937,7 @@ int	main()
 {
 	std::cout << "coucou" << std::endl;
 	Server						s;
-	User						u;
+	User						u("Freya");
 	std::vector<std::string>	str;
 	std::vector<Reply>			r;
 
@@ -1888,22 +1945,33 @@ int	main()
 	r = s.command(u, "PASS", str);
 	std::cout << "user, status connection : " << u.get_connected() << std::endl;
 	std::cout << "reply, value : " << r[0].get_value() << std::endl;
+	std::cout << r[0].get_message() << std::endl;
 	r.clear();
 	str.push_back("");
 	r = s.command(u, "PASS", str);
 	std::cout << "user, status connection : " << u.get_connected() << std::endl;
 	std::cout << "reply, value : " << r[0].get_value() << std::endl;
+	std::cout << r[0].get_message() << std::endl;
 	r.clear();
 	str[0] = "pass";
 	r = s.command(u, "PASS", str);
 	std::cout << "user, status connection : " << u.get_connected() << std::endl;
 	std::cout << "reply, value : " << r[0].get_value() << std::endl;
+	std::cout << r[0].get_message() << std::endl;
 	r.clear();
 	str[0] = "password";
 	r = s.command(u, "PASS", str);
 	std::cout << "user, status connection : " << u.get_connected() << std::endl;
 	std::cout << "reply, value : " << r[0].get_value() << std::endl;
+	std::cout << r[0].get_message() << std::endl;
 	r.clear();
+	str[0] = "password";
+	r = s.command(u, "PASS", str);
+	std::cout << "user, status connection : " << u.get_connected() << std::endl;
+	std::cout << "reply, value : " << r[0].get_value() << std::endl;
+	std::cout << r[0].get_message() << std::endl;
+	r.clear();
+
 
 	(void)r;
 	std::cout << "UwU" << std::endl;
