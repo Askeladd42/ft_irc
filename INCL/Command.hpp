@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/31 15:49:11 by plam             ###   ########.fr       */
+/*   Updated: 2023/01/31 16:38:27 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,17 @@ class User
 	private:
 		bool		_is_connected;
 		std::string	_nickname;
+		std::string	_username;
 
 	public:
 		User(std::string nickname);
 		~User();
 		bool		get_connected();
 		std::string	get_nickname();
+		std::string	get_username();
 		void		set_connected();
 		void		set_nickname(std::string newNick);
+		void		set_username(std::string newUser);
 		bool		user_not_registered(); // todo
 };
 
@@ -52,8 +55,8 @@ class Reply
 };
 
 #define NO_REPLY Reply()
-#define ERR_NOORIGIN (409, "<client> :No origin specified")
-#define ERR_UNKNOWNCOMMAND (421, "<client> <command> :Unknown command")
+#define ERR_NOORIGIN Reply(409, "<client> :No origin specified")
+#define ERR_UNKNOWNCOMMAND Reply(421, "<client> <command> :Unknown command")
 #define ERR_NONICKNAMEGIVEN Reply(431, "<client> :No Nickname Given")
 #define ERR_ERRONEUSNICKNAME Reply(432, "<client> <nick> :Erroneus nickname")
 #define ERR_NICKNAMEINUSE Reply(433, "<client> <nick> :Nickname is already in use")
