@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/31 04:52:52 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/01/31 15:36:00 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class User
 		bool		get_connected();
 		std::string	get_nickname();
 		void		set_connected();
+		void	User::set_nickname(std::string newNick);
 		bool		user_not_registered(); // todo
 };
 
@@ -177,4 +178,4 @@ bool search_motd(std::vector<Reply> &v_reply); // server fonction on message of 
 	v_reply.push_back(RPL_ENDOFMOTD);
 */
 
-bool token_is_valid(std::string token)
+bool token_is_valid(std::string token);

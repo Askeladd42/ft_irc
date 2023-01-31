@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/31 04:55:45 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/01/31 15:38:29 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,10 @@ void	User::set_connected()
 	_is_connected = true;
 }
 
+void	User::set_nickname(std::string newNick)
+{
+	_nickname = newNick;
+}
 
 Reply::Reply() : _value(0), _message("")
 {
@@ -81,10 +85,7 @@ Reply::Reply(const Reply &other)
 	*this = other;
 }
 
-Reply::~Reply()
-{
-
-}
+Reply::~Reply() { }
 
 Reply		&Reply::operator=(const Reply &other)
 {
@@ -156,9 +157,9 @@ std::vector<Reply>	Server::command(User &user, std::string commandName, std::vec
 		if (t[i].commandName == commandName)
 			return (this->*t[i].commands) (user, args);
 	}
-	std::vector<Reply> reply = ERR_UNKNOWNCOMMAND;
-	reply[0].add_arg (user.get_nickname);
-	reply[0].add_arg (commandName);
+	std::vector<Reply>	reply = ERR_UNKNOWNCOMMAND;
+	reply[0].add_arg(user.get_nickname());
+	reply[0].add_arg(commandName);
 	return (reply);
 }
 
@@ -258,7 +259,7 @@ ERR_PASSWDMISMATCH (464)
 std::vector<Reply>	Server::nick(User &user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;
-	int 				nickname = 0;
+	int					nickname = 0;
 
 	if (true == false) // check if ban
 		reply.push_back(ERR_YOUREBANNEDCREEP);
@@ -277,7 +278,7 @@ std::vector<Reply>	Server::nick(User &user, std::vector<std::string> args)
 		reply[0].add_arg(args[0]);
 		user.set_nickname(args[nickname]);
 	}
-	reply[0].add_arg(user.get_nickname())
+	reply[0].add_arg(user.get_nickname());
 	return(reply);
 }
 /*
@@ -325,7 +326,7 @@ std::vector<Reply>	Server::user(User &user, std::vector<std::string> args)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (user.get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
-	else if (args.empty() == true || args[nickname].compare("") == 0 || args.size() < 3 || args[realname].compare(""))
+	else if (args.empty() == true || args[nickname].compare("") == 0 || args.size() < 3 || args[realname].compare(""))		// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
 		reply.push_back(ERR_NEEDMOREPARAMS);
 	else if (user.user_not_registered() == false)
 		reply.push_back(ERR_ALREADYREGISTERED);
@@ -337,7 +338,7 @@ std::vector<Reply>	Server::user(User &user, std::vector<std::string> args)
 		reply[0].add_arg(args[0]);
 		user.set_nickname(args[nickname]);
 	}
-	reply[0].add_arg(user.get_nickname())
+	reply[0].add_arg(user.get_nickname());
 	return (reply);
 }
 /*
@@ -393,7 +394,7 @@ std::vector<Reply>	Server::ping(User &user, std::vector<std::string> args)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (user.get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
-	else if (args.empty() == true || args[nickname].compare("") == 0)
+	else if (args.empty() == true || args[nickname].compare("") == 0)	// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
 		reply.push_back(ERR_NEEDMOREPARAMS);
 	else if (token_is_valid(args[token]) == false)
 		reply.push_back(ERR_NOORIGIN);
@@ -402,7 +403,7 @@ std::vector<Reply>	Server::ping(User &user, std::vector<std::string> args)
 		reply.push_back(NO_REPLY);
 		//reply with pong
 	}
-	reply[0].add_arg(user.get_nickname())
+	reply[0].add_arg(user.get_nickname());
 	reply[0].add_arg("PING");
 	return (reply);
 }
@@ -452,7 +453,7 @@ std::vector<Reply>	Server::pong(User &user, std::vector<std::string> args)
 	{
 		//pong
 	}
-	reply[0].add_arg(user.get_nickname())
+	reply[0].add_arg(user.get_nickname());
 	reply[0].add_arg("PING");
 	return (reply);
 }
