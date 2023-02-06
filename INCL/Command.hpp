@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/06 12:36:18 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/06 13:33:18 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,57 @@ enum	reply_nb {		//temporary attempt to organize the numeric replies, see https:
 	RPL_REHASHING,
 	RPL_TIME = 391,
 	ERR_UNKNOWNERROR = 400,
+	ERR_NOSUCHNICK,
+	ERR_NOSUCHSERVER,
+	ERR_NOSUCHCHANNEL,
+	ERR_CANNOTSENDTOCHAN,
+	ERR_TOOMANYCHANNELS,
+	ERR_WASNOSUCHNICK,
+	ERR_NOORIGIN = 409,
+	ERR_INPUTTOOLONG = 417,
+	ERR_UNKNOWNCOMMAND = 421,
+	ERR_NOMOTD = 422,
+	ERR_ERRONEUSNICKNAME = 432,
+	ERR_NICKNAMEINUSE,
+	ERR_USERNOTINCHANNEL = 441,
+	ERR_NOTONCHANNEL,
+	ERR_USERONCHANNEL,
+	ERR_NOTREGISTERED = 451,
+	ERR_NEEDMOREPARAMS = 461,
+	ERR_ALREADYREGISTERED,
+	ERR_PASSWDMISMATCH = 464,
+	ERR_YOUREBANNEDCREEP,
+	ERR_CHANNELISFULL = 471,
+	ERR_UNKNOWNMODE,
+	ERR_INVITEONLYCHAN,
+	ERR_BANNEDFROMCHAN,
+	ERR_BADCHANNELKEY,
+	ERR_BADCHANMASK,
+	ERR_NOPRIVILEGES = 481,
+	ERR_CHANOPRIVSNEEDED,
+	ERR_CANTKILLSERVER,
+	ERR_NOOPERHOST = 491,
+	ERR_UMODEUNKNOWNFLAG = 501,
+	ERR_USERSDONTMATCH,
+	ERR_HELPNOTFOUND = 524,
+	ERR_INVALIDKEY,
+	RPL_STARTTLS = 670,
+	RPL_WHOISSECURE,
+	ERR_STARTTLS = 691,
+	ERR_INVALIDMODEPARAM = 696,
+	RPL_HELPSTART = 704,
+	RPL_HELPTXT,
+	RPL_ENDOFHELP,
+	ERR_NOPRIVS = 723,
+	RPL_LOGGEDIN = 900,
+	RPL_LOGGEDOUT,
+	ERR_NICKLOCKED,
+	RPL_SASLSUCCESS,
+	ERR_SASLFAIL,
+	ERR_SASLTOOLONG,
+	ERR_SASLABORTED,
+	ERR_SASLALREADY,
+	RPL_SASLMECHS
 };
 
 class User
