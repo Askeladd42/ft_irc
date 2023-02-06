@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/31 16:38:27 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/06 12:36:18 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,81 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+
+enum	reply_nb {		//temporary attempt to organize the numeric replies, see https://modern.ircdocs.horse/#rplwelcome-001
+	RPL_WELCOME = 001,
+	RPL_YOURHOST,
+	RPL_CREATED,
+	RPL_MYINFO,
+	RPL_ISUPPORT,
+	RPL_BOUNCE = 010,
+	RPL_UMODEIS = 221,
+	RPL_LUSERCLIENT = 251,
+	RPL_LUSEROP,
+	RPL_LUSERUNKNOWN,
+	RPL_LUSERCHANNELS,
+	RPL_LUSERME,
+	RPL_ADMINME,
+	RPL_ADMINLOC1,
+	RPL_ADMINLOC2,
+	RPL_ADMINEMAIL,
+	RPL_TRYAGAIN = 263,
+	RPL_LOCALUSERS = 265,
+	RPL_GLOBALUSERS = 266,
+	RPL_WHOISCERTFP = 276,
+	RPL_NONE = 300,
+	RPL_AWAY,
+	RPL_USERHOST,
+	RPL_UNAWAY,
+	RPL_NOWAWAY,
+	RPL_WHOREPLY = 352,
+	RPL_ENDOFWHO = 315,
+	RPL_WHOISREGNICK = 307,
+	RPL_WHOISUSER = 311,
+	RPL_WHOISSERVER,
+	RPL_WHOISOPERATOR,
+	RPL_WHOWASUSER,
+	RPL_WHOISIDLE = 317,
+	RPL_ENDOFWHOIS,
+	RPL_WHOISCHANNELS,
+	RPL_WHOISSPECIAL,
+	RPL_LISTSTART,
+	RPL_LIST,
+	RPL_LISTEND,
+	RPL_CHANNELMODEIS,
+	RPL_CREATIONTIME = 329,
+	RPL_WHOISACCOUNT,
+	RPL_NOTOPIC,
+	RPL_TOPIC,
+	RPL_TOPICWHOTIME,
+	RPL_INVITELIST = 336,			// This numeric should not be confused with RPL_INVEXLIST (346), which is used as a reply to MODE.
+	RPL_ENDOFINVITELIST,			// This numeric should not be confused with RPL_ENDOFINVEXLIST (347), which is used as a reply to MODE.
+	RPL_WHOISACTUALLY,
+	RPL_INVITING = 341,
+	RPL_INVEXLIST = 346,
+	RPL_ENDOFINVEXLIST,
+	RPL_EXCEPTLIST,
+	RPL_ENDOFEXCEPTLIST,
+	RPL_VERSION = 351,
+	RPL_NAMREPLY = 353,
+	RPL_ENDOFNAMES = 366,
+	RPL_LINKS = 364,
+	RPL_ENDOFLINKS,
+	RPL_BANLIST = 367,
+	RPL_ENDOFBANLIST,
+	RPL_ENDOFWHOWAS,
+	RPL_INFO = 371,
+	RPL_ENDOFINFO = 374,
+	RPL_MOTDSTART,
+	RPL_MOTD = 372,
+	RPL_ENDOFMOTD = 376,
+	RPL_WHOISHOST = 378,
+	RPL_WHOISMODES,
+	RPL_YOUREOPER = 381,
+	RPL_REHASHING,
+	RPL_TIME = 391,
+	ERR_UNKNOWNERROR = 400,
+};
 
 class User
 {
