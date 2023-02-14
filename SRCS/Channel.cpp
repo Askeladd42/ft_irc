@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:57 by plam              #+#    #+#             */
-/*   Updated: 2023/02/13 19:33:05 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/02/14 15:48:45 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ Channel::Channel(const Channel &other) {
 Channel::~Channel() { }
 
 Channel	&Channel::operator=(const Channel &other) {
-	if (this != &other)
-		return *this; // ENLEVER (je l'ai juste mis pour que ca compile - MAX)
-		//copy function for Channel ?
+	if (this != &other) {		// PEUT ETRE À ENLEVER (je l'ai juste mis pour que ca compile - MAX)
+		this->_name = other._name;
+	}							//copy function for Channel ?
 	return *this;
 }
 

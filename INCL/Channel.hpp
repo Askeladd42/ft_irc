@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:51:43 by plam              #+#    #+#             */
-/*   Updated: 2023/01/16 14:30:50 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/14 15:48:29 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ class Channel {
 	private:
 		/* data */
 	protected:
-		/* data */
+		std::string	_name;
 	public:
 		Channel();
 		Channel(const Channel &other);
