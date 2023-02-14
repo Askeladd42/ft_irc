@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 17:40:50 by plam              #+#    #+#             */
-/*   Updated: 2023/01/25 11:54:30 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/14 16:05:46 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define __MESSAGE_HPP__
 
 # include "User.hpp"
+# include "Command.hpp"
 # include "Server.hpp"
 
 class Message {
