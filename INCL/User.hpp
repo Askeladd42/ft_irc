@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/01/25 00:42:41 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/14 15:10:29 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ class User
 		void				set_nickname(const int newNick);
 		void				set_username(const int newUser);
 		void				set_realname(const int newReal);
-		void				set_hostname(const int newHost);	//temporary, may bereplaced/deleted later
-		void				set_hostaddr(const int newAddr);	//temporary, may bereplaced/deleted later
+		void				set_hostname(const int newHost);	//temporary, may be replaced/deleted later
+		void				set_hostaddr(const int newAddr);	//temporary, may be replaced/deleted later
 
 		//getter member functions
 		int					get_fd() const;

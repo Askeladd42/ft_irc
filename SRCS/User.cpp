@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/01/25 01:13:10 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/14 15:20:50 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,17 @@ User::User()
 
 User::User(const User &other)
 {
+	*this = other;
 	// do not use this;
 }
 
 User	&User::operator=(const User &other)
 {
+	if (this != &other) {
+		this->_hostname = other._hostname;
+		this->_nickname = other._nickname;
+		this->_realname = other._realname;
+	}
 	return *this; // do not use this;
 }
 
@@ -34,15 +40,12 @@ User::User(const int fd):_fd(fd),
 						_username(""),
 						_realname(""),
 						_hostname(""),
-						_hostaddr("");
+						_hostaddr("")
 {
 
 }
 
-virtual User::~User()
-{
-
-}
+User::~User() { }
 
 void	User::set_status(const int newStatus)
 {
@@ -83,15 +86,15 @@ void	User::set_realname(const int newReal)
 	this->_realname = newReal;
 }
 
-void	set_hostname(const int newHost)
+void	User::set_hostname(const int newHost)
 {
 	this->_hostname = newHost;
-	//temporary, may bereplaced/deleted later
+	//temporary, may be replaced/deleted later
 }
-void	set_hostaddr(const int newAddr)
+void	User::set_hostaddr(const int newAddr)
 {
 	this->_hostaddr = newAddr;
-	//temporary, may bereplaced/deleted later
+	//temporary, may be replaced/deleted later
 }
 
 int	User::get_fd() const
