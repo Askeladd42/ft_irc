@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+         #
+#    By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/01/16 17:45:51 by cmaginot         ###   ########.fr        #
+#    Updated: 2023/02/13 20:03:28 by mmercore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,10 @@ INCLUDESFOLDER 	= 	INCL/
 
 # SOURCES
 
-SRC				=	main.cpp Channel.cpp Server.cpp User.cpp		
+SRC				=	main.cpp \
+					Channel.cpp\
+					Server.cpp \
+					User.cpp		
 
 
 SRCS			=	$(addprefix $(SRCSFOLDER), $(SRC))

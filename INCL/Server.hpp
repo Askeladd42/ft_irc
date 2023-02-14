@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:40:58 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/30 16:31:26 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/02/13 19:32:19 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ typedef enum e_serv_error {
 	nothing = 0,
 	syscall_fail,
 	socket_fail,
-	sock_opt_fail
+	sock_opt_fail,
+	bind_fail
 }							t_serv_error;
 
 // 		Domain:
@@ -69,6 +70,9 @@ typedef enum e_serv_error {
 //		Optlen:
 // La len de ce que pointe opval
 
+typedef struct sockaddr_in	ssocki;
+typedef struct sockaddr		ssock;
+
 # define	DEFAULT_SC	(t_sock_conf){		\
 	.domain=AF_LOCAL,						\
 	.type=SOCK_STREAM,						\
@@ -99,6 +103,8 @@ class Server {
 		void		set_socketfd(int socketfd=-1, t_sock_conf sock_conf=DEFAULT_SC);
 
 		int			set_sockopt(int level, int optname, const void *optval, socklen_t optlen);
+		int			call_bind(int fd, ssock * addrptr, socklen_t addrlen);
+
 	private:
 		std::string	_password;
 		int			_port;
@@ -106,7 +112,7 @@ class Server {
 
 		//https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html
 		// Equivalent a struct sockaddr* en cast, supporte plus d'implementations
-		struct sockaddr_in	address;
+		ssocki	_address;
 };
 
 #endif
