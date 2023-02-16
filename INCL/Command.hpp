@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/06 13:33:18 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/16 12:51:37 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,28 @@ enum	reply_nb {		//temporary attempt to organize the numeric replies, see https:
 	ERR_SASLTOOLONG,
 	ERR_SASLABORTED,
 	ERR_SASLALREADY,
-	RPL_SASLMECHS
+	RPL_SASLMECHS,
+
+/* specific replies */
+/* NICK message */
+	ERR_NONICKNAMEGIVEN = 431,
+	ERR_NICKCOLLISION = 436,
+/* STATS message */
+	RPL_STATSCLINE = 213,
+	RPL_STATSHLINE = 244,
+	RPL_STATSILINE = 215,
+	RPL_STATSKLINE = 216,
+	RPL_STATSLLINE = 241,
+	RPL_STATSOLINE  = 243,
+	RPL_STATSLINKINFO = 211,
+	RPL_STATSUPTIME = 242,
+	RPL_STATSCOMMANDS = 212,
+	RPL_ENDOFSTATS = 219,
+/* PRIVMSG message */
+	ERR_NORECIPIENT = 411,
+	ERR_NOTEXTTOSEND = 412,
+	ERR_NOTOPLEVEL = 413,
+	ERR_WILDTOPLEVEL = 414
 };
 
 class User
