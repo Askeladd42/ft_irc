@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/16 12:51:37 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/16 14:37:06 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,20 +96,20 @@ enum	reply_nb {		//temporary attempt to organize the numeric replies, see https:
 	ERR_CANNOTSENDTOCHAN,
 	ERR_TOOMANYCHANNELS,
 	ERR_WASNOSUCHNICK,
-	ERR_NOORIGIN = 409,
+	//ERR_NOORIGIN = 409,
 	ERR_INPUTTOOLONG = 417,
-	ERR_UNKNOWNCOMMAND = 421,
+	//ERR_UNKNOWNCOMMAND = 421,
 	ERR_NOMOTD = 422,
-	ERR_ERRONEUSNICKNAME = 432,
-	ERR_NICKNAMEINUSE,
+	//ERR_ERRONEUSNICKNAME = 432,
+	//ERR_NICKNAMEINUSE,
 	ERR_USERNOTINCHANNEL = 441,
 	ERR_NOTONCHANNEL,
 	ERR_USERONCHANNEL,
-	ERR_NOTREGISTERED = 451,
-	ERR_NEEDMOREPARAMS = 461,
-	ERR_ALREADYREGISTERED,
-	ERR_PASSWDMISMATCH = 464,
-	ERR_YOUREBANNEDCREEP,
+	//ERR_NOTREGISTERED = 451,
+	//ERR_NEEDMOREPARAMS = 461,
+	//ERR_ALREADYREGISTERED,
+	//ERR_PASSWDMISMATCH = 464,
+	//ERR_YOUREBANNEDCREEP,
 	ERR_CHANNELISFULL = 471,
 	ERR_UNKNOWNMODE,
 	ERR_INVITEONLYCHAN,
