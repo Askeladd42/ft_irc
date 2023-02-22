@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/01/31 16:42:21 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/21 14:57:23 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ std::vector<Reply>	Server::pass(User &user, std::vector<std::string> args)
 	std::vector<Reply>	reply;
 	int 				password = 0;
 
-	if (true == false) // check if ban
+	if (user.get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (args.empty() == true || args[password].compare("") == 0)
 		reply.push_back(ERR_NEEDMOREPARAMS);
@@ -264,7 +264,7 @@ std::vector<Reply>	Server::nick(User &user, std::vector<std::string> args)
 	std::vector<Reply>	reply;
 	int					nickname = 0;
 
-	if (true == false) // check if ban
+	if (user.get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (user.get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
@@ -325,7 +325,7 @@ std::vector<Reply>	Server::user(User &user, std::vector<std::string> args)
 	int 				username = 0;
 	int					realname = 3;
 
-	if (true == false) // check if ban
+	if (user.get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (user.get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
@@ -393,7 +393,7 @@ std::vector<Reply>	Server::ping(User &user, std::vector<std::string> args)
 	std::vector<Reply>	reply;
 	int 				token = 0;
 
-	if (true == false) // check if ban
+	if (user.get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (user.get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
@@ -403,8 +403,9 @@ std::vector<Reply>	Server::ping(User &user, std::vector<std::string> args)
 		reply.push_back(ERR_NOORIGIN);
 	else
 	{
-		reply.push_back(NO_REPLY);
-		//reply with pong
+		reply.push_back(RPL_PONG);
+		reply[0].add_arg(user.get_nickname());
+		return (reply);
 	}
 	reply[0].add_arg(user.get_nickname());
 	reply[0].add_arg("PING");
@@ -448,13 +449,20 @@ std::vector<Reply>	Server::pong(User &user, std::vector<std::string> args)
 	int					server = 0;
 	int 				token = 1;
 
-	if (true == false) // check if ban
+	if (user.get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
-	else if (args.empty() == true || args.size() < 2 || args[token].compare("") || token_is_valid(args[token]) == false)
-		;
+	else if (user.get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.empty() == true || args[token].compare("") == 0)	// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
+		reply.push_back(ERR_NEEDMOREPARAMS);
+	else if (token_is_valid(args[token]) == false)
+		reply.push_back(ERR_NOORIGIN);
+	else if (true == false) // check if token is the same
+		reply.push_back(ERR_TOKENMISMATCH);
 	else
 	{
-		//pong
+		reply.push_back(NO_REPLY);
+		return (reply);
 	}
 	reply[0].add_arg(user.get_nickname());
 	reply[0].add_arg("PING");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/16 14:37:06 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/21 14:57:24 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,28 @@ enum	reply_nb {		//temporary attempt to organize the numeric replies, see https:
 	ERR_WILDTOPLEVEL = 414
 };
 
+#define NO_REPLY Reply()
+#define ERR_NOORIGIN Reply(409, "<client> :No origin specified")
+#define ERR_UNKNOWNCOMMAND Reply(421, "<client> <command> :Unknown command")
+#define ERR_NONICKNAMEGIVEN Reply(431, "<client> :No Nickname Given")
+#define ERR_ERRONEUSNICKNAME Reply(432, "<client> <nick> :Erroneus nickname")
+#define ERR_NICKNAMEINUSE Reply(433, "<client> <nick> :Nickname is already in use")
+#define ERR_NICKCOLLISION Reply(436, "<client> <nick> :Nickname collision")
+#define ERR_NOTREGISTERED Reply(451, "<client> :You have not registered")
+#define ERR_NEEDMOREPARAMS Reply(461, "<client> <command> :Not enough parameters")
+#define ERR_ALREADYREGISTERED Reply(462, "<client> :You may not reregister")
+#define ERR_PASSWDMISMATCH Reply(464, "<client> :Password incorrect")
+#define ERR_YOUREBANNEDCREEP Reply(465, "<client> :You are banned from this server.")
+
+#define RPL_PING Reply()
+#define ERR_TOKENMISMATCH Reply(0, "<client> :token incorrect")
+
+
+
+
+
+#define USR_STAT_BAN = -2
+
 class User
 {
 	private:
@@ -175,6 +197,7 @@ class User
 		User(std::string nickname);
 		~User();
 		bool		get_connected();
+		int			get_status();
 		std::string	get_nickname();
 		std::string	get_username();
 		void		set_connected();
@@ -200,20 +223,6 @@ class Reply
 		std::string	get_message() const;
 
 };
-
-#define NO_REPLY Reply()
-#define ERR_NOORIGIN Reply(409, "<client> :No origin specified")
-#define ERR_UNKNOWNCOMMAND Reply(421, "<client> <command> :Unknown command")
-#define ERR_NONICKNAMEGIVEN Reply(431, "<client> :No Nickname Given")
-#define ERR_ERRONEUSNICKNAME Reply(432, "<client> <nick> :Erroneus nickname")
-#define ERR_NICKNAMEINUSE Reply(433, "<client> <nick> :Nickname is already in use")
-#define ERR_NICKCOLLISION Reply(436, "<client> <nick> :Nickname collision")
-#define ERR_NOTREGISTERED Reply(451, "<client> :You have not registered")
-#define ERR_NEEDMOREPARAMS Reply(461, "<client> <command> :Not enough parameters")
-#define ERR_ALREADYREGISTERED Reply(462, "<client> :You may not reregister")
-#define ERR_PASSWDMISMATCH Reply(464, "<client> :Password incorrect")
-#define ERR_YOUREBANNEDCREEP Reply(465, "<client> :You are banned from this server.")
-
 
 class Server
 {

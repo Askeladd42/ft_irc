@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/02/14 15:10:29 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/21 14:57:40 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <iostream>
 # include <vector>
 # include <fcntl.h>
+
+#define USR_STAT_BAN = -2
 
 class User
 {
@@ -34,6 +36,7 @@ class User
 		std::string			_hostname;
 		std::string			_hostaddr;
 		//std::string		_buffer;	User's buffer, may change later
+		//std::string		_ping_pong_token;
 
 	public:
 		User(const int fd);
