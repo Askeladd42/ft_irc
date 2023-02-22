@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/21 14:57:24 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/21 15:09:09 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,14 +177,14 @@ enum	reply_nb {		//temporary attempt to organize the numeric replies, see https:
 #define ERR_PASSWDMISMATCH Reply(464, "<client> :Password incorrect")
 #define ERR_YOUREBANNEDCREEP Reply(465, "<client> :You are banned from this server.")
 
-#define RPL_PING Reply()
+#define RPL_PONG Reply()
 #define ERR_TOKENMISMATCH Reply(0, "<client> :token incorrect")
 
 
 
 
 
-#define USR_STAT_BAN = -2
+#define USR_STAT_BAN -2
 
 class User
 {
