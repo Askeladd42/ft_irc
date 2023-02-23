@@ -51,3 +51,9 @@ Ajout de Cerr, trucs sur server
 mmercore
 	Mon Feb 13 08:03:57 PM CET 2023
 Ajout de bind, mais il ne fonctionne pas encore. Je suis confus en ce qui concerne pourquoi. Doc reste a faire>
+
+
+
+mmercore
+	Thu Feb 23 07:23:08 AM CET 2023
+trop fatigue pour continuer, bind marche, plus que poll et le serv est complet

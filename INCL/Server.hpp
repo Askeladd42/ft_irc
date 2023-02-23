@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:40:58 by mmercore          #+#    #+#             */
-/*   Updated: 2023/02/13 19:32:19 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/02/23 06:16:32 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 # include "ft_irc.hpp"	
 // Eventuellement il faudra bouger ces defines vers un fichier de conf
 // Par securite
-# define DEFAULT_PORT 1111
+# define DEFAULT_PORT 8080
 # define DEFAULT_PWD "abc"
+# define DEFAULT_TIMEOUT 5*60*1000 // Expressed in ms
 
 typedef struct	e_sock_conf {
 //	void		socket_params;
@@ -37,7 +38,8 @@ typedef enum e_serv_error {
 	syscall_fail,
 	socket_fail,
 	sock_opt_fail,
-	bind_fail
+	bind_fail,
+	listen_fail
 }							t_serv_error;
 
 // 		Domain:
@@ -74,7 +76,7 @@ typedef struct sockaddr_in	ssocki;
 typedef struct sockaddr		ssock;
 
 # define	DEFAULT_SC	(t_sock_conf){		\
-	.domain=AF_LOCAL,						\
+	.domain=AF_INET,						\
 	.type=SOCK_STREAM,						\
 	.protocol=0,							\
 	.level=SOL_SOCKET,						\
@@ -93,8 +95,10 @@ class Server {
 		Server(int port=DEFAULT_PORT, str password=DEFAULT_PWD, t_sock_conf sock_conf=DEFAULT_SC);
 		~Server();
 
-		std::string	get_password() const;
-		void		set_password(std::string password=DEFAULT_PWD);
+		str			get_errval(t_serv_error errval) const;
+
+		str			get_password() const;
+		void		set_password(str password=DEFAULT_PWD);
 
 		int			get_port() const;
 		void		set_port(int port=DEFAULT_PORT);
@@ -103,10 +107,16 @@ class Server {
 		void		set_socketfd(int socketfd=-1, t_sock_conf sock_conf=DEFAULT_SC);
 
 		int			set_sockopt(int level, int optname, const void *optval, socklen_t optlen);
+		
 		int			call_bind(int fd, ssock * addrptr, socklen_t addrlen);
 
+		int			call_listen(int fd, int backlog_hint=SOMAXCONN);
+
+		int			call_poll()
+		
+
 	private:
-		std::string	_password;
+		str			_password;
 		int			_port;
 		int			_socketfd;
 

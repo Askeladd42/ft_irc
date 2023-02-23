@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:24:09 by mmercore          #+#    #+#             */
-/*   Updated: 2023/01/30 16:31:46 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/02/15 17:24:20 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 //		DEFINES
 # define PRINT	std::cout <<
 # define PRERR	std::cerr <<
-# define ENDL	<< std::endl
+# define ENDL	<< std::endl;
 
 //# define DEFINE	# define // Ne marche pas, se renseigner pk
 

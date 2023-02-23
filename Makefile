@@ -6,7 +6,7 @@
 #    By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/02/13 20:03:28 by mmercore         ###   ########.fr        #
+#    Updated: 2023/02/22 17:46:09 by mmercore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,15 +59,15 @@ INCLUDESFOLDER 	= 	INCL/
 
 # SOURCES
 
-SRC				=	main.cpp \
-					Channel.cpp\
-					Server.cpp \
-					User.cpp		
+SRC				=	main.cpp 	\
+					Server.cpp	\
+#					User.cpp	\
+#					Channel.cpp
 
 
 SRCS			=	$(addprefix $(SRCSFOLDER), $(SRC))
 
-INCLUDES		=	ft_irc.hpp Channel.hpp Server.hpp User.hpp
+INCLUDES		=	ft_irc.hpp Server.hpp User.hpp Channel.hpp
 
 # COMPILATION AND LINKING
 
