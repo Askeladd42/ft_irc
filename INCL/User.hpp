@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/02/21 14:57:40 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/23 17:47:41 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 # include <vector>
 # include <fcntl.h>
 
-#define USR_STAT_BAN = -2
+#define USR_STAT_BAN -2
+#define USR_STAT_REGISTERED 1
 
 class User
 {
@@ -48,11 +49,11 @@ class User
 		void				set_disconnected();
 		void				set_user_admin();
 		void				set_user_normal();
-		void				set_nickname(const int newNick);
-		void				set_username(const int newUser);
-		void				set_realname(const int newReal);
-		void				set_hostname(const int newHost);	//temporary, may be replaced/deleted later
-		void				set_hostaddr(const int newAddr);	//temporary, may be replaced/deleted later
+		void				set_nickname(const std::string newNick);
+		void				set_username(const std::string newUser);
+		void				set_realname(const std::string newReal);
+		void				set_hostname(const std::string newHost);	//temporary, may be replaced/deleted later
+		void				set_hostaddr(const std::string newAddr);	//temporary, may be replaced/deleted later
 
 		//getter member functions
 		int					get_fd() const;
@@ -62,6 +63,7 @@ class User
 		const std::string	&get_username() const;
 		const std::string	&get_realname() const;
 		const std::string	&get_hostname() const;
+		const std::string	&get_hostaddr() const;
 };
 
 std::ostream				&operator<<(std::ostream &ost, const User &other);

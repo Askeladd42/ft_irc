@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/02/14 15:20:50 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/23 17:48:11 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,26 +72,26 @@ void	User::set_user_normal()
 	set_status(0);
 }
 
-void	User::set_nickname(const int newNick)
+void	User::set_nickname(const std::string newNick)
 {
 	this->_nickname = newNick;
 }
 
-void	User::set_username(const int newUser)
+void	User::set_username(const std::string newUser)
 {
 	this->_username = newUser;
 }
-void	User::set_realname(const int newReal)
+void	User::set_realname(const std::string newReal)
 {
 	this->_realname = newReal;
 }
 
-void	User::set_hostname(const int newHost)
+void	User::set_hostname(const std::string newHost)
 {
 	this->_hostname = newHost;
 	//temporary, may be replaced/deleted later
 }
-void	User::set_hostaddr(const int newAddr)
+void	User::set_hostaddr(const std::string newAddr)
 {
 	this->_hostaddr = newAddr;
 	//temporary, may be replaced/deleted later
@@ -130,6 +130,11 @@ const std::string	&User::get_realname() const
 const std::string	&User::get_hostname() const
 {
 	return (this->_hostname);
+}
+
+const std::string	&User::get_hostaddr() const
+{
+	return (this->_hostaddr);
 }
 
 std::ostream	&operator<<(std::ostream &ost, const User &other)
