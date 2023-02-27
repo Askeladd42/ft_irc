@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/02/27 15:34:10 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/27 18:07:57 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ int		Server::polling_loop()
 						new_fd = accept(get_socketfd(), NULL, NULL);
 						// Errors
 						fds[fd_counter].fd = new_fd;
-          				fds[fd_counter].events = POLLIN;
+						fds[fd_counter].events = POLLIN;
 						PRERR "NEW CONNECTION HIHI" ENDL;
 						send(fds[fd_counter].fd, "Hi Bitch, Welcome to IRC!!!", 27, 0);
 						PRERR "New fd is now " << new_fd ENDL
