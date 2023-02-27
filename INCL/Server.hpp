@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:40:58 by mmercore          #+#    #+#             */
-/*   Updated: 2023/02/23 06:16:32 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/02/24 19:50:12 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,17 @@
 # define DEFAULT_TIMEOUT 5*60*1000 // Expressed in ms
 
 typedef struct	e_sock_conf {
-//	void		socket_params;
-	int			domain;
-	int			type;
-	int			protocol;
-//	void		socket_opts;
-	int			level;
-	int			optname;
-	int			optvalobj;
-	const void *optval;
-	socklen_t	optlen;
+//	void			socket_params;
+	int				domain;
+	int				type;
+	int				protocol;
+//	void			socket_opts;
+	int				level;
+	int				optname;
+	int				optname2;
+	int				optvalobj;
+	const void		*optval;
+	socklen_t		optlen;
 }				t_sock_conf;
 
 typedef enum e_serv_error {
@@ -38,8 +39,11 @@ typedef enum e_serv_error {
 	syscall_fail,
 	socket_fail,
 	sock_opt_fail,
+	fcntl_fail,
 	bind_fail,
-	listen_fail
+	listen_fail,
+	poll_fail,
+	timeout
 }							t_serv_error;
 
 // 		Domain:
@@ -74,6 +78,7 @@ typedef enum e_serv_error {
 
 typedef struct sockaddr_in	ssocki;
 typedef struct sockaddr		ssock;
+typedef	struct pollfd		spollfd;
 
 # define	DEFAULT_SC	(t_sock_conf){		\
 	.domain=AF_INET,						\
@@ -81,6 +86,7 @@ typedef struct sockaddr		ssock;
 	.protocol=0,							\
 	.level=SOL_SOCKET,						\
 	.optname=SO_REUSEADDR | SO_REUSEPORT,	\
+	.optname2=O_NONBLOCK,					\
 	.optvalobj=1,							\
 	.optval=(const void *)(sizeof(t_sock_conf) - sizeof(socklen_t) - sizeof(const void *)),				\
 	.optlen=sizeof(int)			\
@@ -108,11 +114,13 @@ class Server {
 
 		int			set_sockopt(int level, int optname, const void *optval, socklen_t optlen);
 		
+		int			call_fcntl(int fd, int request);
+		
 		int			call_bind(int fd, ssock * addrptr, socklen_t addrlen);
 
 		int			call_listen(int fd, int backlog_hint=SOMAXCONN);
 
-		int			call_poll()
+		int			polling_loop();
 		
 
 	private:
@@ -123,6 +131,8 @@ class Server {
 		//https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html
 		// Equivalent a struct sockaddr* en cast, supporte plus d'implementations
 		ssocki	_address;
+		spollfd	fds[100];
+		
 };
 
 #endif

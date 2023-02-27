@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/23 17:40:32 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/26 18:11:32 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,54 @@ Server::~Server()
 
 }
 
-std::vector<Reply>	Server::command(User &user, std::string commandName, std::vector<std::string> args)
+User	*Server::find_user(int fd)
+{
+	for (std::vector<User *>::iterator it = _usr_list.begin(); it != _usr_list.end(); it++)
+	{
+		if ((*it)->get_fd() == fd)
+			return (*it);
+	}
+
+	return (NULL);
+}
+
+void	Server::run_line(int fd, std::string line)
+{
+	User *user = find_user(fd);
+	if (user == NULL)
+		return ;
+	std::vector<std::string>	args = pars(line);
+	std::string					cmd = args[0];
+	args.erase(args.begin());
+	std::vector<Reply>			rpls = command(user, cmd, args);
+	for (std::vector<Reply>::iterator it = rpls.begin(); it != rpls.end(); it++)
+		std::cout << rpls[0].get_message() << std::endl; // push all rpls on file instead of cout
+}
+
+std::vector<std::string>	Server::pars(std::string line)
+{
+	size_t						pos;
+	std::string					word;
+	std::vector<std::string>	args;
+	while (line.length() != 0)
+	{
+		pos = line.find(' ');
+		if (pos == std::string::npos)
+		{
+			word = line;
+			line.erase(line.begin(), line.end());
+		}
+		else
+		{
+			word = line.substr(0, pos);
+			line.erase(line.begin(), line.begin() + pos + 1);
+		}
+		args.push_back(word);
+	}
+	return args;
+}
+
+std::vector<Reply>	Server::command(User *user, std::string commandName, std::vector<std::string> args)
 {
 	t_command	t[] =
 	{
@@ -114,12 +161,12 @@ std::vector<Reply>	Server::command(User &user, std::string commandName, std::vec
 	}
 	std::vector<Reply>	reply;
 	reply.push_back(ERR_UNKNOWNCOMMAND);
-	reply[0].add_user(&user);
+	reply[0].add_user(user);
 	reply[0].add_arg(commandName);
 	return (reply);
 }
 
-std::vector<Reply>	Server::cap(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::cap(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -140,7 +187,7 @@ Capability Negotiation specification.
 (https://ircv3.net/specs/extensions/capability-negotiation.html)
 */
 
-std::vector<Reply>	Server::authenticate(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::authenticate(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -162,25 +209,25 @@ the "sasl" client capability, please see the IRCv3.1 and IRCv3.2 SASL Authentica
 specifications.
 */
 
-std::vector<Reply>	Server::pass(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::pass(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;
 	int 				password = 0;
 
-	if (user.get_status() == USR_STAT_BAN)
+	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (args.empty() == true || args[password].compare("") == 0)
 		reply.push_back(ERR_NEEDMOREPARAMS);
-	else if (user.get_connected() == true)
+	else if (user->get_connected() == true)
 		reply.push_back(ERR_ALREADYREGISTERED);
 	else if (args[password].compare(this->_password))
 		reply.push_back(ERR_PASSWDMISMATCH);
 	else
 	{
-		user.set_connected();
+		user->set_connected();
 		reply.push_back(NO_REPLY);
 	}
-	reply[0].add_user(&user);
+	reply[0].add_user(user);
 	reply[0].add_arg("PASS");
 	reply[0].prep_to_send();
 	return(reply);
@@ -213,14 +260,14 @@ ERR_ALREADYREGISTERED (462)
 ERR_PASSWDMISMATCH (464)
 */
 
-std::vector<Reply>	Server::nick(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::nick(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;
 	int					nickname = 0;
 
-	if (user.get_status() == USR_STAT_BAN)
+	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
-	else if (user.get_connected() == false)
+	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
 	else if (args.empty() == true || args[nickname].compare("") == 0)
 		reply.push_back(ERR_NONICKNAMEGIVEN);
@@ -231,11 +278,11 @@ std::vector<Reply>	Server::nick(User &user, std::vector<std::string> args)
 	else
 	{
 		reply.push_back(NO_REPLY);
-		reply[0].add_user(&user);
+		reply[0].add_user(user);
 		reply[0].add_arg(args[0]);
-		user.set_nickname(args[nickname]);
+		user->set_nickname(args[nickname]);
 	}
-	reply[0].add_arg(user.get_nickname());
+	reply[0].add_arg(user->get_nickname());
 	return(reply);
 }
 /*
@@ -273,31 +320,31 @@ ERR_NICKCOLLISION (436) don't know what it is
 check return when sucess
 */
 
-std::vector<Reply>	Server::user(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;
 	int 				username = 0;
 	int					realname = 3;
 
-	if (user.get_status() == USR_STAT_BAN)
+	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
-	else if (user.get_connected() == false)
+	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
 	else if (args.empty() == true || args[username].compare("") == 0 || args.size() < 3 || args[realname].compare(""))		// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
 		reply.push_back(ERR_NEEDMOREPARAMS);
-	else if (user.get_status() == USR_STAT_REGISTERED)
+	else if (user->get_status() == USR_STAT_REGISTERED)
 		reply.push_back(ERR_ALREADYREGISTERED);
 	else
 	{
 		// manage if username > length max and if it's valid,
 		// cut it or put default value otherwise
 		reply.push_back(NO_REPLY);
-		reply[0].add_user(&user);
+		reply[0].add_user(user);
 		reply[0].add_arg(args[0]);
-		user.set_username(args[username]);
-		user.set_status(USR_STAT_REGISTERED);
+		user->set_username(args[username]);
+		user->set_status(USR_STAT_REGISTERED);
 	}
-	reply[0].add_arg(user.get_nickname());
+	reply[0].add_arg(user->get_nickname());
 	return (reply);
 }
 /*
@@ -305,7 +352,7 @@ Command: USER
 Parameters: <username> 0 * <realname>
 
 The USER command is used at the beginning of a connection to specify the
-username and realname of a new user.
+username and realname of a new user->
 
 It must be noted that <realname> must be the last parameter because it may
 contain SPACE (' ', 0x20) characters, and should be prefixed with a 
@@ -344,14 +391,14 @@ ERR_NEEDMOREPARAMS (461)
 ERR_ALREADYREGISTERED (462)
 */
 
-std::vector<Reply>	Server::ping(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::ping(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;
 	int 				token = 0;
 
-	if (user.get_status() == USR_STAT_BAN)
+	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
-	else if (user.get_connected() == false)
+	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
 	else if (args.empty() == true || args[token].compare("") == 0)	// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
 		reply.push_back(ERR_NEEDMOREPARAMS);
@@ -360,10 +407,10 @@ std::vector<Reply>	Server::ping(User &user, std::vector<std::string> args)
 	else
 	{
 		reply.push_back(RPL_PONG);
-		reply[0].add_arg(user.get_nickname());
+		reply[0].add_arg(user->get_nickname());
 		return (reply);
 	}
-	reply[0].add_user(&user);
+	reply[0].add_user(user);
 	reply[0].add_arg("PING");
 	return (reply);
 }
@@ -399,14 +446,14 @@ Deprecated Numeric Reply:
 ERR_NOSUCHSERVER (402)
 */
 
-std::vector<Reply>	Server::pong(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::pong(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;
 	int 				token = 0;
 
-	if (user.get_status() == USR_STAT_BAN)
+	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
-	else if (user.get_connected() == false)
+	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
 	else if (args.empty() == true || args[token].compare("") == 0)	// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
 		reply.push_back(ERR_NEEDMOREPARAMS);
@@ -419,7 +466,7 @@ std::vector<Reply>	Server::pong(User &user, std::vector<std::string> args)
 		reply.push_back(NO_REPLY);
 		return (reply);
 	}
-	reply[0].add_user(&user);
+	reply[0].add_user(user);
 	reply[0].add_arg("PING");
 	return (reply);
 }
@@ -439,7 +486,7 @@ Numeric Replies:
 None
 */
 
-std::vector<Reply>	Server::oper(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::oper(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -461,7 +508,7 @@ If the client is not connecting from a valid host for the given name, the server
 replies with an ERR_NOOPERHOST message and the request is not successful.
 
 If the supplied name and password are both correct, and the user is connecting from
-a valid host, the RPL_YOUREOPER message is sent to the user. The user will also
+a valid host, the RPL_YOUREOPER message is sent to the user-> The user will also
 receive a MODE message indicating their new user modes, and other messages may be sent.
 
 The <name> specified by this command is separate to the accounts specified by SASL
@@ -475,7 +522,7 @@ ERR_NOOPERHOST (491)
 RPL_YOUREOPER (381)
 */
 
-std::vector<Reply>	Server::quit(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::quit(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -493,7 +540,7 @@ connection to the client.
 
 This message may also be sent from the server to a client to show that a client
 has exited from the network. This is typically only dispatched to clients that
-share a channel with the exiting user. When the QUIT message is sent to clients,
+share a channel with the exiting user-> When the QUIT message is sent to clients,
 <source> represents the client that has exited the network.
 
 When connections are terminated by a client-sent QUIT command, servers SHOULD
@@ -528,7 +575,7 @@ Numeric Replies:
 None
 */
 
-std::vector<Reply>	Server::error(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::error(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -552,7 +599,7 @@ None
 Command Example:
 */
 
-std::vector<Reply> Server::join(User &user, std::vector<std::string> args)
+std::vector<Reply> Server::join(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -649,7 +696,7 @@ Message Examples:
   :dan-!d@localhost JOIN #test    ; dan- is joining the channel #test
 */
 
-std::vector<Reply>	Server::part(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::part(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -695,7 +742,7 @@ Message Examples:
   :dan-!d@localhost PART #test    ; dan- is leaving the channel #test
 */
 
-std::vector<Reply>	Server::topic(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::topic(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -751,7 +798,7 @@ Command Examples:
   TOPIC #test                     ; Checking the topic for "#test"
 */
 
-std::vector<Reply>	Server::names(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::names(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -775,7 +822,7 @@ RPL_NAMREPLY (353)
 RPL_ENDOFNAMES (366)
 */
 
-std::vector<Reply> Server::list(User &user, std::vector<std::string> args)
+std::vector<Reply> Server::list(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -830,7 +877,7 @@ Command Examples:
 								  a topic changed within the last 60 minutes
 */
 
-std::vector<Reply>	Server::invite(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::invite(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;
 	(void)user;
@@ -860,7 +907,7 @@ with the ERR_USERONCHANNEL numeric.
 
 When the invite is successful, the server MUST send a RPL_INVITING numeric to the
 command issuer, and an INVITE message, with the issuer as <source>, to the target
-user. Other channel members SHOULD NOT be notified.
+user-> Other channel members SHOULD NOT be notified.
 
 Numeric Replies:
 
@@ -879,7 +926,7 @@ Message Examples:
 										to the channel #test
 */
 
-std::vector<Reply>	Server::kick(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::kick(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -930,14 +977,14 @@ Examples:
 								   from WiZ to remove John from channel
 */
 
-std::vector<Reply>	Server::motd(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::motd(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;
 	int 				target = 0;
 
-	if (user.get_status() == USR_STAT_BAN)
+	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
-	else if (user.get_connected() == false)
+	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
 	else if (args.empty() == true || args[target].compare("") == 0)
 	{
@@ -977,7 +1024,7 @@ RPL_MOTD (372)
 RPL_ENDOFMOTD (376)
 */
 
-std::vector<Reply>	Server::version(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::version(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1010,7 +1057,7 @@ RPL_ISUPPORT (005)
 RPL_VERSION (351)
 */
 
-std::vector<Reply>	Server::admin(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::admin(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1046,7 +1093,7 @@ RPL_ADMINLOC2 (258)
 RPL_ADMINEMAIL (259)
 */
 
-std::vector<Reply>	Server::connect(User &user, std::vector<std::string> args) // do not use, no connection between server in subject
+std::vector<Reply>	Server::connect(User *user, std::vector<std::string> args) // do not use, no connection between server in subject
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1072,7 +1119,7 @@ ERR_NOPRIVILEGES (481)
 ERR_NOPRIVS (723)
 */
 
-std::vector<Reply>	Server::lusers(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::lusers(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1101,7 +1148,7 @@ RPL_LOCALUSERS (265)
 RPL_GLOBALUSERS (266)
 */
 
-std::vector<Reply>	Server::time(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::time(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1124,7 +1171,7 @@ RPL_TIME (391)
 
 */
 
-std::vector<Reply>	Server::stats(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::stats(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1186,7 +1233,7 @@ RPL_STATSCOMMANDS (212)
 RPL_ENDOFSTATS (219)
 */
 
-std::vector<Reply>	Server::help(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::help(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1228,7 +1275,7 @@ RPL_HELPTXT (705)
 RPL_ENDOFHELP (706)
 */
 
-std::vector<Reply>	Server::info(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::info(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1254,7 +1301,7 @@ RPL_INFO (371)
 RPL_ENDOFINFO (374)
 */
 
-std::vector<Reply>	Server::mode(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::mode(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1274,7 +1321,7 @@ numeric is returned. If <target> is a different nick than the user who sent the 
 the ERR_USERSDONTMATCH (502) numeric is returned.
 
 If <modestring> is not given, the RPL_UMODEIS (221) numeric is sent back containing the
-current modes of the target user.
+current modes of the target user->
 
 If <modestring> is given, the supplied modes will be applied, and a MODE message will be
 sent to the user containing the changed modes. If one or more modes sent are not
@@ -1348,7 +1395,7 @@ information to channel operators, or to only those clients who have permissions 
 given list.
 */
 
-std::vector<Reply>	Server::privmsg(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::privmsg(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1404,7 +1451,7 @@ RPL_AWAY (301)
 There are strange "X@Y" target rules and such which are noted in the examples of the original PRIVMSG RFC section. We need to check to make sure modern servers actually process them properly, and if so then specify them.
 */
 
-std::vector<Reply>	Server::notice(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::notice(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1434,7 +1481,7 @@ irritated by the use of NOTICE messages rather than PRIVMSG messages by clients 
 and they are not commonly used by client bots for this reason.
 */
 
-std::vector<Reply>	Server::who(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::who(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1488,7 +1535,7 @@ Reply Examples:
                                   ; Reply to WHO #ircv3
 */
 
-std::vector<Reply>	Server::whois(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::whois(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1517,7 +1564,7 @@ implement a hard timeout to avoid waiting for a reply which won’t come.
 Client MUST NOT not assume all numeric messages are sent at once, as server can interleave
 other messages before the end of the WHOIS response.
 
-If the <target> parameter is specified, it SHOULD be a server name or the nick of a user.
+If the <target> parameter is specified, it SHOULD be a server name or the nick of a user->
 Servers SHOULD send the query to a specific server with that name, or to the server <target>
 is connected to, respectively. Typically, it is used by clients who want to know how long
 the user in question has been idle (as typically only the server the user is directly connected
@@ -1588,7 +1635,7 @@ Reply Example:
   :calcium.libera.chat 318 val val :End of /WHOIS list.
 */
 
-std::vector<Reply>	Server::whowas(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::whowas(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1639,7 +1686,7 @@ Reply Examples:
   :server.example 369 val someone :End of WHOWAS
 */
 
-std::vector<Reply>	Server::kill(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::kill(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1696,7 +1743,7 @@ ERR_NOPRIVS (723)
 NOTE: The KILL message is weird, and I need to look at it more closely, add some examples, etc.
 */
 
-std::vector<Reply>	Server::rehash(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::rehash(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1726,7 +1773,7 @@ Example:
                                  its configuration file.
 */
 
-std::vector<Reply>	Server::restart(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::restart(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1748,7 +1795,7 @@ Numeric replies:
 ERR_NOPRIVILEGES (481)
 */
 
-std::vector<Reply>	Server::squit(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::squit(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1777,7 +1824,7 @@ ERR_NOPRIVILEGES (481)
 ERR_NOPRIVS (723)
 */
 
-std::vector<Reply>	Server::away(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::away(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1813,7 +1860,7 @@ RPL_UNAWAY (305)
 RPL_NOWAWAY (306)
 */
 
-std::vector<Reply>	Server::links(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::links(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1839,7 +1886,7 @@ RPL_LINKS (364)
 RPL_ENDOFLINKS (365)
 */
 
-std::vector<Reply>	Server::userhost(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::userhost(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1869,7 +1916,7 @@ Reply Examples:
                                   ; Reply for user syrk
 */
 
-std::vector<Reply>	Server::wallops(User &user, std::vector<std::string> args)
+std::vector<Reply>	Server::wallops(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	(void)user;
@@ -1909,47 +1956,29 @@ int	main()
 	Server						s;
 	User						u(3);
 	std::vector<std::string>	str;
-	std::vector<Reply>			r;
 
 	u.set_nickname("Freya_nickname");
 	u.set_username("Freya_username");
 	u.set_realname("Freya_realname");
 	u.set_hostname("Freya_hostname");
 	u.set_hostaddr("Freya_hostaddr");
-
+	s._usr_list.push_back(&u);
 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-	r = s.command(u, "PASS", str);
-	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	std::cout << r[0].get_message() << std::endl;
-	r.clear();
-	str.push_back("");
-	r = s.command(u, "PASS", str);
+	s.run_line(3, "PASS");
 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	std::cout << r[0].get_message() << std::endl;
-	r.clear();
-	str[0] = "pass";
-	r = s.command(u, "PASS", str);
+	s.run_line(3, "PASS  ");
 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	std::cout << r[0].get_message() << std::endl;
-	r.clear();
-	str[0] = "password";
-	r = s.command(u, "PASS", str);
+	s.run_line(3, "PASS pass");
 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	std::cout << r[0].get_message() << std::endl;
-	r.clear();
-	str[0] = "password";
-	r = s.command(u, "PASS", str);
+	s.run_line(3, "PASS password");
 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	std::cout << r[0].get_message() << std::endl;
-	r.clear();
-
-
-	(void)r;
+	s.run_line(3, "PASS password");
+	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
+	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
 	std::cout << "UwU" << std::endl;
 	return (0);
 }

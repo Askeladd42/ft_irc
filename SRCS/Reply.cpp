@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 17:31:59 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/23 17:48:45 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/24 17:39:04 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,9 @@ void	Reply::prep_to_send()
 	{
 		_message.insert(0, _user->get_hostaddr());
 		_message.insert(0, "@");
-		_message.insert(0, _user->get_hostname());
-		_message.insert(0, "!");
 		_message.insert(0, _user->get_username());
+		_message.insert(0, "!");
+		_message.insert(0, _user->get_nickname());
 	}
 }
 //cmaginot!cmaginot@localhost 001
