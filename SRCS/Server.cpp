@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/02/27 19:52:08 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/28 13:39:20 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ int		Server::polling_loop()
 {
 	// return (0);
 	int pol_ret, fd_counter, fd_cursor, new_fd, recv_ret;
-	char buffer[200];
+	char buffer[MAX_LINE_SIZE];
 
 	fd_counter = 1;
 	fd_cursor = 0;

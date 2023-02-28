@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/27 19:46:44 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/28 13:38:56 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define DEFAULT_PORT 8080
 # define DEFAULT_PWD "abc"
 # define DEFAULT_TIMEOUT 5*60*1000 // Expressed in ms
+# define MAX_LINE_SIZE 210
 
 typedef struct	e_sock_conf {
 //	void			socket_params;
