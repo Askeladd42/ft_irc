@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/28 13:38:56 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/02/28 14:41:57 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define DEFAULT_PWD "abc"
 # define DEFAULT_TIMEOUT 5*60*1000 // Expressed in ms
 # define MAX_LINE_SIZE 210
+# define NEW_CONNECTION_MESSAGE "You have connected to FT_IRC"
 
 typedef struct	e_sock_conf {
 //	void			socket_params;
@@ -44,7 +45,9 @@ typedef enum e_serv_error {
 	bind_fail,
 	listen_fail,
 	poll_fail,
-	timeout
+	timeout,
+	accept_fail,
+	recv_fail
 }							t_serv_error;
 
 // 		Domain:

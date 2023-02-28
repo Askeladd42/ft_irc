@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/02/28 13:39:20 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/02/28 15:04:58 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ str			Server::get_errval(t_serv_error errval) const
 		case listen_fail:	return("listen_fail");
 		case poll_fail:		return("poll_fail");
 		case timeout:		return("timeout");
+		case accept_fail:	return("accept_fail");
+		case recv_fail:		return("recv_fail");
 	}
 	return ("nothing");
 }
@@ -182,6 +184,7 @@ int		Server::polling_loop()
 		}
 		else
 		{
+			fd_cursor = 0;
 			while (fd_cursor < fd_counter)
 			{
 				//if (fds[fd_cursor].revents == 0)
@@ -190,32 +193,51 @@ int		Server::polling_loop()
 				if (fds[fd_cursor].fd == get_socketfd())
 				{
 					//choses
-					new_fd = 1;
-					while (new_fd != -1)
+					do
 					{
 						new_fd = accept(get_socketfd(), NULL, NULL);
 						// Errors
-						fds[fd_counter].fd = new_fd;
-						fds[fd_counter].events = POLLIN;
-						PRERR "NEW CONNECTION HIHI" ENDL;
-						send(fds[fd_counter].fd, "Hi Bitch, Welcome to IRC!!!", 27, 0);
-						PRERR "New fd is now " << new_fd ENDL
-						if (new_fd != -1)
-							fd_counter++;
+						if (new_fd < 0)
+						{
+							if (errno != EWOULDBLOCK)
+								this->errval = accept_fail;
+						}
+						else
+						{
+							fds[fd_counter].fd = new_fd;
+							fds[fd_counter].events = POLLIN;
+							PRERR "NEW CONNECTION HIHI" ENDL;
+							send(fds[fd_counter].fd, NEW_CONNECTION_MESSAGE, 28, 0);
+							PRERR "New fd is now " << new_fd ENDL
+							fd_counter++;	
+						}
 					}
+					while (new_fd != -1);
 				}
 				else
 				{
 					PRERR "TEST" ENDL
-					recv_ret = 1;
-					while (recv_ret > 0)
+					recv_ret = 11;
+					while (recv_ret == 11)
 					{
-						PRERR "TEST" ENDL
-						recv_ret = recv(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
-						//send(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
-
-						PRERR "Received this " << buffer ENDL;
-						// Errors
+						if (recv_ret <= 0)
+						{
+							// erreurs & close
+							if (errno != EWOULDBLOCK)
+								this->errval = recv_fail;
+							close(fds[fd_cursor].fd);
+							fds[fd_cursor].fd = -1;
+							fds[fd_cursor].events = 0;
+							break;
+						}
+						else
+						{
+							recv_ret = recv(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
+							PRERR "Current value of recv_ret " << recv_ret ENDL
+							//send(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
+							PRERR "Received this " << buffer ENDL;
+							// Errors	
+						}
 					}
 				}
 				fd_cursor++;
