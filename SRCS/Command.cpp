@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/27 19:52:11 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/28 14:14:51 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1848,23 +1848,16 @@ Examples:
 // 	u.set_hostname("Freya_hostname");
 // 	u.set_hostaddr("Freya_hostaddr");
 // 	s._usr_list.push_back(&u);
-// 	s.run_line(3, "BLABLA");
-// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-// 	s.run_line(3, "PASS");
-// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-// 	s.run_line(3, "PASS  ");
-// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-// 	s.run_line(3, "PASS pass");
-// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-// 	s.run_line(3, "PASS password");
-// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-// 	s.run_line(3, "PASS password");
-// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
+// 	// s.run_line(3, "BLABLA");
+// 	// s.run_line(3, "PASS");
+// 	// s.run_line(3, "PASS  ");
+// 	// s.run_line(3, "PASS pass");
+// 	// s.run_line(3, "PASS abc");
+// 	// s.run_line(3, "PASS abc");
 // 	std::cout << "UwU" << std::endl;
+// 	s.run_line(3, "CAP LS");
+// 	s.run_line(3, "PASS abc");
+// 	s.run_line(3, "NICK cmaginot");
+// 	s.run_line(3, "USER cmaginot cmaginot 127.0.0.1 :Celia MAGINOT");
 // 	return (0);
 // }

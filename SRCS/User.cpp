@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/02/23 17:48:11 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/28 14:11:30 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ User	&User::operator=(const User &other)
 		this->_hostname = other._hostname;
 		this->_nickname = other._nickname;
 		this->_realname = other._realname;
+		this->_hostaddr = other._hostaddr;
+		this->_username = other._username;
 	}
 	return *this; // do not use this;
 }
