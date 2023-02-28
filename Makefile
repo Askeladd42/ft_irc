@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+         #
+#    By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/02/22 17:46:09 by mmercore         ###   ########.fr        #
+#    Updated: 2023/02/27 19:51:06 by cmaginot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,13 +61,15 @@ INCLUDESFOLDER 	= 	INCL/
 
 SRC				=	main.cpp 	\
 					Server.cpp	\
-#					User.cpp	\
-#					Channel.cpp
+					User.cpp	\
+					Reply.cpp	\
+					Command.cpp	\
+# 					Channel.cpp
 
 
 SRCS			=	$(addprefix $(SRCSFOLDER), $(SRC))
 
-INCLUDES		=	ft_irc.hpp Server.hpp User.hpp Channel.hpp
+INCLUDES		=	ft_irc.hpp Server.hpp User.hpp Reply.hpp Command.hpp
 
 # COMPILATION AND LINKING
 

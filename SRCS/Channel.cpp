@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:57 by plam              #+#    #+#             */
-/*   Updated: 2023/02/22 15:01:05 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/27 19:16:13 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,11 @@ Channel	&Channel::operator=(const Channel &other) {
 }
 
 void	Channel::add(User &user) {
+	(void)user;
 	// use epoll(epfd, EPOLL_CTL_ADD, fd, *event) for this function ?
 }
 
 void	Channel::del(User &user) {
+	(void)user;
 	// use epoll(epfd, EPOLL_CTL_DEL, fd, *event) for this function ?
 }

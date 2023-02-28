@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/26 18:11:32 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/27 19:52:11 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,121 +49,6 @@ bool target_is_valid(std::string target)
 {
 	(void)target;
 	return (true);
-}
-
-Server::Server():_password("password")
-{
-
-}
-
-Server::~Server()
-{
-
-}
-
-User	*Server::find_user(int fd)
-{
-	for (std::vector<User *>::iterator it = _usr_list.begin(); it != _usr_list.end(); it++)
-	{
-		if ((*it)->get_fd() == fd)
-			return (*it);
-	}
-
-	return (NULL);
-}
-
-void	Server::run_line(int fd, std::string line)
-{
-	User *user = find_user(fd);
-	if (user == NULL)
-		return ;
-	std::vector<std::string>	args = pars(line);
-	std::string					cmd = args[0];
-	args.erase(args.begin());
-	std::vector<Reply>			rpls = command(user, cmd, args);
-	for (std::vector<Reply>::iterator it = rpls.begin(); it != rpls.end(); it++)
-		std::cout << rpls[0].get_message() << std::endl; // push all rpls on file instead of cout
-}
-
-std::vector<std::string>	Server::pars(std::string line)
-{
-	size_t						pos;
-	std::string					word;
-	std::vector<std::string>	args;
-	while (line.length() != 0)
-	{
-		pos = line.find(' ');
-		if (pos == std::string::npos)
-		{
-			word = line;
-			line.erase(line.begin(), line.end());
-		}
-		else
-		{
-			word = line.substr(0, pos);
-			line.erase(line.begin(), line.begin() + pos + 1);
-		}
-		args.push_back(word);
-	}
-	return args;
-}
-
-std::vector<Reply>	Server::command(User *user, std::string commandName, std::vector<std::string> args)
-{
-	t_command	t[] =
-	{
-		{"CAP", &Server::cap},
-		{"AUTHENTICATE", &Server::authenticate},
-		{"PASS", &Server::pass},
-		{"NICK", &Server::nick},
-		{"USER", &Server::user},
-		{"PING", &Server::ping},
-		{"PONG", &Server::pong},
-		{"OPER", &Server::oper},
-		{"QUIT", &Server::quit},
-		{"ERROR", &Server::error},
-		{"JOIN", &Server::join},
-		{"PART", &Server::part},
-		{"TOPIC", &Server::topic},
-		{"NAMES", &Server::names},
-		{"LIST", &Server::list},
-		{"INVITE", &Server::invite},
-		{"KICK", &Server::kick},
-		{"MOTD", &Server::motd},
-		{"VERSION", &Server::version},
-		{"ADMIN", &Server::admin},
-		{"CONNECT", &Server::connect},
-		{"LUSERS", &Server::lusers},
-		{"TIME", &Server::time},
-		{"STATS", &Server::stats},
-		{"HELP", &Server::help},
-		{"INFO", &Server::info},
-		{"MODE", &Server::mode},
-		{"PRIVMSG", &Server::privmsg},
-		{"NOTICE", &Server::notice},
-		{"WHO", &Server::who},
-		{"WHOIS", &Server::whois},
-		{"WHOWAS", &Server::whowas},
-		{"KILL", &Server::kill},
-		{"REHASH", &Server::rehash},
-		{"RESTART", &Server::restart},
-		{"SQUIT", &Server::squit},
-		{"AWAY", &Server::away},
-		{"LINKS", &Server::links},
-		{"USERHOST", &Server::userhost},
-		{"WALLOPS", &Server::wallops}
-	};
-
-	for (int i = 0; i < 40; i++)
-	{
-		if (t[i].commandName == commandName)
-			return (this->*t[i].commands) (user, args);
-	}
-	std::vector<Reply>	reply;
-	reply.push_back(ERR_UNKNOWNCOMMAND);
-	reply[0].add_user(user);
-	reply[0].add_arg(commandName);
-	return (reply);
 }
 
 std::vector<Reply>	Server::cap(User *user, std::vector<std::string> args)
@@ -1950,35 +1835,36 @@ Examples:
 
 */
 
-int	main()
-{
-	std::cout << "coucou" << std::endl;
-	Server						s;
-	User						u(3);
-	std::vector<std::string>	str;
+// int	main()
+// {
+// 	std::cout << "coucou" << std::endl;
+// 	Server						s;
+// 	User						u(3);
+// 	std::vector<std::string>	str;
 
-	u.set_nickname("Freya_nickname");
-	u.set_username("Freya_username");
-	u.set_realname("Freya_realname");
-	u.set_hostname("Freya_hostname");
-	u.set_hostaddr("Freya_hostaddr");
-	s._usr_list.push_back(&u);
-	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-	s.run_line(3, "PASS");
-	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	s.run_line(3, "PASS  ");
-	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	s.run_line(3, "PASS pass");
-	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	s.run_line(3, "PASS password");
-	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	s.run_line(3, "PASS password");
-	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
-	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
-	std::cout << "UwU" << std::endl;
-	return (0);
-}
+// 	u.set_nickname("Freya_nickname");
+// 	u.set_username("Freya_username");
+// 	u.set_realname("Freya_realname");
+// 	u.set_hostname("Freya_hostname");
+// 	u.set_hostaddr("Freya_hostaddr");
+// 	s._usr_list.push_back(&u);
+// 	s.run_line(3, "BLABLA");
+// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
+// 	s.run_line(3, "PASS");
+// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
+// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
+// 	s.run_line(3, "PASS  ");
+// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
+// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
+// 	s.run_line(3, "PASS pass");
+// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
+// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
+// 	s.run_line(3, "PASS password");
+// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
+// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
+// 	s.run_line(3, "PASS password");
+// 	// std::cout << "user, status connection : " << u.get_connected() << std::endl;
+// 	// std::cout << "reply, value : " << r[0].get_value() << std::endl;
+// 	std::cout << "UwU" << std::endl;
+// 	return (0);
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/02/23 17:47:41 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/02/27 19:29:44 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class User
 	protected:
 		int					_fd;		// fd of the User
 		int					_status;	// User's status
-		bool				_connected; // if user give the passord
+		bool				_connected; // if user give the password
 		std::string			_nickname;
 		std::string			_username;
 		std::string			_realname;

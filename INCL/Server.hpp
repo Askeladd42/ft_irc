@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/11 17:40:58 by mmercore          #+#    #+#             */
-/*   Updated: 2023/02/24 19:50:12 by mmercore         ###   ########.fr       */
+/*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
+/*   Updated: 2023/02/27 19:46:44 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ class Server {
 		// Attribut public: La classe a t'elle rencontre
 		// Un pb ?
 		t_serv_error	errval = nothing;
+		std::vector<User *>	_usr_list; // to put in private later
 
 		Server(int port=DEFAULT_PORT, str password=DEFAULT_PWD, t_sock_conf sock_conf=DEFAULT_SC);
 		~Server();
@@ -121,12 +122,60 @@ class Server {
 		int			call_listen(int fd, int backlog_hint=SOMAXCONN);
 
 		int			polling_loop();
+
+		User						*find_user(int fd);
+		void						run_line(int fd, std::string line);
+		std::vector<std::string>	pars_line(std::string line);
+		void						send_message(User *user, std::string message);
+		std::vector<Reply>			command(User *user, std::string commandName, std::vector<std::string> args);
 		
 
 	private:
-		str			_password;
-		int			_port;
-		int			_socketfd;
+		str					_password;
+		int					_port;
+		int					_socketfd;
+
+		std::vector<Reply>			cap(User *user, std::vector<std::string> args);
+		std::vector<Reply>			authenticate(User *user, std::vector<std::string> args);
+		std::vector<Reply>			pass(User *user, std::vector<std::string> args);
+		std::vector<Reply>			nick(User *user, std::vector<std::string> args);
+		std::vector<Reply>			user(User *user, std::vector<std::string> args);
+		std::vector<Reply>			ping(User *user, std::vector<std::string> args);
+		std::vector<Reply>			pong(User *user, std::vector<std::string> args);
+		std::vector<Reply>			oper(User *user, std::vector<std::string> args);
+		std::vector<Reply>			quit(User *user, std::vector<std::string> args);
+		std::vector<Reply>			error(User *user, std::vector<std::string> args);
+		std::vector<Reply>			join(User *user, std::vector<std::string> args);
+		std::vector<Reply>			part(User *user, std::vector<std::string> args);
+		std::vector<Reply>			topic(User *user, std::vector<std::string> args);
+		std::vector<Reply>			names(User *user, std::vector<std::string> args);
+		std::vector<Reply>			list(User *user, std::vector<std::string> args);
+		std::vector<Reply>			invite(User *user, std::vector<std::string> args);
+		std::vector<Reply>			kick(User *user, std::vector<std::string> args);
+		std::vector<Reply>			motd(User *user, std::vector<std::string> args);
+		std::vector<Reply>			version(User *user, std::vector<std::string> args);
+		std::vector<Reply>			admin(User *user, std::vector<std::string> args);
+		std::vector<Reply>			connect(User *user, std::vector<std::string> args);
+		std::vector<Reply>			lusers(User *user, std::vector<std::string> args);
+		std::vector<Reply>			time(User *user, std::vector<std::string> args);
+		std::vector<Reply>			stats(User *user, std::vector<std::string> args);
+		std::vector<Reply>			help(User *user, std::vector<std::string> args);
+		std::vector<Reply>			info(User *user, std::vector<std::string> args);
+		std::vector<Reply>			mode(User *user, std::vector<std::string> args);
+		std::vector<Reply>			privmsg(User *user, std::vector<std::string> args);
+		std::vector<Reply>			notice(User *user, std::vector<std::string> args);
+		std::vector<Reply>			who(User *user, std::vector<std::string> args);
+		std::vector<Reply>			whois(User *user, std::vector<std::string> args);
+		std::vector<Reply>			whowas(User *user, std::vector<std::string> args);
+		std::vector<Reply>			kill(User *user, std::vector<std::string> args);
+		std::vector<Reply>			rehash(User *user, std::vector<std::string> args);
+		std::vector<Reply>			restart(User *user, std::vector<std::string> args);
+		std::vector<Reply>			squit(User *user, std::vector<std::string> args);
+		std::vector<Reply>			away(User *user, std::vector<std::string> args);
+		std::vector<Reply>			links(User *user, std::vector<std::string> args);
+		std::vector<Reply>			userhost(User *user, std::vector<std::string> args);
+		std::vector<Reply>			wallops(User *user, std::vector<std::string> args);
+
 
 		//https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html
 		// Equivalent a struct sockaddr* en cast, supporte plus d'implementations
@@ -134,5 +183,11 @@ class Server {
 		spollfd	fds[100];
 		
 };
+
+typedef struct	s_command
+{
+	std::string	commandName;
+	std::vector<Reply>	(Server::*commands)(User *user, std::vector<std::string> args);
+}				t_command;
 
 #endif

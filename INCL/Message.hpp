@@ -3,19 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 17:40:50 by plam              #+#    #+#             */
-/*   Updated: 2023/02/14 16:05:46 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/27 19:49:06 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __MESSAGE_HPP__
 # define __MESSAGE_HPP__
-
-# include "User.hpp"
-# include "Command.hpp"
-# include "Server.hpp"
+# include "ft_irc.hpp"
 
 class Message {
 	private:

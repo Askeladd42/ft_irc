@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:51:43 by plam              #+#    #+#             */
-/*   Updated: 2023/02/14 15:48:29 by plam             ###   ########.fr       */
+/*   Updated: 2023/02/27 19:13:07 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __CHANNEL_HPP__
 # define __CHANNEL_HPP__
-# include "User.hpp"
+# include "ft_irc.hpp"
 
 class Channel {
 	private:
