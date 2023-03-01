@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/02/28 14:14:51 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/01 16:32:27 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -374,9 +374,16 @@ None
 std::vector<Reply>	Server::oper(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
-	
+	if (*(args.begin()) == "" && *(args.end()) == "")
+		reply.push_back(ERR_NEEDMOREPARAMS);
+	else if (user->get_connected()) {
+		if (args[1].compare(this->_password))		//temporary, need a adequate comparing value for password
+			reply.push_back(ERR_PASSWDMISMATCH);
+		else if (user->get_hostname() != args[0])	//temporary, need a adequate comparing value for hostname
+			reply.push_back(ERR_NOOPERHOST);
+		else
+			reply.push_back(RPL_YOUREOPER);
+	}
 	return (reply);
 }
 /*
