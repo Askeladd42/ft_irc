@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/02/28 15:04:58 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/03/06 15:53:57 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,10 @@ int		Server::polling_loop()
 							PRERR "NEW CONNECTION HIHI" ENDL;
 							send(fds[fd_counter].fd, NEW_CONNECTION_MESSAGE, 28, 0);
 							PRERR "New fd is now " << new_fd ENDL
-							fd_counter++;	
+
+							User	user(fds[fd_counter].fd);
+							_usr_list.push_back(&user);
+							fd_counter++;
 						}
 					}
 					while (new_fd != -1);
@@ -234,6 +237,7 @@ int		Server::polling_loop()
 						{
 							recv_ret = recv(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
 							PRERR "Current value of recv_ret " << recv_ret ENDL
+							run_line(fds[fd_cursor].fd, buffer);
 							//send(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
 							PRERR "Received this " << buffer ENDL;
 							// Errors	
@@ -296,7 +300,8 @@ std::vector<std::string>	Server::pars_line(std::string line)
 
 void	Server::send_message(User *user, std::string message)
 {
-	std::cout << "send message to fd " << user->get_fd() << " : " << message << std::endl; // push all rpls on file instead of cout
+	send(user->get_fd(), message.c_str(), message.length(), 0);
+	// std::cout << "send message to fd " << user->get_fd() << " : " << message << std::endl; // push all rpls on file instead of cout
 }
 
 std::vector<Reply>	Server::command(User *user, std::string commandName, std::vector<std::string> args)

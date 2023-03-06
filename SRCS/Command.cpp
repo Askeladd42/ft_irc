@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/01 16:39:25 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/06 15:49:15 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -374,7 +374,7 @@ None
 std::vector<Reply>	Server::oper(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	if (*(args.begin()) == "" && *(args.end()) == "" || args.size() == 0)
+	if (*(args.begin()) == "" && (*(args.end()) == "" || args.size() == 0))
 		reply.push_back(ERR_NEEDMOREPARAMS);
 	else if (user->get_connected()) {
 		if (args[1].compare(this->_password))		//temporary, need a adequate comparing value for password
