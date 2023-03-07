@@ -6,7 +6,7 @@
 #    By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/02/27 19:51:06 by cmaginot         ###   ########.fr        #
+#    Updated: 2023/03/07 16:21:40 by cmaginot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,6 +60,7 @@ INCLUDESFOLDER 	= 	INCL/
 # SOURCES
 
 SRC				=	main.cpp 	\
+					utils.cpp	\
 					Server.cpp	\
 					User.cpp	\
 					Reply.cpp	\
@@ -86,7 +87,7 @@ CXX				=	clang++
 
 CXXFLAGS		=	-Wall -Werror -Wextra
 
-CXXFLAGS		+= -g3 #-std=c90 -pedantic-errors
+CXXFLAGS		+= -g3 #-std=c++98 -pedantic-errors
 
 LFLAGS			=
 

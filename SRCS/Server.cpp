@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/06 15:53:57 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/07 16:19:15 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,8 +210,20 @@ int		Server::polling_loop()
 							send(fds[fd_counter].fd, NEW_CONNECTION_MESSAGE, 28, 0);
 							PRERR "New fd is now " << new_fd ENDL
 
+
+
+
+
 							User	user(fds[fd_counter].fd);
+							user.set_hostname("User_hostname");
+							user.set_hostaddr("User_hostaddr");
 							_usr_list.push_back(&user);
+
+
+
+
+
+
 							fd_counter++;
 						}
 					}
@@ -237,7 +249,7 @@ int		Server::polling_loop()
 						{
 							recv_ret = recv(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
 							PRERR "Current value of recv_ret " << recv_ret ENDL
-							run_line(fds[fd_cursor].fd, buffer);
+							run_buffer(fds[fd_cursor].fd, buffer);
 							//send(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
 							PRERR "Received this " << buffer ENDL;
 							// Errors	
@@ -260,6 +272,36 @@ User	*Server::find_user(int fd)
 	}
 
 	return (NULL);
+}
+
+void	Server::run_buffer(int fd, std::string buffer)
+{
+	std::vector<std::string>	line = pars_line(buffer);
+	for (std::vector<std::string>::iterator it = line.begin(); it != line.end(); it++)
+		run_line(fd, *it);
+}
+
+std::vector<std::string>	Server::pars_buffer(std::string line)
+{
+	size_t						pos;
+	std::string					word;
+	std::vector<std::string>	args;
+	while (line.length() != 0)
+	{
+		pos = line.find('\n');
+		if (pos == std::string::npos)
+		{
+			word = line;
+			line.erase(line.begin(), line.end());
+		}
+		else
+		{
+			word = line.substr(0, pos);
+			line.erase(line.begin(), line.begin() + pos + 1);
+		}
+		args.push_back(word);
+	}
+	return args;
 }
 
 void	Server::run_line(int fd, std::string line)
@@ -300,15 +342,15 @@ std::vector<std::string>	Server::pars_line(std::string line)
 
 void	Server::send_message(User *user, std::string message)
 {
+	std::cout << "send message to fd " << user->get_fd() << " : " << message << std::endl; // push all rpls on file instead of cout
 	send(user->get_fd(), message.c_str(), message.length(), 0);
-	// std::cout << "send message to fd " << user->get_fd() << " : " << message << std::endl; // push all rpls on file instead of cout
 }
 
 std::vector<Reply>	Server::command(User *user, std::string commandName, std::vector<std::string> args)
 {
 	t_command	t[] =
 	{
-		{"CAP", &Server::cap},
+		// {"CAP", &Server::cap},
 		{"AUTHENTICATE", &Server::authenticate},
 		{"PASS", &Server::pass},
 		{"NICK", &Server::nick},

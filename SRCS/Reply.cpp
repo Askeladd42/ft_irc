@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 17:31:59 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/06 16:00:17 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/06 19:14:11 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,12 @@ void	Reply::add_user(User *user)
 	_user = user;
 	if (_message.compare("") != 0)
 	{
-		found = _message.find("<client>");
-		_message.replace(found,size,_user->get_nickname());
+		if (_user->get_nickname().compare("") != 0)
+		{
+			found = _message.find("<client>");
+			if (found != std::string::npos)
+				_message.replace(found,size,_user->get_nickname());
+		}
 	}
 }
 
@@ -97,3 +101,8 @@ void	Reply::prep_to_send()
 	}
 }
 //cmaginot!cmaginot@localhost 001
+
+// CAP LS
+// PASS abc
+// NICK cmaginot
+// USER cmaginot cmaginot 127.0.0.1 :Celien MAGINOT

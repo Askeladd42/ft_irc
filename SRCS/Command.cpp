@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/06 15:49:15 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/06 18:37:38 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1846,14 +1846,11 @@ Examples:
 // {
 // 	std::cout << "coucou" << std::endl;
 // 	Server						s;
-// 	User						u(3);
+// 	User						u(1);
 // 	std::vector<std::string>	str;
 
-// 	u.set_nickname("Freya_nickname");
-// 	u.set_username("Freya_username");
-// 	u.set_realname("Freya_realname");
-// 	u.set_hostname("Freya_hostname");
-// 	u.set_hostaddr("Freya_hostaddr");
+// 	u.set_hostname("User_hostname");
+// 	u.set_hostaddr("User_hostaddr");
 // 	s._usr_list.push_back(&u);
 // 	// s.run_line(3, "BLABLA");
 // 	// s.run_line(3, "PASS");
@@ -1862,9 +1859,9 @@ Examples:
 // 	// s.run_line(3, "PASS abc");
 // 	// s.run_line(3, "PASS abc");
 // 	std::cout << "UwU" << std::endl;
-// 	s.run_line(3, "CAP LS");
-// 	s.run_line(3, "PASS abc");
-// 	s.run_line(3, "NICK cmaginot");
-// 	s.run_line(3, "USER cmaginot cmaginot 127.0.0.1 :Celia MAGINOT");
+// 	s.run_line(1, "CAP LS");
+// 	s.run_line(1, "PASS abc");
+// 	s.run_line(1, "NICK cmaginot");
+// 	s.run_line(1, "USER cmaginot cmaginot 127.0.0.1 :Celia MAGINOT");
 // 	return (0);
 // }

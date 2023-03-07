@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/06 15:58:16 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/07 16:19:42 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define DEFAULT_PWD "abc"
 # define DEFAULT_TIMEOUT 5*60*1000 // Expressed in ms
 # define MAX_LINE_SIZE 210
-# define NEW_CONNECTION_MESSAGE "You have connected to FT_IRC"
+# define NEW_CONNECTION_MESSAGE "You have connected to FT_IRC\n"
 
 typedef struct	e_sock_conf {
 //	void			socket_params;
@@ -128,6 +128,8 @@ class Server {
 		int			polling_loop();
 
 		User						*find_user(int fd);
+		void						run_buffer(int fd, std::string line);
+		std::vector<std::string>	pars_buffer(std::string buffer);
 		void						run_line(int fd, std::string line);
 		std::vector<std::string>	pars_line(std::string line);
 		void						send_message(User *user, std::string message);
