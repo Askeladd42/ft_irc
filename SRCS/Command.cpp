@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/08 15:23:37 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/08 15:40:06 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -974,12 +974,15 @@ RPL_ENDOFMOTD (376)
 std::vector<Reply>	Server::version(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	
+	(void)user;
+
 	if (args[0] != "" && args.size() == 1) {
 		if (this->_name.compare(args[0])) {
 			reply.push_back(RPL_VERSION);
 			reply.push_back(RPL_ISUPPORT);		//to see how to match the target's version
 		}
+		//else if (user->_name.compare(args[0]))	// to see with a correct client name
+		//	reply.push_back(RPL_ISUPPORT);
 		else
 			reply.push_back(ERR_NOSUCHSERVER);
 	return (reply);
