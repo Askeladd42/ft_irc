@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 17:31:59 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/06 19:14:11 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/08 07:54:06 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,21 @@ Reply::Reply(int value, std::string message) : _value(value), _message(message)
 	_user = NULL;
 }
 
-void	Reply::add_arg(std::string arg)
+void	Reply::add_arg(std::string arg, std::string to_replace)
 {
-	int i = 0;
+	std::size_t found, size;
+	std::string balise = "<";
+	balise.append(to_replace);
+	balise.append(">");
+	size = balise.length();
 
-	for (std::string::iterator it = _message.begin(); it != _message.end(); it++)
+	if (_message.compare("") != 0)
 	{
-		if (*it == '<')
+		found = _message.find(balise);
+		if (found != std::string::npos)
 		{
-			_message.erase(i, _message.find('>') - i + 1);
-			_message.insert(i, arg);
-			break;
+			_message.replace(found, size, arg);
 		}
-		else
-			i++;
 	}
 }
 
@@ -46,11 +47,15 @@ void	Reply::add_user(User *user)
 	_user = user;
 	if (_message.compare("") != 0)
 	{
-		if (_user->get_nickname().compare("") != 0)
+		found = _message.find("<client>");
+		if (found != std::string::npos)
 		{
-			found = _message.find("<client>");
-			if (found != std::string::npos)
+			if (_user->get_nickname().compare("") != 0)
 				_message.replace(found,size,_user->get_nickname());
+			else
+			{
+				_message.replace(found,size,"Unknow_user");
+			}
 		}
 	}
 }
@@ -82,27 +87,24 @@ std::string	Reply::get_message() const
 	return (_message);
 }
 
-void	Reply::prep_to_send()
+void	Reply::prep_to_send(int mode)
 {
 	std::stringstream s_value;
 	s_value << _value;
 	std::string value_str = s_value.str();
 
-	_message.insert(0, " ");
-	_message.insert(0, value_str);
-	_message.insert(0, " ");
-	if (_user)
+	if (mode > 0)
 	{
-		_message.insert(0, _user->get_hostaddr());
-		_message.insert(0, "@");
-		_message.insert(0, _user->get_username());
-		_message.insert(0, "!");
-		_message.insert(0, _user->get_nickname());
+		_message.insert(0, " ");
+		_message.insert(0, value_str);
+		_message.insert(0, " ");
+		if (_user)
+		{
+			_message.insert(0, _user->get_hostaddr());
+			_message.insert(0, "@");
+			_message.insert(0, _user->get_username());
+			_message.insert(0, "!");
+			_message.insert(0, _user->get_nickname());
+		}
 	}
 }
-//cmaginot!cmaginot@localhost 001
-
-// CAP LS
-// PASS abc
-// NICK cmaginot
-// USER cmaginot cmaginot 127.0.0.1 :Celien MAGINOT

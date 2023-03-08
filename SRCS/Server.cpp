@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/07 16:19:15 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/08 10:11:24 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,9 +206,9 @@ int		Server::polling_loop()
 						{
 							fds[fd_counter].fd = new_fd;
 							fds[fd_counter].events = POLLIN;
-							PRERR "NEW CONNECTION HIHI" ENDL;
-							send(fds[fd_counter].fd, NEW_CONNECTION_MESSAGE, 28, 0);
-							PRERR "New fd is now " << new_fd ENDL
+							PRERR "\033[31mNEW CONNECTION HIHI\033[0m" ENDL;
+							// send(fds[fd_counter].fd, NEW_CONNECTION_MESSAGE, 28, 0);
+							PRERR "\033[31mNew fd is now \033[0m" << new_fd ENDL
 
 
 
@@ -233,6 +233,7 @@ int		Server::polling_loop()
 				{
 					PRERR "TEST" ENDL
 					recv_ret = 11;
+					std::string full_buffer = "";
 					while (recv_ret == 11)
 					{
 						if (recv_ret <= 0)
@@ -247,14 +248,27 @@ int		Server::polling_loop()
 						}
 						else
 						{
+							for (int i = 0; i < MAX_LINE_SIZE; i++)
+								buffer[i] = 0;
 							recv_ret = recv(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
-							PRERR "Current value of recv_ret " << recv_ret ENDL
-							run_buffer(fds[fd_cursor].fd, buffer);
+							PRERR "\033[31mCurrent value of recv_ret\033[0m" << recv_ret ENDL
+							PRERR "\033[31mReceived this :" << std::endl;
+							PRERR "<<" << buffer << ">>\033[0m" ENDL;
+
+
+							full_buffer.append(buffer);
+
+
+
+
+
 							//send(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
-							PRERR "Received this " << buffer ENDL;
 							// Errors	
 						}
 					}
+					PRERR "\033[31m go running buffer\033[0m" ENDL;
+					run_buffer(fds[fd_cursor].fd, buffer);
+					full_buffer.clear();
 				}
 				fd_cursor++;
 			}
@@ -270,45 +284,55 @@ User	*Server::find_user(int fd)
 		if ((*it)->get_fd() == fd)
 			return (*it);
 	}
-
 	return (NULL);
 }
 
 void	Server::run_buffer(int fd, std::string buffer)
 {
-	std::vector<std::string>	line = pars_line(buffer);
-	for (std::vector<std::string>::iterator it = line.begin(); it != line.end(); it++)
-		run_line(fd, *it);
-}
-
-std::vector<std::string>	Server::pars_buffer(std::string line)
-{
-	size_t						pos;
-	std::string					word;
-	std::vector<std::string>	args;
-	while (line.length() != 0)
-	{
-		pos = line.find('\n');
-		if (pos == std::string::npos)
-		{
-			word = line;
-			line.erase(line.begin(), line.end());
-		}
-		else
-		{
-			word = line.substr(0, pos);
-			line.erase(line.begin(), line.begin() + pos + 1);
-		}
-		args.push_back(word);
-	}
-	return args;
-}
-
-void	Server::run_line(int fd, std::string line)
-{
 	User *user = find_user(fd);
 	if (user == NULL)
 		return ;
+	std::vector<std::string>	line = pars_buffer(buffer);
+	for (std::vector<std::string>::iterator it = line.begin(); it != line.end(); it++)
+	{
+		if (it->compare("") != 0)
+		{
+			std::cout << "\033[1;32m" << user->get_fd() << " <- \033[1;36m|\033[0m" << *it << "\033[1;36m|\033[0m" << std::endl;
+			// push all rpls on file named log instead of cout
+		}
+	}
+	for (std::vector<std::string>::iterator it = line.begin(); it != line.end(); it++)
+		run_line(user, *it);
+}
+
+std::vector<std::string>	Server::pars_buffer(std::string &buffer)
+{
+	size_t						pos;
+	std::string					line;
+	std::vector<std::string>	lines;
+	while (buffer.length() != 0)
+	{
+		// std::cout << "\033[1;32m|" << buffer << "|\033[0m" << std::endl;
+		pos = buffer.find('\n');
+		// std::cout << "\033[1;34m<>" << pos << "<>\033[0m" << std::endl;
+		if (pos == std::string::npos)
+		{
+			line = buffer.substr(0, buffer.length());
+			buffer.erase(buffer.begin(), buffer.end());
+		}
+		else
+		{
+			line = buffer.substr(0, pos - 1); // what the fuck is the -1 to work ?!
+			// std::cout << "\033[1;33m~" << line << " ~\033[0m" << std::endl;
+			buffer.erase(buffer.begin(), buffer.begin() + pos + 1);
+		}
+		lines.push_back(line);
+	}
+	return lines;
+}
+
+void	Server::run_line(User *user, std::string &line)
+{
 	std::vector<std::string>	args = pars_line(line);
 	std::string					cmd = args[0];
 	args.erase(args.begin());
@@ -317,7 +341,7 @@ void	Server::run_line(int fd, std::string line)
 		send_message(user, it->get_message());
 }
 
-std::vector<std::string>	Server::pars_line(std::string line)
+std::vector<std::string>	Server::pars_line(std::string &line)
 {
 	size_t						pos;
 	std::string					word;
@@ -342,8 +366,14 @@ std::vector<std::string>	Server::pars_line(std::string line)
 
 void	Server::send_message(User *user, std::string message)
 {
-	std::cout << "send message to fd " << user->get_fd() << " : " << message << std::endl; // push all rpls on file instead of cout
-	send(user->get_fd(), message.c_str(), message.length(), 0);
+	if (message.compare("") != 0)
+	{
+		send(user->get_fd(), message.c_str(), message.length(), 0);
+		message.erase(message.begin() + message.size() - 1);
+		std::cout << "\033[1;35m" << user->get_fd() << " -> \033[1;36m|\033[0m";
+		std::cout << message << "\033[1;36m|\033[0m" << std::endl;
+		// push all rpls on file named log instead of cout
+	}
 }
 
 std::vector<Reply>	Server::command(User *user, std::string commandName, std::vector<std::string> args)
@@ -391,8 +421,7 @@ std::vector<Reply>	Server::command(User *user, std::string commandName, std::vec
 		{"USERHOST", &Server::userhost},
 		{"WALLOPS", &Server::wallops}
 	};
-
-	for (int i = 0; i < 40; i++)
+	for (int i = 0; i < 39; i++)
 	{
 		if (t[i].commandName == commandName)
 			return (this->*t[i].commands) (user, args);
@@ -400,7 +429,7 @@ std::vector<Reply>	Server::command(User *user, std::string commandName, std::vec
 	std::vector<Reply>	reply;
 	reply.push_back(ERR_UNKNOWNCOMMAND);
 	reply[0].add_user(user);
-	reply[0].add_arg(commandName);
+	reply[0].add_arg(commandName, "command");
 	return (reply);
 }
 

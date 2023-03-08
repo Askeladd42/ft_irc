@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 17:32:30 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/07 16:20:21 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/08 09:21:06 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef REPLY_HPP
@@ -33,15 +33,15 @@ class Reply
 		Reply(const Reply &reply);
 		~Reply();
 		Reply		&operator=(const Reply &other);
-		void		add_arg(std::string arg);
+		void		add_arg(std::string arg, std::string to_replace);
 		void		add_user(User *user);
 		int			get_value() const;
 		std::string	get_message() const;
-		void		prep_to_send();
+		void		prep_to_send(int mode = 0);
 
 };
 
-#define NO_REPLY Reply(0, "\n")
+#define NO_REPLY Reply(0, "")
 #define RPL_WELCOME Reply(001, "<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]\n")
 #define RPL_YOURHOST Reply(002, "<client> :Your host is <servername>, running version <version>\n")
 #define RPL_CREATED Reply(003, "<client> :This server was created <datetime>\n")
@@ -60,7 +60,7 @@ class Reply
 #define RPL_STATSOLINE Reply(243, "\n")
 #define RPL_STATSHLINE Reply(244, "\n")
 #define RPL_LUSERCLIENT Reply(251, "<client> :There are <u> users and <i> invisible on <s> servers\n")
-#define RPL_LUSEROP Reply(252, "<client> <ops> :operator(s) online\n"),
+#define RPL_LUSEROP Reply(252, "<client> <ops> :operator(s) online\n")
 #define RPL_LUSERUNKNOWN Reply(253, "<client> <connections> :unknown connection(s)\n")
 #define RPL_LUSERCHANNELS Reply(254, "<client> <channels> :channels formed\n")
 #define RPL_LUSERME Reply(255, "<client> :I have <c> clients and <s> servers\n")
@@ -141,7 +141,7 @@ class Reply
 #define ERR_NONICKNAMEGIVEN Reply(431, "<client> :No Nickname Given\n")
 #define ERR_ERRONEUSNICKNAME Reply(432, "<client> <nick> :Erroneus nickname\n")
 #define ERR_NICKNAMEINUSE Reply(433, "<client> <nick> :Nickname is already in use\n")
-#define ERR_NICKCOLLISION Reply(436, "<client> <nick> :Nickname collision\n")
+#define ERR_NICKCOLLISION Reply(436, "<client> <nick> :Nickname collision\n") // not usefull on this project
 #define ERR_USERNOTINCHANNEL Reply(441, "<client> <nick> <channel> :They aren't on that channel\n")
 #define ERR_NOTONCHANNEL Reply(442, "<client> <channel> :You're not on that channel\n")
 #define ERR_USERONCHANNEL Reply(443, "<client> <nick> <channel> :is already on channel\n")
@@ -188,5 +188,9 @@ class Reply
 
 #define ERR_TOKENMISMATCH Reply(0, "<client> :token incorrect\n")
 #define RPL_PONG Reply(0, "\n")
+#define RPL_NICKSET Reply(0, "NICK :<client>\n")
+
+
+#define ERR_ERROSAMENICKNAME Reply(434, "<client> :you already use this nickname\n")
 
 # endif

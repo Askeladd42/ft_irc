@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/07 16:19:42 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/08 08:19:48 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,10 +128,10 @@ class Server {
 		int			polling_loop();
 
 		User						*find_user(int fd);
-		void						run_buffer(int fd, std::string line);
-		std::vector<std::string>	pars_buffer(std::string buffer);
-		void						run_line(int fd, std::string line);
-		std::vector<std::string>	pars_line(std::string line);
+		void						run_buffer(int fd, std::string buffer);
+		std::vector<std::string>	pars_buffer(std::string &buffer);
+		void						run_line(User *user, std::string &line);
+		std::vector<std::string>	pars_line(std::string &line);
 		void						send_message(User *user, std::string message);
 		std::vector<Reply>			command(User *user, std::string commandName, std::vector<std::string> args);
 		
@@ -140,6 +140,9 @@ class Server {
 		str					_password;
 		int					_port;
 		int					_socketfd;
+
+		bool						is_nickname_valid(std::string nickname);
+		bool						is_nickname_free(std::string nickname);
 
 		std::vector<Reply>			cap(User *user, std::vector<std::string> args);
 		std::vector<Reply>			authenticate(User *user, std::vector<std::string> args);

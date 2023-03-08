@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/06 18:37:38 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/08 12:48:51 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,27 @@
 #include "../INCL/Command.hpp"
 
 
-bool is_nickname_valid(std::string nickname)
+bool Server::is_nickname_valid(std::string nickname)
 {
-	(void)nickname;
+	std::string autorise_special_char = "0123456789`|^_-{}[]\\"; // valid char exept for begin
+	if (nickname.compare("") == 0)
+		return (false);
+	for (std::string::iterator it = nickname.begin(); it != nickname.end(); it++)
+	{
+		if (!((*it >= 'a' && *it <= 'z') || (*it >= 'A' && *it <= 'Z') || \
+			(autorise_special_char.find(*it) != std::string::npos && it != nickname.begin())))
+			return (false);
+	}
 	return (true);
 }
 
-bool is_nickname_free(std::string nickname)
+bool Server::is_nickname_free(std::string nickname)
 {
-	(void)nickname;
+	for (std::vector<User *>::iterator it = _usr_list.begin(); it != _usr_list.end(); it++)
+	{
+		if ((*it)->get_nickname() == nickname)
+			return (false);
+	}
 	return (true);
 }
 
@@ -102,7 +114,10 @@ std::vector<Reply>	Server::pass(User *user, std::vector<std::string> args)
 	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (args.empty() == true || args[password].compare("") == 0)
+	{
 		reply.push_back(ERR_NEEDMOREPARAMS);
+		reply[0].add_arg("PASS", "command");
+	}
 	else if (user->get_connected() == true)
 		reply.push_back(ERR_ALREADYREGISTERED);
 	else if (args[password].compare(this->_password))
@@ -113,7 +128,6 @@ std::vector<Reply>	Server::pass(User *user, std::vector<std::string> args)
 		reply.push_back(NO_REPLY);
 	}
 	reply[0].add_user(user);
-	reply[0].add_arg("PASS");
 	reply[0].prep_to_send();
 	return(reply);
 }
@@ -157,17 +171,24 @@ std::vector<Reply>	Server::nick(User *user, std::vector<std::string> args)
 	else if (args.empty() == true || args[nickname].compare("") == 0)
 		reply.push_back(ERR_NONICKNAMEGIVEN);
 	else if (is_nickname_valid(args[nickname]) == false)
+	{
 		reply.push_back(ERR_ERRONEUSNICKNAME);
+		reply[0].add_arg(args[0], "nick");
+	}
+	else if (args[nickname] == user->get_nickname())
+		reply.push_back(ERR_ERROSAMENICKNAME);
 	else if (is_nickname_free(args[nickname]) == false)
+	{
 		reply.push_back(ERR_NICKNAMEINUSE);
+		reply[0].add_arg(args[0], "nick");
+	}
 	else
 	{
-		reply.push_back(NO_REPLY);
-		reply[0].add_user(user);
-		reply[0].add_arg(args[0]);
 		user->set_nickname(args[nickname]);
+		reply.push_back(RPL_NICKSET);
 	}
-	reply[0].add_arg(user->get_nickname());
+	reply[0].add_user(user);
+	reply[0].prep_to_send();
 	return(reply);
 }
 /*
@@ -207,29 +228,63 @@ check return when sucess
 
 std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 {
-	std::vector<Reply>	reply;
-	int 				username = 0;
-	int					realname = 3;
+	std::vector<Reply>	reply;//, reply_motd;
+	// int 				username = 0;
+	// int					realname = 3;
+	(void)args;
 
 	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
-	else if (args.empty() == true || args[username].compare("") == 0 || args.size() < 3 || args[realname].compare(""))		// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
-		reply.push_back(ERR_NEEDMOREPARAMS);
+	// else if (args.empty() == true || args[username].compare("") == 0 || args.size() < 3 || args[realname].compare(""))		// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
+	// 	reply.push_back(ERR_NEEDMOREPARAMS);
 	else if (user->get_status() == USR_STAT_REGISTERED)
 		reply.push_back(ERR_ALREADYREGISTERED);
 	else
 	{
 		// manage if username > length max and if it's valid,
 		// cut it or put default value otherwise
-		reply.push_back(NO_REPLY);
-		reply[0].add_user(user);
-		reply[0].add_arg(args[0]);
-		user->set_username(args[username]);
+		// user->set_username(args[username]);
 		user->set_status(USR_STAT_REGISTERED);
+		reply.push_back(RPL_WELCOME);
+		reply[0].add_arg("", "networkname");
+		reply[0].add_arg("", "nick");
+		reply[0].add_arg("", "user");
+		reply[0].add_arg("", "host");
+		// remove '[' and ']'
+		reply.push_back(RPL_YOURHOST);
+		reply[1].add_arg("", "servername");
+		reply[1].add_arg("", "version");
+		reply.push_back(RPL_CREATED);
+		reply[2].add_arg("", "datetime");
+		reply.push_back(RPL_MYINFO);
+		reply[3].add_arg("", "servername");
+		reply[3].add_arg("", "version");
+		reply[3].add_arg("", "available user modes");
+		reply[3].add_arg("", "available channel modes");
+		// do something with [<channel modes with a parameter>]
+		reply.push_back(RPL_LUSERCLIENT);
+		reply[4].add_arg("", "u"); // number of user connected
+		reply[4].add_arg("", "i"); // number of invisible user
+		reply[4].add_arg("", "s"); // number of server = 0
+		reply.push_back(RPL_LUSEROP);
+		reply[5].add_arg("", "ops"); // number of operators connected
+		reply.push_back(RPL_LUSERUNKNOWN);
+		reply[6].add_arg("", "connections"); // number of connections
+		reply.push_back(RPL_LUSERCHANNELS);
+		reply[7].add_arg("", "channels"); // number of channel
+		reply.push_back(RPL_LUSERME);
+		reply[8].add_arg("", "c"); // number of clients
+		reply[8].add_arg("", "channels"); // number of server = 0
 	}
-	reply[0].add_arg(user->get_nickname());
+	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
+	{
+		it->add_user(user);
+		it->prep_to_send();
+	}
+	// reply_motd = motd(user);// to do
+	// reply.append(reply_motd);
 	return (reply);
 }
 /*
@@ -292,11 +347,11 @@ std::vector<Reply>	Server::ping(User *user, std::vector<std::string> args)
 	else
 	{
 		reply.push_back(RPL_PONG);
-		reply[0].add_arg(user->get_nickname());
+		reply[0].add_arg(user->get_nickname(), "");
 		return (reply);
 	}
 	reply[0].add_user(user);
-	reply[0].add_arg("PING");
+	reply[0].add_arg("PING", "");
 	return (reply);
 }
 /*
@@ -352,7 +407,7 @@ std::vector<Reply>	Server::pong(User *user, std::vector<std::string> args)
 		return (reply);
 	}
 	reply[0].add_user(user);
-	reply[0].add_arg("PING");
+	reply[0].add_arg("PING", "");
 	return (reply);
 }
 /*
@@ -1842,26 +1897,135 @@ Examples:
 
 */
 
+// to run these test uncomment (return (0) on Server::polling_loop) and comment 
+// send(user->get_fd(), message.c_str(), message.length(), 0); on Server::send_message()
+// then compile with :
+// clang++ -Wall -Wextra -Werror SRCS/Command.cpp SRCS/User.cpp SRCS/Reply.cpp SRCS/Server.cpp
+
 // int	main()
 // {
 // 	std::cout << "coucou" << std::endl;
 // 	Server						s;
-// 	User						u(1);
+// 	User						u1(1); // irssi connection
+// 	User						u2(2); // unknow command
+// 	User						u3(3); // banned
+// 	User						u4(4); // pass
+// 	User						u5(5); // nick
+// 	User						u6(6); // nick
+// 	User						u7(7); // nick
 // 	std::vector<std::string>	str;
 
-// 	u.set_hostname("User_hostname");
-// 	u.set_hostaddr("User_hostaddr");
-// 	s._usr_list.push_back(&u);
-// 	// s.run_line(3, "BLABLA");
-// 	// s.run_line(3, "PASS");
-// 	// s.run_line(3, "PASS  ");
-// 	// s.run_line(3, "PASS pass");
-// 	// s.run_line(3, "PASS abc");
-// 	// s.run_line(3, "PASS abc");
-// 	std::cout << "UwU" << std::endl;
-// 	s.run_line(1, "CAP LS");
-// 	s.run_line(1, "PASS abc");
-// 	s.run_line(1, "NICK cmaginot");
-// 	s.run_line(1, "USER cmaginot cmaginot 127.0.0.1 :Celia MAGINOT");
+// 	u1.set_hostname("User1_hostname");
+// 	u1.set_hostaddr("User1_hostaddr");
+// 	u2.set_hostname("User2_hostname");
+// 	u2.set_hostaddr("User2_hostaddr");
+// 	u3.set_hostname("User3_hostname");
+// 	u3.set_hostaddr("User3_hostaddr");
+// 	u3.set_status(USR_STAT_BAN);
+// 	u4.set_hostname("User4_hostname");
+// 	u4.set_hostaddr("User4_hostaddr");
+// 	u5.set_hostname("User5_hostname");
+// 	u5.set_hostaddr("User5_hostaddr");
+// 	u6.set_hostname("User6_hostname");
+// 	u6.set_hostaddr("User6_hostaddr");
+// 	u7.set_hostname("User7_hostname");
+// 	u7.set_hostaddr("User7_hostaddr");
+
+// 	s._usr_list.push_back(&u1);
+// 	s._usr_list.push_back(&u2);
+// 	s._usr_list.push_back(&u3);
+// 	s._usr_list.push_back(&u4);
+// 	s._usr_list.push_back(&u5);
+// 	s._usr_list.push_back(&u6);
+// 	s._usr_list.push_back(&u7);
+
+// 	std::cout << "\033[1;36m---- TEST NORMAL CONNECTION IRSSI ----\033[0m" << std::endl;
+// 	s.run_buffer(1, "CAP LS \nPASS abc \nNICK cmaginot \nUSER cmaginot cmaginot 127.0.0.1 :Celia MAGINOT \n");
+
+
+
+// 	std::cout << "\033[1;36m---- TEST UNKNOW COMMAND ----\033[0m" << std::endl;
+// 	s.run_buffer(2, "BLABLA");
+
+
+
+// 	std::cout << "\033[1;36m---- TEST PASS ----\033[0m" << std::endl;
+// 	std::cout << "\033[36m- ban -\033[0m" << std::endl;
+// 	s.run_buffer(3, "PASS I AM BANNED");
+
+
+
+// 	std::cout << "\033[36m- error -\033[0m" << std::endl;
+// 	s.run_buffer(4, "PASS");
+// 	s.run_buffer(4, "PASS  ");
+// 	s.run_buffer(4, "PASS pass");
+// 	s.run_buffer(4, "PASS pass word");
+// 	s.run_buffer(4, "PASS pass abc");
+
+// 	std::cout << "\033[36m- good multiple time -\033[0m" << std::endl;
+// 	s.run_buffer(4, "PASS abc word");
+// 	s.run_buffer(4, "PASS abc");
+// 	s.run_buffer(4, "PASS abc");
+
+
+
+// 	std::cout << "\033[1;36m---- TEST NICK ----\033[0m" << std::endl;
+// 	std::cout << "\033[36m- ban -\033[0m" << std::endl;
+// 	s.run_buffer(3, "NICK I AM BANNED");
+
+// 	std::cout << "\033[36m- not register -\033[0m" << std::endl;
+// 	s.run_buffer(5, "NICK cmaginot");
+
+// 	std::cout << "\033[36m- bad nick -\033[0m" << std::endl;
+// 	s.run_buffer(5, "PASS abc");
+// 	s.run_buffer(5, "NICK");
+// 	s.run_buffer(5, "NICK    ");
+// 	s.run_buffer(5, "NICK freya~");
+// 	s.run_buffer(5, "NICK freya*");
+// 	s.run_buffer(5, "NICK 123freya");
+// 	s.run_buffer(5, "NICK -freya");
+
+// 	std::cout << "\033[36m- good nick -\033[0m" << std::endl;
+// 	s.run_buffer(5, "NICK Freya");
+// 	s.run_buffer(5, "NICK freya");
+// 	s.run_buffer(5, "NICK Cmaginot");
+// 	s.run_buffer(5, "NICK e1r1p1");
+// 	s.run_buffer(5, "NICK Freya-Tenebrae");
+// 	s.run_buffer(5, "NICK Freya");
+
+// 	std::cout << "\033[36m- try to put same nick -\033[0m" << std::endl;
+// 	s.run_buffer(5, "NICK Freya");
+
+// 	std::cout << "\033[36m- good nick but already exist on another user -\033[0m" << std::endl;
+// 	s.run_buffer(6, "PASS abc");
+// 	s.run_buffer(6, "NICK Freya");
+// 	s.run_buffer(6, "NICK Freya-Tenebrae");
+
+// 	std::cout << "\033[1;36m---- TEST USER ----\033[0m" << std::endl;
+// 	std::cout << "\033[36m- ban -\033[0m" << std::endl;
+// 	s.run_buffer(3, "NICK I AM BANNED");
+
+// 	std::cout << "\033[36m- not register -\033[0m" << std::endl;
+// 	s.run_buffer(7, "NICK cmaginot");
+
+// 	std::cout << "\033[36m- nick not done before -\033[0m" << std::endl;
+// 	s.run_buffer(7, "PASS abc");
+// 	s.run_buffer(7, "USER cmaginot cmaginot 127.0.0.1 :Celia MAGINOT");
+
+// 	std::cout << "\033[36m- wrong -\033[0m" << std::endl;
+// 	s.run_buffer(7, "PASS abc");
+// 	s.run_buffer(7, "USER cmaginot cmaginot 127.0.0.1 :Celia MAGINOT");
+
+// 	std::cout << "\033[36m- correct -\033[0m" << std::endl;
+// 	s.run_buffer(7, "NICK cmaginot");
+// 	s.run_buffer(7, "USER cmaginot cmaginot 127.0.0.1 :Celia MAGINOT");
+
+// 	std::cout << "\033[36m- second user -\033[0m" << std::endl;
+// 	s.run_buffer(7, "NICK cmaginot");
+// 	s.run_buffer(7, "USER cmaginot cmaginot 127.0.0.1 :Celia MAGINOT");
+
+
+
+// 	std::cout << "\033[1;36m---- END OF TESTS ----\033[0m" << std::endl;
 // 	return (0);
 // }
