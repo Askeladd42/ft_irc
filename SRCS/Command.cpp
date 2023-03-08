@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/08 12:48:51 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/08 15:23:37 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,7 +363,7 @@ of the connection is still connected and/or to check for connection latency,
 at the application layer.
 
 The <token> may be any non-empty string.
-
+str
 When receiving a PING message, clients or servers must reply to it with a PONG
 message with the same <token> value. This allows either to match PONG with the
 PING they reply to, for example to compute latency.
@@ -974,9 +974,14 @@ RPL_ENDOFMOTD (376)
 std::vector<Reply>	Server::version(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
 	
+	if (args[0] != "" && args.size() == 1) {
+		if (this->_name.compare(args[0])) {
+			reply.push_back(RPL_VERSION);
+			reply.push_back(RPL_ISUPPORT);		//to see how to match the target's version
+		}
+		else
+			reply.push_back(ERR_NOSUCHSERVER);
 	return (reply);
 }
 /*
@@ -1098,9 +1103,8 @@ RPL_GLOBALUSERS (266)
 std::vector<Reply>	Server::time(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
-	
+
+	reply.push_back(RPL_TIME);
 	return (reply);
 }
 /*

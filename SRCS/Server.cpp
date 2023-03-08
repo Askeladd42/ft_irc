@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/08 10:11:24 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/08 13:52:35 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -432,4 +432,3 @@ std::vector<Reply>	Server::command(User *user, std::string commandName, std::vec
 	reply[0].add_arg(commandName, "command");
 	return (reply);
 }
-
