@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/02/28 14:11:30 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/09 15:45:40 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,18 @@ void	User::set_hostaddr(const std::string newAddr)
 	//temporary, may be replaced/deleted later
 }
 
+void	User::set_usermode(const char newMod)
+{
+	int	i;
+
+	while(this->_usermode[i]) {
+		if (this->_usermode[i] == newMod)
+			return ;
+		i++;
+	}
+	this->_usermode.push_back(newMod);
+}
+
 int	User::get_fd() const
 {
 	return (this->_fd);
@@ -112,6 +124,11 @@ int	User::get_status() const
 bool	User::get_connected() const
 {
 	return (this->_connected);
+}
+
+const std::string	&User::get_usermode() const
+{
+	return (this->_usermode);
 }
 
 const std::string&	User::get_nickname() const

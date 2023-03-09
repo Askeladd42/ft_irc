@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/03/07 16:20:14 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/09 15:33:57 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class User
 		int					_fd;		// fd of the User
 		int					_status;	// User's status
 		bool				_connected; // if user give the password
+		std::string			_usermode;
 		std::string			_nickname;
 		std::string			_username;
 		std::string			_realname;
@@ -54,6 +55,7 @@ class User
 		void				set_realname(const std::string newReal);
 		void				set_hostname(const std::string newHost);	//temporary, may be replaced/deleted later
 		void				set_hostaddr(const std::string newAddr);	//temporary, may be replaced/deleted later
+		void				set_usermode(const char newMod);
 
 		//getter member functions
 		int					get_fd() const;
@@ -64,6 +66,7 @@ class User
 		const std::string	&get_realname() const;
 		const std::string	&get_hostname() const;
 		const std::string	&get_hostaddr() const;
+		const std::string	&get_usermode() const;
 };
 
 std::ostream				&operator<<(std::ostream &ost, const User &other);
