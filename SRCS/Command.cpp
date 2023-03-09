@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/08 15:40:06 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/09 12:17:22 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -985,6 +985,7 @@ std::vector<Reply>	Server::version(User *user, std::vector<std::string> args)
 		//	reply.push_back(RPL_ISUPPORT);
 		else
 			reply.push_back(ERR_NOSUCHSERVER);
+	}
 	return (reply);
 }
 /*
@@ -1106,8 +1107,10 @@ RPL_GLOBALUSERS (266)
 std::vector<Reply>	Server::time(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
+	(void)user;
 
-	reply.push_back(RPL_TIME);
+	if (!args.empty() && args.size() == 1)
+		reply.push_back(RPL_TIME);
 	return (reply);
 }
 /*
