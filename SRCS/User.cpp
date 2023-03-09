@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/03/09 15:56:30 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/09 16:10:10 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	User::set_hostaddr(const std::string newAddr)
 
 void	User::add_usermode(const char newMod)
 {
-	int	i;
+	int	i = 0;
 
 	while(this->_usermode[i]) {
 		if (this->_usermode[i] == newMod)
@@ -113,7 +113,7 @@ void	User::add_usermode(const char newMod)
 
 void	User::del_usermode(const char oldMod)
 {
-	int	i;
+	int	i = 0;
 
 	while(this->_usermode[i]) {
 		if (this->_usermode[i] == oldMod)
