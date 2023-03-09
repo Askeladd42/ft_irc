@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/09 12:17:22 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/09 14:29:53 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,7 +434,7 @@ std::vector<Reply>	Server::oper(User *user, std::vector<std::string> args)
 	else if (user->get_connected()) {
 		if (args[1].compare(this->_password))		//temporary, need a adequate comparing value for password
 			reply.push_back(ERR_PASSWDMISMATCH);
-		else if (user->get_hostname() != args[0])	//temporary, need a adequate comparing value for hostname
+		else if (!args[0].compare(user->get_hostname()))	//temporary, need a adequate comparing value for hostname
 			reply.push_back(ERR_NOOPERHOST);
 		else
 			reply.push_back(RPL_YOUREOPER);
