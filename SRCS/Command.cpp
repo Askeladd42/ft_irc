@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/09 16:09:40 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/09 16:40:58 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,12 +254,12 @@ std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 		reply[0].add_arg("", "host");
 		// remove '[' and ']'
 		reply.push_back(RPL_YOURHOST);
-		reply[1].add_arg("", "servername");
+		reply[1].add_arg(get_name(), "servername");
 		reply[1].add_arg("", "version");
 		reply.push_back(RPL_CREATED);
 		reply[2].add_arg("", "datetime");
 		reply.push_back(RPL_MYINFO);
-		reply[3].add_arg("", "servername");
+		reply[3].add_arg(get_name(), "servername");
 		reply[3].add_arg("", "version");
 		reply[3].add_arg("", "available user modes");
 		reply[3].add_arg("", "available channel modes");
@@ -1015,9 +1015,17 @@ RPL_VERSION (351)
 std::vector<Reply>	Server::admin(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
 	
+	if (args.empty() == true) {
+		if (user->get_connected()) {
+			reply.push_back(RPL_ADMINME);
+			reply.push_back(RPL_ADMINLOC1);
+			reply.push_back(RPL_ADMINLOC2);
+			reply.push_back(RPL_ADMINEMAIL);
+		}
+	}
+	else
+		reply.push_back(ERR_NOSUCHSERVER);
 	return (reply);
 }
 /*

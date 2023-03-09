@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/08 14:56:49 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/09 16:21:21 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,7 @@ class Server {
 	public:
 		// Attribut public: La classe a t'elle rencontre
 		// Un pb ?
-		t_serv_error	errval = nothing;
-		std::vector<User *>	_usr_list; // to put in private later
+		t_serv_error	errval = nothing; // to put in private later
 
 		Server(int port=DEFAULT_PORT, str password=DEFAULT_PWD, t_sock_conf sock_conf=DEFAULT_SC);
 		~Server();
@@ -116,6 +115,9 @@ class Server {
 		
 		int			get_socketfd() const;
 		void		set_socketfd(int socketfd=-1, t_sock_conf sock_conf=DEFAULT_SC);
+
+		std::string	get_name();
+		void		set_name(std::string name);
 
 		int			set_sockopt(int level, int optname, const void *optval, socklen_t optlen);
 		
@@ -137,10 +139,11 @@ class Server {
 		
 
 	private:
-		str					_name;
-		str					_password;
+		std::string			_name;
+		std::string			_password;
 		int					_port;
 		int					_socketfd;
+		std::vector<User *>	_usr_list;
 
 		bool						is_nickname_valid(std::string nickname);
 		bool						is_nickname_free(std::string nickname);

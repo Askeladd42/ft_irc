@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/08 13:52:35 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/09 16:21:56 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 Server::Server(int port, str password, t_sock_conf sock_conf):_password(password), _port(port)
 {
 	this->errval = nothing;
+	this->_name = "ft_irc";
 	set_socketfd(-1 ,sock_conf);
 	if (!this->errval && !set_sockopt(sock_conf.level, sock_conf.optname, (const void *)((unsigned long)&sock_conf + (unsigned long)sock_conf.optval), sock_conf.optlen))
 	{
@@ -114,6 +115,16 @@ int		Server::set_sockopt(int level, int optname, const void *optval, socklen_t o
 		return (1);
 	}
 	return (0);
+}
+
+std::string	Server::get_name()
+{
+	return (_name);
+}
+
+void	Server::set_name(std::string name)
+{
+	_name = name;
 }
 
 int			Server::call_fcntl(int fd, int request)
