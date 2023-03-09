@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/09 16:40:58 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/09 18:03:39 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1085,8 +1085,11 @@ ERR_NOPRIVS (723)
 std::vector<Reply>	Server::lusers(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
+
+	std::vector<User *>::iterator		it = this->_usr_list.begin();
 	(void)user;
-	(void)args;
+	if (args.empty())
+		reply.push_back(RPL_LUSERCLIENT);
 	
 	return (reply);
 }
