@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/14 14:23:57 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/14 14:41:18 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1247,7 +1247,8 @@ std::vector<Reply>	Server::help(User *user, std::vector<std::string> args)
 		}
 		else if (args.size() == 1) {
 			reply.push_back(RPL_HELPSTART);
-			//while help text is shown, reply.push_back(RPL_HELPTXT);
+			while (user->get_status())			// temporary :  while help text is shown, need client/user treatment for it ?
+				reply.push_back(RPL_HELPTXT);
 			reply.push_back(RPL_ENDOFHELP);
 		}
 		else
