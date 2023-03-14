@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:24:09 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/07 16:21:16 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/13 16:02:35 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #include <netinet/in.h>			/*netinet/in	=>		pour sockaddr_in	  */
 
 #include <cstddef>				/*cstddef		=>		std::size_t...		  */
+#include <cerrno>				/*cerrno		=>		good morning groupchat*/
 
 //		DEFINES
 # define PRINT	std::cout <<

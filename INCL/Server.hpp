@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/09 16:21:21 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/13 18:20:17 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define DEFAULT_TIMEOUT 5*60*1000 // Expressed in ms
 # define MAX_LINE_SIZE 210
 # define NEW_CONNECTION_MESSAGE "You have connected to FT_IRC\n"
+# define VERSION "0.3"
 
 typedef struct	e_sock_conf {
 //	void			socket_params;
@@ -100,7 +101,7 @@ class Server {
 	public:
 		// Attribut public: La classe a t'elle rencontre
 		// Un pb ?
-		t_serv_error	errval = nothing; // to put in private later
+		t_serv_error	errval;
 
 		Server(int port=DEFAULT_PORT, str password=DEFAULT_PWD, t_sock_conf sock_conf=DEFAULT_SC);
 		~Server();
@@ -118,6 +119,9 @@ class Server {
 
 		std::string	get_name();
 		void		set_name(std::string name);
+
+		std::string	get_version();
+		void		set_version(std::string version);
 
 		int			set_sockopt(int level, int optname, const void *optval, socklen_t optlen);
 		
@@ -140,6 +144,7 @@ class Server {
 
 	private:
 		std::string			_name;
+		std::string			_version;
 		std::string			_password;
 		int					_port;
 		int					_socketfd;
@@ -147,6 +152,7 @@ class Server {
 
 		bool						is_nickname_valid(std::string nickname);
 		bool						is_nickname_free(std::string nickname);
+		int							check_number_user_with_specific_mod(char mod);
 
 		std::vector<Reply>			cap(User *user, std::vector<std::string> args);
 		std::vector<Reply>			authenticate(User *user, std::vector<std::string> args);

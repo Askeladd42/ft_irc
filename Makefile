@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+         #
+#    By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/03/07 16:21:40 by cmaginot         ###   ########.fr        #
+#    Updated: 2023/03/13 16:03:21 by mmercore         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -85,9 +85,9 @@ RM				=	rm -rf
 
 CXX				=	clang++
 
-CXXFLAGS		=	-Wall -Werror -Wextra
+CXXFLAGS		=	-Wall -Werror -Wextra -std=c++98
 
-CXXFLAGS		+= -g3 #-std=c++98 -pedantic-errors
+CXXFLAGS		+= -g3 #-std=c++98 #-pedantic-errors
 
 LFLAGS			=
 

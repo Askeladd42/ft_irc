@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/03/09 16:15:58 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/13 19:08:23 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ User::User(const int fd):_fd(fd),
 						_hostname(""),
 						_hostaddr("")
 {
-
+	this->_usermode = "";
 }
 
 User::~User() { }
@@ -109,6 +109,19 @@ void	User::add_usermode(const char newMod)
 		i++;
 	}
 	this->_usermode.push_back(newMod);
+}
+
+bool	User::check_if_mode_is_used(const char mod)
+{
+	int	i = 0;
+
+	while(this->_usermode[i])
+	{
+		if (this->_usermode[i] == mod)
+			return (true);
+		i++;
+	}
+	return (false);
 }
 
 void	User::del_usermode(const char oldMod)

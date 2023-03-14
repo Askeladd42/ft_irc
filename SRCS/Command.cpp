@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/09 18:03:39 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/14 14:23:57 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,23 @@
 #include "../INCL/Reply.hpp"
 #include "../INCL/Command.hpp"
 
+std::string	convert_into_to_string(int val)
+{
+	std::stringstream strstr;
+	strstr << val;
+	std::string str = strstr.str();
+	return (str);
+}
+
+int Server::check_number_user_with_specific_mod(char mod)
+{
+	int i = 0;
+
+	for (std::vector<User *>::iterator it = _usr_list.begin(); it != _usr_list.end(); it++)
+		if ((*it)->check_if_mode_is_used(mod) == true)
+			i++;
+	return (i);
+}
 
 bool Server::is_nickname_valid(std::string nickname)
 {
@@ -128,7 +145,7 @@ std::vector<Reply>	Server::pass(User *user, std::vector<std::string> args)
 		reply.push_back(NO_REPLY);
 	}
 	reply[0].add_user(user);
-	reply[0].prep_to_send();
+	reply[0].prep_to_send(0); // or 1 ?
 	return(reply);
 }
 /*
@@ -188,7 +205,7 @@ std::vector<Reply>	Server::nick(User *user, std::vector<std::string> args)
 		reply.push_back(RPL_NICKSET);
 	}
 	reply[0].add_user(user);
-	reply[0].prep_to_send();
+	reply[0].prep_to_send(1); // or 0 ?
 	return(reply);
 }
 /*
@@ -229,59 +246,70 @@ check return when sucess
 std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;//, reply_motd;
-	// int 				username = 0;
-	// int					realname = 3;
+	std::string			realname_str = "";
+	int 				username = 0;
+	// int					nickname = 1;
+	// int					hostaddr = 2;
+	int					realname = 3;
 	(void)args;
 
 	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
-	// else if (args.empty() == true || args[username].compare("") == 0 || args.size() < 3 || args[realname].compare(""))		// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
-	// 	reply.push_back(ERR_NEEDMOREPARAMS);
+	else if (args.empty() == true || args[username].compare("") == 0 || args.size() < 3)
+		reply.push_back(ERR_NEEDMOREPARAMS);
 	else if (user->get_status() == USR_STAT_REGISTERED)
 		reply.push_back(ERR_ALREADYREGISTERED);
 	else
 	{
-		// manage if username > length max and if it's valid,
-		// cut it or put default value otherwise
-		// user->set_username(args[username]);
+		for (size_t i = realname; i < args.size(); i++)
+			realname_str.append(args[i]);
+		realname_str.erase(realname_str.begin());
+		// if (username_is_conform_and_not_already_used())
+		user->set_username(args[username]);
+		// else
+		// 	user->set_username(user.get_nickname());
+		// if (realname_is_conform())
+		user->set_realname(realname_str);
+		// else
+		// 	user->set_realname(user.get_nickname());
 		user->set_status(USR_STAT_REGISTERED);
 		reply.push_back(RPL_WELCOME);
 		reply[0].add_arg("", "networkname");
-		reply[0].add_arg("", "nick");
-		reply[0].add_arg("", "user");
-		reply[0].add_arg("", "host");
+		reply[0].add_arg(user->get_nickname(), "nick");
+		reply[0].add_arg(user->get_username(), "user");
+		reply[0].add_arg(user->get_hostaddr(), "host");
 		// remove '[' and ']'
 		reply.push_back(RPL_YOURHOST);
 		reply[1].add_arg(get_name(), "servername");
-		reply[1].add_arg("", "version");
+		reply[1].add_arg(get_version(), "version");
 		reply.push_back(RPL_CREATED);
 		reply[2].add_arg("", "datetime");
 		reply.push_back(RPL_MYINFO);
 		reply[3].add_arg(get_name(), "servername");
-		reply[3].add_arg("", "version");
+		reply[3].add_arg(get_version(), "version");
 		reply[3].add_arg("", "available user modes");
 		reply[3].add_arg("", "available channel modes");
 		// do something with [<channel modes with a parameter>]
 		reply.push_back(RPL_LUSERCLIENT);
-		reply[4].add_arg("", "u"); // number of user connected
-		reply[4].add_arg("", "i"); // number of invisible user
-		reply[4].add_arg("", "s"); // number of server = 0
+		reply[4].add_arg(convert_into_to_string(_usr_list.size()), "u"); // number of user connected
+		reply[4].add_arg(convert_into_to_string(check_number_user_with_specific_mod('i')), "i"); // number of invisible user
+		reply[4].add_arg("1", "s"); // number of server = 1
 		reply.push_back(RPL_LUSEROP);
-		reply[5].add_arg("", "ops"); // number of operators connected
+		reply[5].add_arg(convert_into_to_string(check_number_user_with_specific_mod('o')), "ops"); // number of operators connected
 		reply.push_back(RPL_LUSERUNKNOWN);
 		reply[6].add_arg("", "connections"); // number of connections
 		reply.push_back(RPL_LUSERCHANNELS);
 		reply[7].add_arg("", "channels"); // number of channel
 		reply.push_back(RPL_LUSERME);
 		reply[8].add_arg("", "c"); // number of clients
-		reply[8].add_arg("", "channels"); // number of server = 0
+		reply[8].add_arg("1", "s"); // number of server = 1
 	}
 	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
 	{
 		it->add_user(user);
-		it->prep_to_send();
+		it->prep_to_send(1);
 	}
 	// reply_motd = motd(user);// to do
 	// reply.append(reply_motd);
@@ -1087,10 +1115,16 @@ std::vector<Reply>	Server::lusers(User *user, std::vector<std::string> args)
 	std::vector<Reply> reply;
 
 	std::vector<User *>::iterator		it = this->_usr_list.begin();
+	// Ici pb avec std c98, fix svp
 	(void)user;
-	if (args.empty())
+	if (args.empty() == true) {
 		reply.push_back(RPL_LUSERCLIENT);
-	
+		while (it != this->_usr_list.end())
+			std::cout << (*it)->get_username() << std::endl;		// put the list of username of the usrs to compare
+		reply.push_back(RPL_LUSERME);
+	}
+	else
+		reply.push_back(RPL_LUSERUNKNOWN);
 	return (reply);
 }
 /*
@@ -1121,6 +1155,8 @@ std::vector<Reply>	Server::time(User *user, std::vector<std::string> args)
 
 	if (!args.empty() && args.size() == 1)
 		reply.push_back(RPL_TIME);
+	else
+		reply.push_back(ERR_NOSUCHSERVER);
 	return (reply);
 }
 /*
@@ -1143,7 +1179,7 @@ std::vector<Reply>	Server::stats(User *user, std::vector<std::string> args)
 	std::vector<Reply> reply;
 	(void)user;
 	(void)args;
-	
+
 	return (reply);
 }
 /*
@@ -1203,9 +1239,20 @@ RPL_ENDOFSTATS (219)
 std::vector<Reply>	Server::help(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
-	
+
+	if (user->get_connected() == true) {
+		if (args.size() == 0) {
+			reply.push_back(RPL_HELPSTART);
+			reply.push_back(RPL_ENDOFHELP);
+		}
+		else if (args.size() == 1) {
+			reply.push_back(RPL_HELPSTART);
+			//while help text is shown, reply.push_back(RPL_HELPTXT);
+			reply.push_back(RPL_ENDOFHELP);
+		}
+		else
+			reply.push_back(ERR_HELPNOTFOUND);
+	}
 	return (reply);
 }
 /*
@@ -1244,10 +1291,13 @@ RPL_ENDOFHELP (706)
 
 std::vector<Reply>	Server::info(User *user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
 	(void)user;
-	(void)args;
-	
+	std::vector<Reply> reply;
+
+	if (args.size() == 0) {
+		reply.push_back(RPL_INFO);
+		reply.push_back(RPL_ENDOFINFO);
+	}
 	return (reply);
 }
 /*

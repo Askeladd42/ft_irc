@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:26:22 by mmercore          #+#    #+#             */
-/*   Updated: 2023/02/24 21:02:07 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/03/13 15:59:21 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@
 int	main(int ac, char **av, char **envp) {
 	(void)ac, (void)av, (void)envp;
 	Server a;
-	PRINT "The errval is " << a.errval << " and the errno is " << strerror(errno) ENDL;
+	//PRINT "The errval is " << a.errval << " and the errno is " << strerror(errno) ENDL;
 	
 	//while(1);
 	// struct pollfd	fds[1];

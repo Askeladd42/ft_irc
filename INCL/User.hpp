@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/03/09 15:55:18 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/13 18:10:32 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ class User
 		void				set_hostname(const std::string newHost);	//temporary, may be replaced/deleted later
 		void				set_hostaddr(const std::string newAddr);	//temporary, may be replaced/deleted later
 		void				add_usermode(const char newMod);
+		bool				check_if_mode_is_used(const char mod);
 		void				del_usermode(const char oldMod);
 
 		//getter member functions
