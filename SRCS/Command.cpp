@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/14 14:41:18 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/14 17:32:06 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ std::vector<Reply>	Server::pass(User *user, std::vector<std::string> args)
 		reply.push_back(NO_REPLY);
 	}
 	reply[0].add_user(user);
-	reply[0].prep_to_send(0); // or 1 ?
+	reply[0].prep_to_send(1);
 	return(reply);
 }
 /*
@@ -203,6 +203,7 @@ std::vector<Reply>	Server::nick(User *user, std::vector<std::string> args)
 	{
 		user->set_nickname(args[nickname]);
 		reply.push_back(RPL_NICKSET);
+		reply[0].add_arg(user->get_nickname(), "client");
 	}
 	reply[0].add_user(user);
 	reply[0].prep_to_send(1); // or 0 ?
@@ -245,7 +246,8 @@ check return when sucess
 
 std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 {
-	std::vector<Reply>	reply;//, reply_motd;
+	std::vector<Reply>	reply, reply_motd;
+	std::vector<std::string> to_motd;
 	std::string			realname_str = "";
 	int 				username = 0;
 	// int					nickname = 1;
@@ -266,7 +268,7 @@ std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 		for (size_t i = realname; i < args.size(); i++)
 			realname_str.append(args[i]);
 		realname_str.erase(realname_str.begin());
-		// if (username_is_conform_and_not_already_used())
+		// if (username_is_conform())
 		user->set_username(args[username]);
 		// else
 		// 	user->set_username(user.get_nickname());
@@ -280,7 +282,6 @@ std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 		reply[0].add_arg(user->get_nickname(), "nick");
 		reply[0].add_arg(user->get_username(), "user");
 		reply[0].add_arg(user->get_hostaddr(), "host");
-		// remove '[' and ']'
 		reply.push_back(RPL_YOURHOST);
 		reply[1].add_arg(get_name(), "servername");
 		reply[1].add_arg(get_version(), "version");
@@ -299,20 +300,20 @@ std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 		reply.push_back(RPL_LUSEROP);
 		reply[5].add_arg(convert_into_to_string(check_number_user_with_specific_mod('o')), "ops"); // number of operators connected
 		reply.push_back(RPL_LUSERUNKNOWN);
-		reply[6].add_arg("", "connections"); // number of connections
+		reply[6].add_arg(convert_into_to_string(_usr_list.size()), "connections"); // number of connections = user ??
 		reply.push_back(RPL_LUSERCHANNELS);
 		reply[7].add_arg("", "channels"); // number of channel
 		reply.push_back(RPL_LUSERME);
-		reply[8].add_arg("", "c"); // number of clients
+		reply[8].add_arg(convert_into_to_string(_usr_list.size()), "c"); // number of clients = user ??
 		reply[8].add_arg("1", "s"); // number of server = 1
 	}
+	reply_motd = motd(user, to_motd);
+	reply.insert(reply.end(), reply_motd.begin(), reply_motd.end());
 	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
 	{
 		it->add_user(user);
 		it->prep_to_send(1);
 	}
-	// reply_motd = motd(user);// to do
-	// reply.append(reply_motd);
 	return (reply);
 }
 /*
@@ -956,20 +957,30 @@ std::vector<Reply>	Server::motd(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply>	reply;
 	int 				target = 0;
+	int					i = 0;
 
 	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
-	else if (args.empty() == true || args[target].compare("") == 0)
-	{
-		; // if message of the day is not a target
-	}
-	else if (target_is_valid(args[target]) == false)
-		; // if target is not valid
+	else if (args.empty() != true && args[target].compare("") != 0 && _name.compare(args[target]) == 0)
+		reply.push_back(ERR_NOSUCHSERVER);
 	else
 	{
-		; // message of the day with target
+		if (_modt.empty() == true)
+			reply.push_back(ERR_NOMOTD);
+		else
+		{
+			reply.push_back(RPL_MOTDSTART);
+			reply[0].add_arg(get_name(), "server");
+			for (std::vector<std::string>::iterator it = _modt.begin(); it != _modt.end(); it++)
+			{
+				++i;
+				reply.push_back(RPL_MOTD);
+				reply[i].add_arg(*it, "line of the motd");
+			}
+			reply.push_back(RPL_ENDOFMOTD);
+		}
 	}
 	return (reply);
 }

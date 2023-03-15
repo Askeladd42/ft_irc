@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/03/13 18:10:32 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/14 17:31:39 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ class User
 		std::string			_realname;
 		std::string			_hostname;
 		std::string			_hostaddr;
-		//std::string		_buffer;	User's buffer, may change later
 		//std::string		_ping_pong_token;
 
 	public:

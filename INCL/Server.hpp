@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/13 18:20:17 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/14 16:42:16 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,12 +143,13 @@ class Server {
 		
 
 	private:
-		std::string			_name;
-		std::string			_version;
-		std::string			_password;
-		int					_port;
-		int					_socketfd;
-		std::vector<User *>	_usr_list;
+		std::string					_name;
+		std::string					_version;
+		std::string					_password;
+		int							_port;
+		int							_socketfd;
+		std::vector<User *>			_usr_list;
+		std::vector<std::string>	_modt;
 
 		bool						is_nickname_valid(std::string nickname);
 		bool						is_nickname_free(std::string nickname);

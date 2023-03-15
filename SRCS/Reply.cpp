@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 17:31:59 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/13 19:02:27 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/14 16:32:58 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,14 +97,21 @@ void	Reply::prep_to_send(int mode)
 	{
 		_message.insert(0, " ");
 		_message.insert(0, value_str);
-		_message.insert(0, " ");
-		if (_user != NULL)
+		// _message.insert(0, " ");
+		// if (_user != NULL) // for log only
+		// {
+		// 	_message.insert(0, _user->get_hostaddr());
+		// 	_message.insert(0, "@");
+		// 	_message.insert(0, _user->get_username());
+		// 	_message.insert(0, "!");
+		// 	_message.insert(0, _user->get_nickname());
+		// }
+	}
+	for (std::string::iterator it = _message.begin(); it != _message.end(); it++)
+	{
+		if (*it == '[' || *it == ']')
 		{
-			_message.insert(0, _user->get_hostaddr());
-			_message.insert(0, "@");
-			_message.insert(0, _user->get_username());
-			_message.insert(0, "!");
-			_message.insert(0, _user->get_nickname());
+			it = _message.erase(it);
 		}
 	}
 }
