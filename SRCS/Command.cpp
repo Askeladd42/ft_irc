@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/14 17:32:06 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/15 15:32:02 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,8 +250,6 @@ std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 	std::vector<std::string> to_motd;
 	std::string			realname_str = "";
 	int 				username = 0;
-	// int					nickname = 1;
-	// int					hostaddr = 2;
 	int					realname = 3;
 	(void)args;
 
@@ -963,7 +961,7 @@ std::vector<Reply>	Server::motd(User *user, std::vector<std::string> args)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
 	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
-	else if (args.empty() != true && args[target].compare("") != 0 && _name.compare(args[target]) == 0)
+	else if (args.empty() != true && args[target].compare("") != 0 && _name.compare(args[target]) != 0)
 		reply.push_back(ERR_NOSUCHSERVER);
 	else
 	{
@@ -1012,17 +1010,23 @@ RPL_ENDOFMOTD (376)
 
 std::vector<Reply>	Server::version(User *user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
+	std::vector<Reply>	reply;
+	int 				target = 0;
+	int					i = 0;
 
-	if (args[0] != "" && args.size() == 1) {
-		if (this->_name.compare(args[0])) {
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.empty() != true && args[target].compare("") != 0 && _name.compare(args[target]) != 0)
+		reply.push_back(ERR_NOSUCHSERVER);
+	else {
+		if (this->_name.compare(args[target])) {
 			reply.push_back(RPL_VERSION);
 			reply.push_back(RPL_ISUPPORT);		//to see how to match the target's version
 		}
-		else if (user->get_username().compare(args[0]))	// to see with a correct client name
+		else if (user->get_username().compare(args[target]))	// to see with a correct client name
 			reply.push_back(RPL_ISUPPORT);
-		else
-			reply.push_back(ERR_NOSUCHSERVER);
 	}
 	return (reply);
 }
