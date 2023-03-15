@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/03/13 19:08:23 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/15 14:10:00 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ User	&User::operator=(const User &other)
 		this->_realname = other._realname;
 		this->_hostaddr = other._hostaddr;
 		this->_username = other._username;
+		this->_usermode = other._usermode;
 	}
 	return *this; // do not use this;
 }
