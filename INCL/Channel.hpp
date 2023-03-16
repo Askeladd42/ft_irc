@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:51:43 by plam              #+#    #+#             */
-/*   Updated: 2023/02/27 19:13:07 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/16 16:15:41 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 class Channel {
 	private:
-		/* data */
+		std::vector<User *>	_ch_usr_list;
 	protected:
 		std::string	_name;
 	public:

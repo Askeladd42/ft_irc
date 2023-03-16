@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/14 17:19:57 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/16 16:41:11 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -419,6 +419,15 @@ void	Server::send_message(User *user, std::string message)
 	{
 		send(user->get_fd(), message.c_str(), message.length(), 0);
 		message.erase(message.begin() + message.size() - 1);
+		message.insert(0, " ");
+		if (user != NULL) // for log only
+		{
+			message.insert(0, user->get_hostaddr());
+			message.insert(0, "@");
+			message.insert(0, user->get_username());
+			message.insert(0, "!");
+			message.insert(0, user->get_nickname());
+		}
 		std::cout << "\033[1;35m" << user->get_fd() << " -> \033[1;36m|\033[0m";
 		std::cout << message << "\033[1;36m|\033[0m" << std::endl;
 		// push all rpls on file named log instead of cout
