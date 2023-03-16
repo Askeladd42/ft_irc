@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/15 15:32:02 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/16 13:03:30 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1166,9 +1166,10 @@ RPL_GLOBALUSERS (266)
 std::vector<Reply>	Server::time(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
+	int					target = 0;
 	(void)user;
 
-	if (!args.empty() && args.size() == 1)
+	if (args.empty() == true || args[target].compare(this->_name))
 		reply.push_back(RPL_TIME);
 	else
 		reply.push_back(ERR_NOSUCHSERVER);
