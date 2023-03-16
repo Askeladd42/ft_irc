@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/16 13:03:30 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/16 13:33:17 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1014,11 +1014,7 @@ std::vector<Reply>	Server::version(User *user, std::vector<std::string> args)
 	int 				target = 0;
 	int					i = 0;
 
-	if (user->get_status() == USR_STAT_BAN)
-		reply.push_back(ERR_YOUREBANNEDCREEP);
-	else if (user->get_connected() == false)
-		reply.push_back(ERR_NOTREGISTERED);
-	else if (args.empty() != true && args[target].compare("") != 0 && _name.compare(args[target]) != 0)
+	if (args.empty() != true && args[target].compare("") != 0 && _name.compare(args[target]) != 0)
 		reply.push_back(ERR_NOSUCHSERVER);
 	else {
 		if (this->_name.compare(args[target])) {
