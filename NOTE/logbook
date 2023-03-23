@@ -63,3 +63,24 @@ trop fatigue pour continuer, bind marche, plus que poll et le serv est complet
 mmercore
 	Fri Feb 24 09:10:56 PM CET 2023
 Ajout de communication serveur client
+
+
+
+mmercore
+	Mon Mar 20 07:38:08 PM CET 2023
+J'ai finalise des trucs dans poll()
+- Les users partent sans boucle inf
+- Les FDs sont non bloquants (on a deux facons differentes au cas ou, y'a un truc a revoir avec le sujet)
+- la fonction pars tient compte du dernier char d'une ligne
+- Doc et prints etendus
+
+
+
+
+mmercore
+	Mon Mar 20 07:40:03 PM CET 2023
+J'ai finalise des trucs dans poll()
+- Les users partent sans boucle inf
+- Les FDs sont non bloquants (on a deux facons differentes au cas ou, y'a un truc a revoir avec le sujet)
+- la fonction pars tient compte du dernier char d'une ligne
+- Doc et prints etendus

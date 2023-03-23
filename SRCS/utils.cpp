@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:33:48 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/06 16:46:52 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:28:17 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,12 @@ void	ft_memset(void *a, char c, size_t l)
 void	ft_bzero(void *a, size_t l)
 {
 	ft_memset(a, '\0', l);
+}
+
+std::string	convert_int_to_string(int val)
+{
+	std::stringstream strstr;
+	strstr << val;
+	std::string str = strstr.str();
+	return (str);
 }

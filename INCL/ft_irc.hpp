@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:24:09 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/13 16:02:35 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:13:06 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ typedef std::size_t		size_t;
 //		CLASSES & TEMPLATES
 # include "Reply.hpp"			/* class Client header/template file */
 # include "User.hpp"			/* class Client header/template file */
-# include "Command.hpp"			/* class Client header/template file */
 # include "Server.hpp"
 // # include "Channel.hpp"			/* class Channel header/template file */
 // # include "Message.hpp"			/* class Client header/template file */
@@ -54,7 +53,8 @@ typedef std::size_t		size_t;
 //		FUNCTIONS & MACROS
 
 //		PROTOTYPES
-void	ft_memset(void *a, char c, size_t l);
-void	ft_bzero(void *a, size_t l = 0);
+void		ft_memset(void *a, char c, size_t l);
+void		ft_bzero(void *a, size_t l = 0);
+std::string	convert_int_to_string(int val);
 
 # endif

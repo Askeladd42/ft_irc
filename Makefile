@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+         #
+#    By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/03/13 16:03:21 by mmercore         ###   ########.fr        #
+#    Updated: 2023/03/22 16:12:45 by cmaginot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,47 @@ SRC				=	main.cpp 	\
 					Server.cpp	\
 					User.cpp	\
 					Reply.cpp	\
-					Command.cpp	\
+					cmd/admin.cpp \
+					cmd/authenticate.cpp \
+					cmd/away.cpp \
+					cmd/cap.cpp \
+					cmd/connect.cpp \
+					cmd/error.cpp \
+					cmd/help.cpp \
+					cmd/info.cpp \
+					cmd/invite.cpp \
+					cmd/join.cpp \
+					cmd/kick.cpp \
+					cmd/kill.cpp \
+					cmd/links.cpp \
+					cmd/list.cpp \
+					cmd/luser.cpp \
+					cmd/mode.cpp \
+					cmd/modt.cpp \
+					cmd/names.cpp \
+					cmd/nick.cpp \
+					cmd/notice.cpp \
+					cmd/oper.cpp \
+					cmd/part.cpp \
+					cmd/pass.cpp \
+					cmd/ping.cpp \
+					cmd/pong.cpp \
+					cmd/privmsg.cpp \
+					cmd/quit.cpp \
+					cmd/rehash.cpp \
+					cmd/restart.cpp \
+					cmd/squit.cpp \
+					cmd/stats.cpp \
+					cmd/time.cpp \
+					cmd/topic.cpp \
+					cmd/user.cpp \
+					cmd/userhost.cpp \
+					cmd/version.cpp \
+					cmd/wallops.cpp \
+					cmd/who.cpp \
+					cmd/whois.cpp \
+					cmd/whowas.cpp
+
 # 					Channel.cpp
 
 

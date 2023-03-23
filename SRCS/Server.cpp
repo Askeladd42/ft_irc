@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/16 16:41:11 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:56:15 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,12 +169,15 @@ int			Server::call_fcntl(int fd, int request)
 	int flags;
 
 	flags = fcntl(fd, F_GETFL, 0);
+	//PRERR "Before FCNTL flags are " <<  fcntl(fd, F_GETFL, 0) ENDL;
+	//PRERR "We are putting the flag " << request ENDL
 	if (flags == -1 || fcntl(fd, F_SETFL, flags | request) < 0)
 	{
 		PRERR "FAILED TO CALL FCNTL" ENDL
 		this->errval = fcntl_fail;
 		return (1);
 	}
+	//PRERR "After FCNTL flags are " <<  fcntl(fd, F_GETFL, 0) ENDL;
 	return (0);
 }
 
@@ -213,11 +216,14 @@ int		Server::polling_loop()
 	recv_ret = 1;
 	this->fds[0].fd = get_socketfd();
 	this->fds[0].events = POLLIN;
+	unsigned int fakeaddr = sizeof((this->_address)); 
+	(void)fakeaddr;
 	pol_ret = 0;
 	while(this->errval == 0)
 	{
 		PRERR "Polling..." ENDL;
-		pol_ret = poll(this->fds, fd_counter,DEFAULT_TIMEOUT);
+		//PRINT this->_modt ENDL;
+		pol_ret = poll(this->fds, fd_counter, DEFAULT_TIMEOUT);
 
 		if (pol_ret < 0)
 		{
@@ -234,17 +240,21 @@ int		Server::polling_loop()
 		else
 		{
 			fd_cursor = 0;
-			while (fd_cursor < fd_counter)
+			while (fd_cursor <= fd_counter)
 			{
-				//if (fds[fd_cursor].revents == 0)
-				//	continue;
-				// Ajouter erreurs
+				PRERR "revents for fd " << fd_cursor << " out of " << fd_counter << " is " << fds[fd_cursor].revents ENDL
+				if (fds[fd_cursor].revents == 0)
+				{
+					PRERR "Doin a skippy on fd " << fd_cursor << " out of " << fd_counter ENDL
+					fd_cursor++;
+					continue;
+				}
 				if (fds[fd_cursor].fd == get_socketfd())
 				{
-					//choses
+					// On verifie si on est prets a accepter une nouvelle connection
 					do
 					{
-						new_fd = accept(get_socketfd(), NULL, NULL);
+						new_fd = accept(get_socketfd(),0 , 0);
 						// Errors
 						if (new_fd < 0)
 						{
@@ -256,22 +266,13 @@ int		Server::polling_loop()
 							fds[fd_counter].fd = new_fd;
 							fds[fd_counter].events = POLLIN;
 							PRERR "\033[31mNEW CONNECTION HIHI\033[0m" ENDL;
-							// send(fds[fd_counter].fd, NEW_CONNECTION_MESSAGE, 28, 0);
+							//send(fds[fd_counter].fd, this->_motd.c_str(), this->motd, 0);
 							PRERR "\033[31mNew fd is now \033[0m" << new_fd ENDL
-
-
-
-
 
 							User	user(fds[fd_counter].fd);
 							user.set_hostname("localhost");
 							user.set_hostaddr("127.0.0.1");
 							_usr_list.push_back(&user);
-
-
-
-
-
 
 							fd_counter++;
 						}
@@ -281,32 +282,51 @@ int		Server::polling_loop()
 				else
 				{
 					PRERR "TEST" ENDL
-					recv_ret = 11;
+					recv_ret = 0;
 					std::string full_buffer = "";
-					while (recv_ret == 11)
+					do
 					{
+						for (int i = 0; i < MAX_LINE_SIZE; i++)
+							buffer[i] = 0;
+						// MSG_DONTWAIT for nonblock sim
+						PRERR "READ" ENDL
+						recv_ret = recv(fds[fd_cursor].fd, buffer, sizeof(buffer), MSG_DONTWAIT);
 						if (recv_ret <= 0)
 						{
 							// erreurs & close
-							if (errno != EWOULDBLOCK)
-								this->errval = recv_fail;
-							close(fds[fd_cursor].fd);
-							fds[fd_cursor].fd = -1;
-							fds[fd_cursor].events = 0;
+							if (errno != EWOULDBLOCK || recv_ret == 0)
+							{
+								//this->errval = recv_fail;
+								close(fds[fd_cursor].fd);
+								fds[fd_cursor].fd = -1;
+								fds[fd_cursor].events = 0;
+								PRERR "ERREURS ET CLOSE" ENDL
+								// CELIA PAR ICI (cf discord)
+								int i = fd_cursor;
+								while (i < fd_counter)
+								{
+									fds[i] = fds[i + 1];
+									i++;
+								}
+								fds[i].fd = 0;
+								fds[i].events = 0;
+								fd_counter--;
+								fd_cursor--;
+							}
 							break;
 						}
 						else
 						{
-							for (int i = 0; i < MAX_LINE_SIZE; i++)
-								buffer[i] = 0;
-							recv_ret = recv(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
+
+							//if (errno == EWOULDBLOCK)
+							//	PRERR "WOULD BLOCK" ENDL;
 							PRERR "\033[31mCurrent value of recv_ret\033[0m" << recv_ret ENDL
 							PRERR "\033[31mReceived this :" << std::endl;
 							PRERR "<<" << buffer << ">>\033[0m" ENDL;
-
-
-							full_buffer.append(buffer);
-
+							//full_buffer.append(buffer);
+							//PRERR "\033[31m go running buffer\033[0m" ENDL;
+							//full_buffer.clear();
+							run_buffer(fds[fd_cursor].fd, buffer);
 
 
 
@@ -314,10 +334,8 @@ int		Server::polling_loop()
 							//send(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
 							// Errors	
 						}
-					}
-					PRERR "\033[31m go running buffer\033[0m" ENDL;
-					run_buffer(fds[fd_cursor].fd, buffer);
-					full_buffer.clear();
+					} while (recv_ret > 0);
+
 				}
 				fd_cursor++;
 			}
@@ -347,6 +365,7 @@ void	Server::run_buffer(int fd, std::string buffer)
 		if (it->compare("") != 0)
 		{
 			std::cout << "\033[1;32m" << user->get_fd() << " <- \033[1;36m|\033[0m" << *it << "\033[1;36m|\033[0m" << std::endl;
+			std::cerr << "\033[36m line : ->|" << *it << "|<-\033[0m" << std::endl;
 			// push all rpls on file named log instead of cout
 		}
 	}
@@ -371,8 +390,7 @@ std::vector<std::string>	Server::pars_buffer(std::string &buffer)
 		}
 		else
 		{
-			line = buffer.substr(0, pos - 1); // what the fuck is the -1 to work ?!
-			// std::cout << "\033[1;33m~" << line << " ~\033[0m" << std::endl;
+			line = buffer.substr(0, pos - 1); // -1 for last char
 			buffer.erase(buffer.begin(), buffer.begin() + pos + 1);
 		}
 		lines.push_back(line);
@@ -384,6 +402,10 @@ void	Server::run_line(User *user, std::string &line)
 {
 	std::vector<std::string>	args = pars_line(line);
 	std::string					cmd = args[0];
+
+						for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++)
+							std::cerr << "\033[36m args : ->|" << *it << "|<-\033[0m" << std::endl;
+
 	args.erase(args.begin());
 	std::vector<Reply>			rpls = command(user, cmd, args);
 	for (std::vector<Reply>::iterator it = rpls.begin(); it != rpls.end(); it++)

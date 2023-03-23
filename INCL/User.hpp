@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/03/14 17:31:39 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:55:05 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 #define USR_STAT_BAN -2
 #define USR_STAT_REGISTERED 1
+#define USER_MODE_AVAILABLE "i"
 
 class User
 {
