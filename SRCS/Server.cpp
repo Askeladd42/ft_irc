@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2023/03/22 16:56:15 by cmaginot         ###   ########.fr       */
-=======
-/*   Updated: 2023/03/20 19:33:10 by mmercore         ###   ########.fr       */
->>>>>>> refs/remotes/origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,12 +390,7 @@ std::vector<std::string>	Server::pars_buffer(std::string &buffer)
 		}
 		else
 		{
-<<<<<<< HEAD
 			line = buffer.substr(0, pos - 1); // -1 for last char
-=======
-			line = buffer.substr(0, pos); // what the fuck is the -1 to work ?!
-			// std::cout << "\033[1;33m~" << line << " ~\033[0m" << std::endl;
->>>>>>> refs/remotes/origin/main
 			buffer.erase(buffer.begin(), buffer.begin() + pos + 1);
 		}
 		lines.push_back(line);
