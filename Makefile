@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+         #
+#    By: plam <plam@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/03/22 16:12:45 by cmaginot         ###   ########.fr        #
+#    Updated: 2023/03/24 13:48:51 by plam             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -213,7 +213,7 @@ loop		:
 
 $(OBJSFOLDER)	:
 				@echo	"       ============================= `tput setaf 3` Compiling objects...`tput sgr0`"
-				mkdir -p $@
+				mkdir -p $@/cmd
 
 .PHONY:	log
 log			:
