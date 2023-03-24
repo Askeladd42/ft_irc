@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   admin.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:22:56 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/24 12:57:24 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../INCL/User.hpp"
 #include "../../INCL/Reply.hpp"
 #include "../../INCL/Server.hpp"
+#include "../../INCL/Channel.hpp"
 
 /*
 Command: ADMIN
@@ -46,7 +47,7 @@ std::vector<Reply>	Server::admin(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	
-	if (args.empty() == true) {
+	if (args.empty() == true || (args.size() == 1 && args[0].compare(this->get_name()))) {
 		if (user->get_connected()) {
 			reply.push_back(RPL_ADMINME);
 			reply.push_back(RPL_ADMINLOC1);
