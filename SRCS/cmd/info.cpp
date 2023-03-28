@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:14 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/27 18:11:56 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,27 @@ RPL_ENDOFINFO (374)
 
 std::vector<Reply>	Server::info(User *user, std::vector<std::string> args)
 {
-	(void)user;
+	(void)args;
+
 	std::vector<Reply> reply;
 
-	if (args.size() == 0) {
-		reply.push_back(RPL_INFO);
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else
+	{
+		for (std::vector<std::string>::iterator it = _info.begin(); it != _info.end(); it++)
+		{
+			Reply r(RPL_INFO);
+			r.add_arg(*it, "string");
+			reply.push_back(r);
+		}
 		reply.push_back(RPL_ENDOFINFO);
 	}
+
+	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
+		it->add_user(user);
+
 	return (reply);
 }

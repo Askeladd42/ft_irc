@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:09 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/27 17:53:51 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,12 @@ ERR_NOPRIVS (723)
 std::vector<Reply>	Server::connect(User *user, std::vector<std::string> args) // do not use, no connection between server in subject
 {
 	std::vector<Reply> reply;
-	(void)user;
 	(void)args;
-	
+
+	reply.push_back(ERR_UNKNOWNCOMMAND);
+	reply[0].add_user(user);
+	reply[0].add_arg("CONNECT", "command");
+	reply[0].prep_to_send(1);
 	return (reply);
 	// do nothing is command connect is called (not required in subject)
 }

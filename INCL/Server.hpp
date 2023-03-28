@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/20 18:28:22 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/03/27 17:53:22 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ class Server {
 		int							_socketfd;
 		std::vector<User *>			_usr_list;
 		std::vector<std::string>	_modt;
+		std::vector<std::string>	_info;
 
 		bool						is_nickname_valid(std::string nickname);
 		bool						is_nickname_free(std::string nickname);

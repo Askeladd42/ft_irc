@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:13 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/27 18:05:22 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,25 @@ std::vector<Reply>	Server::help(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 
-	if (user->get_connected() == true) {
-		if (args.size() == 0) {
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else
+	{
+		if (args.size() == 0)
+		{
 			reply.push_back(RPL_HELPSTART);
 			reply.push_back(RPL_ENDOFHELP);
 		}
-		else if (args.size() == 1) {
-			reply.push_back(RPL_HELPSTART);
-			while (user->get_status())			// temporary :  while help text is shown, need client/user treatment for it ?
-				reply.push_back(RPL_HELPTXT);
-			reply.push_back(RPL_ENDOFHELP);
-		}
-		else
+		else if (args.size() == 1)
+		{
 			reply.push_back(ERR_HELPNOTFOUND);
+		}
 	}
+
+	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
+		it->add_user(user);
+	
 	return (reply);
 }

@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 18:18:11 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/27 17:06:18 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ std::vector<Reply>	Server::mode(User *user, std::vector<std::string> args)
 					reply.push_back(ERR_NOSUCHCHANNEL);
 				else
 				{
-
+					// if channel
 				}
 			}
 			else

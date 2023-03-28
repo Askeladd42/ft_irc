@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/03/15 14:10:00 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/27 17:28:09 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,6 @@ void	User::set_hostaddr(const std::string newAddr)
 
 void	User::add_usermode(const char newMod)
 {
-	int	i = 0;
-
-	while(this->_usermode[i]) {
-		if (this->_usermode[i] == newMod)
-			return ;
-		i++;
-	}
 	this->_usermode.push_back(newMod);
 }
 
@@ -129,9 +122,11 @@ void	User::del_usermode(const char oldMod)
 {
 	int	i = 0;
 
-	while(this->_usermode[i]) {
+	while(this->_usermode[i])
+	{
+		std::cerr << "hello" << std::endl;
 		if (this->_usermode[i] == oldMod)
-			this->_usermode.erase(this->_usermode[i]);
+			this->_usermode.erase(i);
 		i++;
 	}
 }

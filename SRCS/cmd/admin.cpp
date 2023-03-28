@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   admin.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/24 12:57:24 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/27 18:01:58 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,16 @@ std::vector<Reply>	Server::admin(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
 	
-	if (args.empty() == true || (args.size() == 1 && args[0].compare(this->get_name()))) {
-		if (user->get_connected()) {
-			reply.push_back(RPL_ADMINME);
-			reply.push_back(RPL_ADMINLOC1);
-			reply.push_back(RPL_ADMINLOC2);
-			reply.push_back(RPL_ADMINEMAIL);
-		}
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.empty() == true || (args.size() == 1 && args[0].compare(this->get_name())))
+	{
+		reply.push_back(RPL_ADMINME);
+		reply.push_back(RPL_ADMINLOC1);
+		reply.push_back(RPL_ADMINLOC2);
+		reply.push_back(RPL_ADMINEMAIL);
 	}
 	else
 		reply.push_back(ERR_NOSUCHSERVER);
