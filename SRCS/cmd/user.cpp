@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:47 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 16:28:02 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ int Server::check_number_user_with_specific_mod(char mod)
 
 std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 {
-	std::vector<Reply>	reply, reply_motd;
-	std::vector<std::string> to_motd;
+	std::vector<Reply>	reply, reply_motd, reply_luser;
+	std::vector<std::string> to_motd, to_luser;
 	std::string			realname_str = "";
 	int 				username = 0;
 	int					realname = 3;
@@ -115,26 +115,15 @@ std::vector<Reply>	Server::user(User *user, std::vector<std::string> args)
 		reply[3].add_arg("", "available user modes");
 		reply[3].add_arg("", "available channel modes");
 		// do something with [<channel modes with a parameter>]
-		reply.push_back(RPL_LUSERCLIENT);
-		reply[4].add_arg(convert_int_to_string(_usr_list.size()), "u"); // number of user connected
-		reply[4].add_arg(convert_int_to_string(check_number_user_with_specific_mod('i')), "i"); // number of invisible user
-		reply[4].add_arg("1", "s"); // number of server = 1
-		reply.push_back(RPL_LUSEROP);
-		reply[5].add_arg(convert_int_to_string(check_number_user_with_specific_mod('o')), "ops"); // number of operators connected
-		reply.push_back(RPL_LUSERUNKNOWN);
-		reply[6].add_arg(convert_int_to_string(_usr_list.size()), "connections"); // number of connections = user ??
-		reply.push_back(RPL_LUSERCHANNELS);
-		reply[7].add_arg("", "channels"); // number of channel
-		reply.push_back(RPL_LUSERME);
-		reply[8].add_arg(convert_int_to_string(_usr_list.size()), "c"); // number of clients = user ??
-		reply[8].add_arg("1", "s"); // number of server = 1
 	}
-	reply_motd = motd(user, to_motd);
-	reply.insert(reply.end(), reply_motd.begin(), reply_motd.end());
 	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
 	{
 		it->add_user(user);
 		it->prep_to_send(1);
 	}
+	reply_luser = lusers(user, to_luser);
+	reply.insert(reply.end(), reply_luser.begin(), reply_luser.end());
+	reply_motd = motd(user, to_motd);
+	reply.insert(reply.end(), reply_motd.begin(), reply_motd.end());
 	return (reply);
 }

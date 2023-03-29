@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:21 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 17:08:56 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,28 @@ RPL_ENDOFLINKS (365)
 
 std::vector<Reply>	Server::links(User *user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
-	(void)user;
 	(void)args;
-	
+
+	std::vector<Reply> reply;
+
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else
+	{
+		reply.push_back(RPL_LINKS);
+		reply[0].add_arg(_name, "server");
+		reply[0].add_arg(0, "hopcount");
+		reply[0].add_arg("main server (there is no conection between server)", "server info");
+		reply.push_back(RPL_ENDOFINFO);
+	}
+
+	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
+	{
+		it->add_user(user);
+		it->prep_to_send(1);
+	}
+
 	return (reply);
 }

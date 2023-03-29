@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/27 17:53:22 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 17:58:39 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,6 @@ class Server {
 		std::vector<Reply>			pong(User *user, std::vector<std::string> args);
 		std::vector<Reply>			oper(User *user, std::vector<std::string> args);
 		std::vector<Reply>			quit(User *user, std::vector<std::string> args);
-		std::vector<Reply>			error(User *user, std::vector<std::string> args);
 		std::vector<Reply>			join(User *user, std::vector<std::string> args);
 		std::vector<Reply>			part(User *user, std::vector<std::string> args);
 		std::vector<Reply>			topic(User *user, std::vector<std::string> args);

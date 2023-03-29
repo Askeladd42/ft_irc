@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:24:09 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/22 16:13:06 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 16:50:18 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <netinet/in.h>		/*in			=>  	inet_addr...		  */
 # include <signal.h>			/*signal		=>		signal			  	  */
 # include <vector>
+# include <map>
 # include <string>
 # include <cstring>
 

@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:50 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 16:42:14 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,16 @@ std::vector<Reply>	Server::version(User *user, std::vector<std::string> args)
 	std::vector<Reply>	reply;
 	int 				target = 0;
 
-	if (args.empty() != true && args[target].compare("") != 0 && _name.compare(args[target]) != 0)
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.empty() != true && args[target].compare("") != 0 && _name.compare(args[target]) != 0)
 		reply.push_back(ERR_NOSUCHSERVER);
-	else {
-		if (this->_name.compare(args[target])) {
+	else
+	{
+		if (this->_name.compare(args[target]))
+		{
 			reply.push_back(RPL_VERSION);
 			reply.push_back(RPL_ISUPPORT);		//to see how to match the target's version
 		}

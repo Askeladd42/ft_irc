@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:03 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 16:57:22 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,23 @@ RPL_NOWAWAY (306)
 std::vector<Reply>	Server::away(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
-	
+
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.size() == 1 && args[0].empty() == false)
+	{
+		user->set_status_message(args[0]);
+		reply.push_back(RPL_NOWAWAY);
+	}
+	else
+	{
+		user->set_status_message("");
+		reply.push_back(RPL_UNAWAY);
+	}
+
+	reply[0].add_user(user);
+	reply[0].prep_to_send(1);
 	return (reply);
 }

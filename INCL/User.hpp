@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/03/22 17:55:05 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 16:40:07 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 
 #define USR_STAT_BAN -2
 #define USR_STAT_REGISTERED 1
-#define USER_MODE_AVAILABLE "i"
+#define USR_STAT_AWAY 2
+#define USER_MODE_AVAILABLE "iws"
 
 class User
 {
@@ -38,6 +39,7 @@ class User
 		std::string			_realname;
 		std::string			_hostname;
 		std::string			_hostaddr;
+		std::string			_status_message;
 		//std::string		_ping_pong_token;
 
 	public:
@@ -55,6 +57,7 @@ class User
 		void				set_realname(const std::string newReal);
 		void				set_hostname(const std::string newHost);	//temporary, may be replaced/deleted later
 		void				set_hostaddr(const std::string newAddr);	//temporary, may be replaced/deleted later
+		void				set_status_message(const std::string new_stat_message);
 		void				add_usermode(const char newMod);
 		bool				check_if_mode_is_used(const char mod);
 		void				del_usermode(const char oldMod);
@@ -69,6 +72,7 @@ class User
 		const std::string	&get_hostname() const;
 		const std::string	&get_hostaddr() const;
 		const std::string	&get_usermode() const;
+		const std::string	&get_status_message() const;
 };
 
 std::ostream				&operator<<(std::ostream &ost, const User &other);

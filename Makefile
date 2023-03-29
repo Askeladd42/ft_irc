@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: plam <plam@student.42.fr>                  +#+  +:+       +#+         #
+#    By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/03/24 13:48:51 by plam             ###   ########.fr        #
+#    Updated: 2023/03/28 17:50:52 by cmaginot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,7 +69,6 @@ SRC				=	main.cpp 	\
 					cmd/away.cpp \
 					cmd/cap.cpp \
 					cmd/connect.cpp \
-					cmd/error.cpp \
 					cmd/help.cpp \
 					cmd/info.cpp \
 					cmd/invite.cpp \

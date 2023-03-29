@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:28:26 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 17:51:40 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,7 @@ Numeric Replies:
 
 ERR_NEEDMOREPARAMS (461)
 ERR_NOORIGIN (409)
-Deprecated Numeric Reply:
-
-ERR_NOSUCHSERVER (402)
 */
-
-static bool token_is_valid(std::string token)
-{
-	(void)token;
-	return (true);
-}
 
 std::vector<Reply>	Server::ping(User *user, std::vector<std::string> args)
 {
@@ -62,16 +53,16 @@ std::vector<Reply>	Server::ping(User *user, std::vector<std::string> args)
 	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
 	else if (args.empty() == true || args[token].compare("") == 0)	// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
-		reply.push_back(ERR_NEEDMOREPARAMS);
-	else if (token_is_valid(args[token]) == false)
 		reply.push_back(ERR_NOORIGIN);
 	else
 	{
 		reply.push_back(RPL_PONG);
-		reply[0].add_arg(user->get_nickname(), "");
+		reply[0].add_user(user);
+		reply[0].add_arg(args[token], "tocken");
 		return (reply);
 	}
 	reply[0].add_user(user);
-	reply[0].add_arg("PING", "");
+	reply[0].add_arg("PING", "command");
+	reply[0].prep_to_send(1);
 	return (reply);
 }

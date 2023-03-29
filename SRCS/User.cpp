@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/03/27 17:28:09 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 15:39:19 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ User	&User::operator=(const User &other)
 		this->_hostaddr = other._hostaddr;
 		this->_username = other._username;
 		this->_usermode = other._usermode;
+		this->_status_message = other._status_message;
 	}
 	return *this; // do not use this;
 }
@@ -46,6 +47,7 @@ User::User(const int fd):_fd(fd),
 						_hostaddr("")
 {
 	this->_usermode = "";
+	this->_status_message = "";
 }
 
 User::~User() { }
@@ -98,6 +100,11 @@ void	User::set_hostaddr(const std::string newAddr)
 {
 	this->_hostaddr = newAddr;
 	//temporary, may be replaced/deleted later
+}
+
+void	User::set_status_message(const std::string new_stat_message)
+{
+	this->_status_message = new_stat_message;
 }
 
 void	User::add_usermode(const char newMod)
@@ -174,6 +181,11 @@ const std::string	&User::get_hostname() const
 const std::string	&User::get_hostaddr() const
 {
 	return (this->_hostaddr);
+}
+
+const std::string	&User::get_status_message() const
+{
+	return (this->_status_message);
 }
 
 std::ostream	&operator<<(std::ostream &ost, const User &other)

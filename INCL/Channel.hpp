@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:51:43 by plam              #+#    #+#             */
-/*   Updated: 2023/03/16 16:15:41 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/28 16:11:21 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,18 @@
 # define __CHANNEL_HPP__
 # include "ft_irc.hpp"
 
-class Channel {
+#define UNIQUE_CHANNEL_MODE_AVAILABLE "i"
+#define MULTIPLE_CHANNEL_MODE_AVAILABLE "b"
+
+class Channel
+{
 	private:
 		std::vector<User *>	_ch_usr_list;
+
 	protected:
 		std::string	_name;
+		std::multimap<char, std::string>	_channelmode;
+
 	public:
 		Channel();
 		Channel(const Channel &other);

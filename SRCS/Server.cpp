@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/27 18:11:24 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 17:59:09 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -471,7 +471,6 @@ std::vector<Reply>	Server::command(User *user, std::string commandName, std::vec
 		{"PONG", &Server::pong},							{"pong", &Server::pong},
 		{"OPER", &Server::oper},							{"oper", &Server::oper},
 		{"QUIT", &Server::quit},							{"quit", &Server::quit},
-		{"ERROR", &Server::error},							{"error", &Server::error},
 		{"JOIN", &Server::join},							{"join", &Server::join},
 		{"PART", &Server::part},							{"part", &Server::part},
 		{"TOPIC", &Server::topic},							{"topic", &Server::topic},

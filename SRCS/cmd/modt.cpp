@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:26 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 15:46:36 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ std::vector<Reply>	Server::motd(User *user, std::vector<std::string> args)
 			}
 			reply.push_back(RPL_ENDOFMOTD);
 		}
+	}
+	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
+	{
+		it->add_user(user);
+		it->prep_to_send(1);
 	}
 	return (reply);
 }

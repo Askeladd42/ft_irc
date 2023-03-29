@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/27 18:05:22 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 15:44:28 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,10 @@ std::vector<Reply>	Server::help(User *user, std::vector<std::string> args)
 	}
 
 	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
+	{
 		it->add_user(user);
+		it->prep_to_send(1);
+	}
 	
 	return (reply);
 }

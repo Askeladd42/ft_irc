@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:33 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 16:31:38 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,20 @@ RPL_YOUREOPER (381)
 std::vector<Reply>	Server::oper(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	if (*(args.begin()) == "" && (*(args.end()) == "" || args.size() == 0))
+
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (*(args.begin()) == "" && (*(args.end()) == "" || args.size() == 0))
 		reply.push_back(ERR_NEEDMOREPARAMS);
-	else if (user->get_connected()) {
-		if (args[1].compare(this->_password))		//temporary, need a adequate comparing value for password
-			reply.push_back(ERR_PASSWDMISMATCH);
-		else if (!args[0].compare(user->get_hostname()))	//temporary, need a adequate comparing value for hostname
-			reply.push_back(ERR_NOOPERHOST);
-		else
-			reply.push_back(RPL_YOUREOPER);
-	}
+	else if (args[1].compare(this->_password))		//(need to add _oper_pass or something on server)
+		reply.push_back(ERR_PASSWDMISMATCH);
+	else if (!args[0].compare(user->get_hostaddr()))	//temporary, need a adequate comparing value for hostname
+		reply.push_back(ERR_NOOPERHOST);
+	else
+		reply.push_back(RPL_YOUREOPER);
+	reply[0].add_user(user);
+	reply[0].prep_to_send(1);
 	return (reply);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   userhost.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:48 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 18:37:22 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,24 @@ Reply Examples:
 std::vector<Reply>	Server::userhost(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
-	
+	if (args.size() == 0)
+		reply.push_back(ERR_NEEDMOREPARAMS);
+	else
+	{
+		if (args.size() <= 5)
+		{
+			for (std::vector<std::string>::iterator itA = args.begin(); itA != args.end(); itA++)
+			{
+				for (std::vector<User *>::iterator itL = this->_usr_list.begin(); itL != this->_usr_list.end(); itL++)
+				{
+					if (*itA == (*itL)->get_nickname())
+						reply.push_back(RPL_USERHOST);
+				}
+			}
+		}
+	}
+
+	reply[0].add_user(user);
+	reply[0].prep_to_send(1);
 	return (reply);
 }

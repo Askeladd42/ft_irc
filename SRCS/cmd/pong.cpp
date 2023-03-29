@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:28:32 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/28 17:49:56 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ Numeric Replies:
 None
 */
 
-static bool token_is_valid(std::string token)
+static bool token_match(User *user, std::string token)
 {
 	(void)token;
+	(void)user;
 	return (true);
 }
 
@@ -46,17 +47,16 @@ std::vector<Reply>	Server::pong(User *user, std::vector<std::string> args)
 	else if (user->get_connected() == false)
 		reply.push_back(ERR_NOTREGISTERED);
 	else if (args.empty() == true || args[token].compare("") == 0)	// NEED TO SEE HOW TO IDENTIFY THE NICKNAME IN ARGS
-		reply.push_back(ERR_NEEDMOREPARAMS);
-	else if (token_is_valid(args[token]) == false)
 		reply.push_back(ERR_NOORIGIN);
-	else if (true == false) // check if token is the same
+	else if (token_match(user, args[token]) == false) // check if token is the same
 		reply.push_back(ERR_TOKENMISMATCH);
 	else
 	{
+		// update ping/pong value on User.cpp
 		reply.push_back(NO_REPLY);
-		return (reply);
 	}
 	reply[0].add_user(user);
-	reply[0].add_arg("PING", "");
+	reply[0].add_arg("PONG", "");
+	reply[0].prep_to_send(1);
 	return (reply);
 }
