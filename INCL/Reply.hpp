@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 17:32:30 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/28 17:28:24 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/30 18:52:43 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef REPLY_HPP
@@ -188,8 +188,8 @@ class Reply
 
 #define ERR_TOKENMISMATCH Reply(0, "<client> :token incorrect\n")
 #define RPL_PONG Reply(0, "<client> :PONG <tocken>\n")
-#define RPL_NICKSET Reply(0, "<client> :NICK :<client>\n")
-
+#define RPL_NICKSET Reply(0, "NICK :<client>\n")
+#define MGS_WALLOP Reply(0, "WALLOP <message>\n")
 
 #define ERR_ERROSAMENICKNAME Reply(434, "<client> :you already use this nickname\n")
 

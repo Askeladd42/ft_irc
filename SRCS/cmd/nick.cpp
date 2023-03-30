@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/28 15:46:35 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/30 18:14:00 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ bool Server::is_nickname_free(std::string nickname)
 {
 	for (std::vector<User *>::iterator it = _usr_list.begin(); it != _usr_list.end(); it++)
 	{
-		if ((*it)->get_nickname() == nickname)
+		if ((*it)->get_nickname().compare(nickname) == 0)
 			return (false);
 	}
 	return (true);
@@ -95,12 +95,23 @@ std::vector<Reply>	Server::nick(User *user, std::vector<std::string> args)
 	{
 		reply.push_back(ERR_NICKNAMEINUSE);
 		reply[0].add_arg(args[0], "nick");
+		if (user->get_nickname().compare("") == 0)
+		{
+			std::string tmp_nick = args[nickname];
+			tmp_nick.insert(0, "tmp_");
+			while (is_nickname_free(tmp_nick) == false)
+				tmp_nick.push_back('X');
+			user->set_nickname(tmp_nick);
+		}
 	}
 	else
 	{
-		user->set_nickname(args[nickname]);
 		reply.push_back(RPL_NICKSET);
-		reply[0].add_arg(user->get_nickname(), "client");
+		reply[0].add_arg(args[nickname], "client");
+		reply[0].add_user(user);
+		reply[0].prep_to_send(2);
+		user->set_nickname(args[nickname]);
+		return(reply);
 	}
 	reply[0].add_user(user);
 	reply[0].prep_to_send(1);

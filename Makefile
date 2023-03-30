@@ -6,7 +6,7 @@
 #    By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/04 17:28:09 by mmercore          #+#    #+#              #
-#    Updated: 2023/03/28 17:50:52 by cmaginot         ###   ########.fr        #
+#    Updated: 2023/03/30 18:40:14 by cmaginot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,9 +63,9 @@ SRC				=	main.cpp 	\
 					utils.cpp	\
 					Server.cpp	\
 					User.cpp	\
+					Channel.cpp \
 					Reply.cpp	\
 					cmd/admin.cpp \
-					cmd/authenticate.cpp \
 					cmd/away.cpp \
 					cmd/cap.cpp \
 					cmd/connect.cpp \
@@ -104,12 +104,10 @@ SRC				=	main.cpp 	\
 					cmd/whois.cpp \
 					cmd/whowas.cpp
 
-# 					Channel.cpp
-
 
 SRCS			=	$(addprefix $(SRCSFOLDER), $(SRC))
 
-INCLUDES		=	ft_irc.hpp Server.hpp User.hpp Reply.hpp Command.hpp
+INCLUDES		=	ft_irc.hpp Server.hpp User.hpp Reply.hpp Channel.hpp
 
 # COMPILATION AND LINKING
 
@@ -126,7 +124,7 @@ CXX				=	clang++
 
 CXXFLAGS		=	-Wall -Werror -Wextra -std=c++98
 
-CXXFLAGS		+= -g3 #-std=c++98 #-pedantic-errors
+CXXFLAGS		+= -g3 #-pedantic-errors
 
 LFLAGS			=
 

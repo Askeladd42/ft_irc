@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/28 17:59:09 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/03/30 19:24:33 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ Server::Server(int port, str password, t_sock_conf sock_conf):_password(password
 	this->errval = nothing;
 	this->_name = "ft_irc";
 	this->_version = VERSION;
+	this->_oper_id = DEFAULT_OPER_ID;
+	this->_oper_password = DEFAULT_OPER_PWD;
+	this->_socketfd = 0;
 	this->_modt.push_back("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
 	this->_modt.push_back("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
 	this->_modt.push_back("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
@@ -45,6 +48,16 @@ Server::Server(int port, str password, t_sock_conf sock_conf):_password(password
 	this->_modt.push_back("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀FT_IRC⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
 	this->_info.push_back("ft_irs is an irc server designed for irssi client");
 	this->_info.push_back("it's actual version is 0.3 ans is developped by cmaginot, mmercore, and plam");
+	if (port < 0 || port > 65353)
+	{
+		this->errval = bad_param_port;
+		return ;
+	}
+	if (!password[0])
+	{
+		this->errval = bad_param_pwd;
+		return ;
+	}
 	set_socketfd(-1 ,sock_conf);
 	if (!this->errval && !set_sockopt(sock_conf.level, sock_conf.optname, (const void *)((unsigned long)&sock_conf + (unsigned long)sock_conf.optval), sock_conf.optlen))
 	{
@@ -87,6 +100,8 @@ str			Server::get_errval(t_serv_error errval) const
 	switch (errval)
 	{
 		case nothing:		return("nothing");
+		case bad_param_port:return("bad_param_port");
+		case bad_param_pwd:	return("bad_param_pwd");
 		case syscall_fail:	return("syscall_fail");
 		case socket_fail:	return("socket_fail");
 		case sock_opt_fail:	return("sock_opt_fail");
@@ -271,10 +286,10 @@ int		Server::polling_loop()
 							//send(fds[fd_counter].fd, this->_motd.c_str(), this->motd, 0);
 							PRERR "\033[31mNew fd is now \033[0m" << new_fd ENDL
 
-							User	user(fds[fd_counter].fd);
-							user.set_hostname("localhost");
-							user.set_hostaddr("127.0.0.1");
-							_usr_list.push_back(&user);
+							User	*u = new User(fds[fd_counter].fd);
+							u->set_hostname("localhost");
+							u->set_hostaddr("127.0.0.1");
+							_usr_list.push_back(u);
 
 							fd_counter++;
 						}
@@ -303,6 +318,15 @@ int		Server::polling_loop()
 								fds[fd_cursor].fd = -1;
 								fds[fd_cursor].events = 0;
 								PRERR "ERREURS ET CLOSE" ENDL
+								for (std::vector<User *>::iterator it = _usr_list.begin(); it != _usr_list.end(); it++)
+								{
+									if ((*it)->get_fd() == fds[fd_cursor].fd)
+									{
+										User * usr = *it;
+										_usr_list.erase(it);
+										delete usr;
+									}
+								}
 								// CELIA PAR ICI (cf discord)
 								int i = fd_cursor;
 								while (i < fd_counter)
@@ -328,15 +352,14 @@ int		Server::polling_loop()
 							//full_buffer.append(buffer);
 							//PRERR "\033[31m go running buffer\033[0m" ENDL;
 							//full_buffer.clear();
-							run_buffer(fds[fd_cursor].fd, buffer);
-
+							//run_buffer(fds[fd_cursor].fd, buffer);
 
 
 
 							//send(fds[fd_cursor].fd, buffer, sizeof(buffer), 0);
 							// Errors	
 						}
-					} while (recv_ret > 0);
+					} while (compilecommand(buffer, fds[fd_cursor].fd));
 
 				}
 				fd_cursor++;
@@ -344,6 +367,26 @@ int		Server::polling_loop()
 		}
 	}
 	return (0);
+}
+
+int		Server::compilecommand(char *message, int fd)
+{
+	static str m;
+
+	m.append(message);
+	PRERR "Message size  " << m ENDL;
+	if (m.find(CRLF) != str::npos)
+	{
+		PRERR "Correct message, going for the parse" ENDL;
+		run_buffer(fd, m.c_str());
+		m.clear();
+		return (0);
+	}
+	else
+	{
+		PRERR "Message not ready yet" ENDL;
+		return (1);
+	}
 }
 
 User	*Server::find_user(int fd)
@@ -462,46 +505,51 @@ std::vector<Reply>	Server::command(User *user, std::string commandName, std::vec
 {
 	t_command	t[] =
 	{
-		{"CAP", &Server::cap},								{"cap", &Server::cap},
-		{"AUTHENTICATE", &Server::authenticate},			{"authenticate", &Server::authenticate},
-		{"PASS", &Server::pass},							{"pass", &Server::pass},
-		{"NICK", &Server::nick},							{"nick", &Server::nick},
-		{"USER", &Server::user},							{"user", &Server::user},
-		{"PING", &Server::ping},							{"ping", &Server::ping},
-		{"PONG", &Server::pong},							{"pong", &Server::pong},
-		{"OPER", &Server::oper},							{"oper", &Server::oper},
-		{"QUIT", &Server::quit},							{"quit", &Server::quit},
-		{"JOIN", &Server::join},							{"join", &Server::join},
-		{"PART", &Server::part},							{"part", &Server::part},
-		{"TOPIC", &Server::topic},							{"topic", &Server::topic},
-		{"NAMES", &Server::names},							{"names", &Server::names},
-		{"LIST", &Server::list},							{"list", &Server::list},
-		{"INVITE", &Server::invite},						{"invite", &Server::invite},
-		{"KICK", &Server::kick},							{"kick", &Server::kick},
-		{"MOTD", &Server::motd},							{"motd", &Server::motd},
-		{"VERSION", &Server::version},						{"version", &Server::version},
-		{"ADMIN", &Server::admin},							{"admin", &Server::admin},
-		{"CONNECT", &Server::connect},						{"connect", &Server::connect},
-		{"LUSERS", &Server::lusers},						{"luser", &Server::lusers},
-		{"TIME", &Server::time},							{"time", &Server::time},
-		{"STATS", &Server::stats},							{"stats", &Server::stats},
-		{"HELP", &Server::help},							{"help", &Server::help},
-		{"INFO", &Server::info},							{"info", &Server::info},
-		{"MODE", &Server::mode},							{"mode", &Server::mode},
-		{"PRIVMSG", &Server::privmsg},						{"privmsg", &Server::privmsg},
-		{"NOTICE", &Server::notice},						{"notice", &Server::notice},
-		{"WHO", &Server::who},								{"who", &Server::who},
-		{"WHOIS", &Server::whois},							{"whois", &Server::whois},
-		{"WHOWAS", &Server::whowas},						{"whowas", &Server::whowas},
-		{"KILL", &Server::kill},							{"kill", &Server::kill},
-		{"REHASH", &Server::rehash},						{"rehash", &Server::rehash},
-		{"RESTART", &Server::restart},						{"restart", &Server::restart},
-		{"SQUIT", &Server::squit},							{"squit", &Server::squit},
-		{"AWAY", &Server::away},							{"away", &Server::away},
-		{"LINKS", &Server::links},							{"links", &Server::links},
-		{"USERHOST", &Server::userhost},					{"userhost", &Server::userhost},
-		{"WALLOPS", &Server::wallops},						{"wallops", &Server::wallops}
+		{"CAP", &Server::cap},
+		{"PASS", &Server::pass},
+		{"NICK", &Server::nick},
+		{"USER", &Server::user},
+		{"PING", &Server::ping},
+		{"PONG", &Server::pong},
+		{"OPER", &Server::oper},
+		{"QUIT", &Server::quit},
+		{"JOIN", &Server::join},
+		{"PART", &Server::part},
+		{"TOPIC", &Server::topic},
+		{"NAMES", &Server::names},
+		{"LIST", &Server::list},
+		{"INVITE", &Server::invite},
+		{"KICK", &Server::kick},
+		{"MOTD", &Server::motd},
+		{"VERSION", &Server::version},
+		{"ADMIN", &Server::admin},
+		{"CONNECT", &Server::connect},
+		{"LUSERS", &Server::lusers},
+		{"TIME", &Server::time},
+		{"STATS", &Server::stats},
+		{"HELP", &Server::help},
+		{"INFO", &Server::info},
+		{"MODE", &Server::mode},
+		{"PRIVMSG", &Server::privmsg},
+		{"NOTICE", &Server::notice},
+		{"WHO", &Server::who},
+		{"WHOIS", &Server::whois},
+		{"WHOWAS", &Server::whowas},
+		{"KILL", &Server::kill},
+		{"REHASH", &Server::rehash},
+		{"RESTART", &Server::restart},
+		{"SQUIT", &Server::squit},
+		{"AWAY", &Server::away},
+		{"LINKS", &Server::links},
+		{"USERHOST", &Server::userhost},
+		{"WALLOPS", &Server::wallops}
 	};
+	for (std::string::iterator it = commandName.begin(); it != commandName.end(); it++)
+	{
+		if (*it <= 'z' && *it >= 'a')
+			*it += 'A' - 'a';
+	}
+
 	for (int i = 0; i < 39; i++)
 	{
 		if (t[i].commandName == commandName)

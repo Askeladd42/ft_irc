@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/28 15:44:30 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/30 18:18:05 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ std::vector<Reply>	Server::cap(User *user, std::vector<std::string> args) // do 
 
 	if (user->get_status() == USR_STAT_BAN)
 		reply.push_back(ERR_YOUREBANNEDCREEP);
-	else if (user->get_connected() == false)
-		reply.push_back(ERR_NOTREGISTERED);
 	else
 	{
 		reply.push_back(ERR_UNKNOWNCOMMAND);

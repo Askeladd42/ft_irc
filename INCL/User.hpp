@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 12:46:03 by plam              #+#    #+#             */
-/*   Updated: 2023/03/28 16:40:07 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/30 16:56:04 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ class User
 		std::string			_hostname;
 		std::string			_hostaddr;
 		std::string			_status_message;
-		//std::string		_ping_pong_token;
+		std::string			_ping_pong_token;
+		int					_deltaTimePing;
+		int					_lastTimePing;
 
 	public:
 		User(const int fd);
@@ -50,22 +52,20 @@ class User
 		void				set_status(const int newStatus);
 		void				set_connected();
 		void				set_disconnected();
-		void				set_user_admin();
-		void				set_user_normal();
 		void				set_nickname(const std::string newNick);
 		void				set_username(const std::string newUser);
 		void				set_realname(const std::string newReal);
-		void				set_hostname(const std::string newHost);	//temporary, may be replaced/deleted later
-		void				set_hostaddr(const std::string newAddr);	//temporary, may be replaced/deleted later
-		void				set_status_message(const std::string new_stat_message);
-		void				add_usermode(const char newMod);
-		bool				check_if_mode_is_used(const char mod);
-		void				del_usermode(const char oldMod);
+		void				set_hostname(const std::string newHost);
+		void				set_hostaddr(const std::string newAddr);
+		void				set_status_message(const std::string newStat_message);
+		void				set_ping_pong_token(const std::string newPing_pong_token);
+		void				set_deltaTimePing(const int newDeltaTimePing);
+		void				set_lastTimePing(const int newLastTimePing);
 
 		//getter member functions
-		int					get_fd() const;
-		int					get_status() const;
-		bool				get_connected() const;
+		const int			&get_fd() const;
+		const int			&get_status() const;
+		const bool			&get_connected() const;
 		const std::string	&get_nickname() const;
 		const std::string	&get_username() const;
 		const std::string	&get_realname() const;
@@ -73,6 +73,13 @@ class User
 		const std::string	&get_hostaddr() const;
 		const std::string	&get_usermode() const;
 		const std::string	&get_status_message() const;
+		const std::string	&get_ping_pong_token() const;
+		const int			&get_deltaTimePing() const;
+		const int			&get_lastTimePing() const;
+
+		bool				check_if_mode_is_used(const char mod);
+		void				add_usermode(const char newMod);
+		void				del_usermode(const char oldMod);
 };
 
 std::ostream				&operator<<(std::ostream &ost, const User &other);

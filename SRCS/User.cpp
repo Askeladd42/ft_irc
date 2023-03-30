@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 16:37:21 by plam              #+#    #+#             */
-/*   Updated: 2023/03/28 15:39:19 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/30 16:57:40 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ User::User(const int fd):_fd(fd),
 {
 	this->_usermode = "";
 	this->_status_message = "";
+	this->_ping_pong_token = "";
+	this->_deltaTimePing = 0;
+	this->_lastTimePing = 0;
 }
 
 User::~User() { }
@@ -65,16 +68,6 @@ void	User::set_connected()
 void	User::set_disconnected()
 {
 	this->_connected = false;
-}
-
-void	User::set_user_admin()
-{
-	set_status(1);
-}
-
-void	User::set_user_normal()
-{
-	set_status(0);
 }
 
 void	User::set_nickname(const std::string newNick)
@@ -107,58 +100,37 @@ void	User::set_status_message(const std::string new_stat_message)
 	this->_status_message = new_stat_message;
 }
 
-void	User::add_usermode(const char newMod)
+void	User::set_ping_pong_token(const std::string newPing_pong_token)
 {
-	this->_usermode.push_back(newMod);
+	this->_ping_pong_token = newPing_pong_token;
 }
 
-bool	User::check_if_mode_is_used(const char mod)
+void	User::set_deltaTimePing(const int newDeltaTimePing)
 {
-	int	i = 0;
-
-	while(this->_usermode[i])
-	{
-		if (this->_usermode[i] == mod)
-			return (true);
-		i++;
-	}
-	return (false);
+	this->_deltaTimePing = newDeltaTimePing;
 }
 
-void	User::del_usermode(const char oldMod)
+void	User::set_lastTimePing(const int newLastTimePing)
 {
-	int	i = 0;
-
-	while(this->_usermode[i])
-	{
-		std::cerr << "hello" << std::endl;
-		if (this->_usermode[i] == oldMod)
-			this->_usermode.erase(i);
-		i++;
-	}
+	this->_lastTimePing = newLastTimePing;
 }
 
-int	User::get_fd() const
+const int	&User::get_fd() const
 {
 	return (this->_fd);
 }
 
-int	User::get_status() const
+const int	&User::get_status() const
 {
 	return (this->_status);
 }
 
-bool	User::get_connected() const
+const bool	&User::get_connected() const
 {
 	return (this->_connected);
 }
 
-const std::string	&User::get_usermode() const
-{
-	return (this->_usermode);
-}
-
-const std::string&	User::get_nickname() const
+const std::string	&User::get_nickname() const
 {
 	return (this->_nickname);
 }
@@ -183,9 +155,62 @@ const std::string	&User::get_hostaddr() const
 	return (this->_hostaddr);
 }
 
+
+const std::string	&User::get_usermode() const
+{
+	return (this->_usermode);
+}
+
+const std::string	&User::get_ping_pong_token() const
+{
+	return (this->_ping_pong_token);
+}
+
+const int	&User::get_deltaTimePing() const
+{
+	return (this->_deltaTimePing);
+}
+
+const int	&User::get_lastTimePing() const
+{
+	return (this->_lastTimePing);
+}
+
+
 const std::string	&User::get_status_message() const
 {
 	return (this->_status_message);
+}
+
+bool	User::check_if_mode_is_used(const char mod)
+{
+	int	i = 0;
+
+	while(this->_usermode[i])
+	{
+		if (this->_usermode[i] == mod)
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+void	User::add_usermode(const char newMod)
+{
+	this->_usermode.push_back(newMod);
+}
+
+void	User::del_usermode(const char oldMod)
+{
+	int	i = 0;
+
+	while(this->_usermode[i])
+	{
+		std::cerr << "hello" << std::endl;
+		if (this->_usermode[i] == oldMod)
+			this->_usermode.erase(i);
+		i++;
+	}
 }
 
 std::ostream	&operator<<(std::ostream &ost, const User &other)

@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:51 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/30 19:05:47 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,37 @@ Examples:
 
 std::vector<Reply>	Server::wallops(User *user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
-	(void)user;
-	(void)args;
-	
+	std::vector<Reply>	reply, to_send;
+	std::string			message = "";
+	int					text = 0;
+
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.empty() == true || args[text].compare("") == 0)
+		reply.push_back(ERR_NEEDMOREPARAMS);
+	else if (user->check_if_mode_is_used('o') == false)
+		reply.push_back(ERR_NOPRIVILEGES);
+	else
+	{
+		to_send.push_back(MGS_WALLOP);
+		to_send[0].add_user(user);
+		for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++)
+		{
+			message.append(*it);
+			message.push_back(' ');
+		}
+		to_send[0].add_arg(message, "message");
+		to_send[0].prep_to_send(1);
+		for (std::vector<User *>::iterator it = _usr_list.begin(); it != _usr_list.end(); it++)
+		{
+			if (*it == user || (*it)->check_if_mode_is_used('w') == true)
+				send_message(*it, to_send[0].get_message());
+		}
+		return (reply);
+	}
+	reply[0].add_user(user);
+	reply[0].prep_to_send(1);
 	return (reply);
 }

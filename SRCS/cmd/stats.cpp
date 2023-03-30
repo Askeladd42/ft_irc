@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/22 16:23:43 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/30 16:06:06 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,46 @@ RPL_ENDOFSTATS (219)
 
 std::vector<Reply>	Server::stats(User *user, std::vector<std::string> args)
 {
-	std::vector<Reply> reply;
 	(void)user;
-	(void)args;
+	std::vector<Reply>	reply;
 
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.size() == 0)
+		reply.push_back(ERR_NEEDMOREPARAMS);
+	else if (args.size() == 2 && args[1].compare(this->get_name()) == false)
+		reply.push_back(ERR_NOSUCHSERVER);
+	else
+	{
+		for (std::string::iterator it = args[0].begin(); it != args[0].end(); it++)
+		{
+			if (*it == 'c')
+				reply.push_back(RPL_STATSCLINE);
+			if (*it == 'h')
+				reply.push_back(RPL_STATSHLINE);
+			if (*it == 'i')
+				reply.push_back(RPL_STATSILINE);
+			if (*it == 'k')
+				reply.push_back(RPL_STATSKLINE);
+			if (*it == 'l')
+				reply.push_back(RPL_STATSLLINE);
+			if (*it == 'o')
+				reply.push_back(RPL_STATSOLINE);
+			if (*it == 'm')
+				reply.push_back(RPL_STATSLINKINFO);
+			if (*it == 'u')
+				reply.push_back(RPL_STATSUPTIME);
+			if (*it == 'y')
+				reply.push_back(RPL_STATSCOMMANDS);
+		}
+	}
+	reply.push_back(RPL_ENDOFSTATS);
+	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
+	{
+		it->add_user(user);
+		it->prep_to_send(1);
+	}
 	return (reply);
 }

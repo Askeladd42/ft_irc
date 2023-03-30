@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:24:09 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/28 16:50:18 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/03/30 16:28:37 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,8 @@ typedef std::size_t		size_t;
 //		CLASSES & TEMPLATES
 # include "Reply.hpp"			/* class Client header/template file */
 # include "User.hpp"			/* class Client header/template file */
+# include "Channel.hpp"			/* class Channel header/template file */
 # include "Server.hpp"
-// # include "Channel.hpp"			/* class Channel header/template file */
-// # include "Message.hpp"			/* class Client header/template file */
 
 //		FUNCTIONS & MACROS
 

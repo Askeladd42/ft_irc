@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 18:26:22 by mmercore          #+#    #+#             */
-/*   Updated: 2023/03/13 15:59:21 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/03/30 18:20:48 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,18 @@
 
 int	main(int ac, char **av, char **envp) {
 	(void)ac, (void)av, (void)envp;
-	Server a;
+	if (ac == 1)
+	{
+		Server a;
+	}
+	if (ac == 2)
+	{
+		Server a(atoi(av[1]));
+	}
+	if (ac == 3)
+	{
+		Server a(atoi(av[1]), av[2]);
+	}
 	//PRINT "The errval is " << a.errval << " and the errno is " << strerror(errno) ENDL;
 	
 	//while(1);

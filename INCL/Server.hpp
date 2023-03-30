@@ -6,7 +6,7 @@
 /*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/28 17:58:39 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/03/30 19:20:57 by mmercore         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,13 @@
 // Par securite
 # define DEFAULT_PORT 8080
 # define DEFAULT_PWD "abc"
+# define DEFAULT_OPER_ID "admin"
+# define DEFAULT_OPER_PWD "admin"
 # define DEFAULT_TIMEOUT 5*60*1000 // Expressed in ms
 # define MAX_LINE_SIZE 210
 # define NEW_CONNECTION_MESSAGE "You have connected to FT_IRC\n"
 # define VERSION "0.3"
+# define CRLF "\r"
 
 typedef struct	e_sock_conf {
 //	void			socket_params;
@@ -39,6 +42,8 @@ typedef struct	e_sock_conf {
 
 typedef enum e_serv_error {
 	nothing = 0,
+	bad_param_port,
+	bad_param_pwd,
 	syscall_fail,
 	socket_fail,
 	sock_opt_fail,
@@ -133,6 +138,8 @@ class Server {
 
 		int			polling_loop();
 
+		int			compilecommand(char *message, int fd);
+
 		User						*find_user(int fd);
 		void						run_buffer(int fd, std::string buffer);
 		std::vector<std::string>	pars_buffer(std::string &buffer);
@@ -146,9 +153,12 @@ class Server {
 		std::string					_name;
 		std::string					_version;
 		std::string					_password;
+		std::string					_oper_id;
+		std::string					_oper_password;
 		int							_port;
 		int							_socketfd;
 		std::vector<User *>			_usr_list;
+		// std::vector<Channel *>		_cha_list;
 		std::vector<std::string>	_modt;
 		std::vector<std::string>	_info;
 
@@ -157,7 +167,6 @@ class Server {
 		int							check_number_user_with_specific_mod(char mod);
 
 		std::vector<Reply>			cap(User *user, std::vector<std::string> args);
-		std::vector<Reply>			authenticate(User *user, std::vector<std::string> args);
 		std::vector<Reply>			pass(User *user, std::vector<std::string> args);
 		std::vector<Reply>			nick(User *user, std::vector<std::string> args);
 		std::vector<Reply>			user(User *user, std::vector<std::string> args);

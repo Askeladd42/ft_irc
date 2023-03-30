@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   userhost.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/03/28 18:37:22 by plam             ###   ########.fr       */
+/*   Updated: 2023/03/30 16:07:18 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,12 @@ Reply Examples:
 std::vector<Reply>	Server::userhost(User *user, std::vector<std::string> args)
 {
 	std::vector<Reply> reply;
-	if (args.size() == 0)
+	
+	if (user->get_status() == USR_STAT_BAN)
+		reply.push_back(ERR_YOUREBANNEDCREEP);
+	else if (user->get_connected() == false)
+		reply.push_back(ERR_NOTREGISTERED);
+	else if (args.size() == 0)
 		reply.push_back(ERR_NEEDMOREPARAMS);
 	else
 	{
@@ -56,7 +61,10 @@ std::vector<Reply>	Server::userhost(User *user, std::vector<std::string> args)
 		}
 	}
 
-	reply[0].add_user(user);
-	reply[0].prep_to_send(1);
+	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
+	{
+		it->add_user(user);
+		it->prep_to_send(1);
+	}
 	return (reply);
 }
