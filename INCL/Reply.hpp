@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 17:32:30 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/04/21 20:21:50 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/04/24 16:33:09 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ class Reply
 #define RPL_EXCEPTLIST Reply(348, "<client> <channel> <mask>\n")
 #define RPL_ENDOFEXCEPTLIST Reply(349, "<client> <channel> :End of channel exception list\n")
 #define RPL_VERSION Reply(351, "<client> <version> <server> :<comments>\n")
-#define RPL_WHOREPLY Reply(352, "<client> <channel> <username> <host> <server> <nick> <flags> :<hopcount> <realname>\n"),
+#define RPL_WHOREPLY Reply(352, "<client> <channel> <username> <host> <server> <nick> <flags> :<hopcount> <realname>\n")
 #define RPL_NAMREPLY Reply(353, "<client> <symbol> <channel> :[prefix]<nick>\n")
 #define RPL_NAMREPLY_LOOP " [prefix]<nick>"
 #define RPL_LINKS Reply(364, "<client> * <server> :<hopcount> <server info>\n")
@@ -193,7 +193,7 @@ class Reply
 #define RPL_PONG Reply(0, "<client> :PONG <tocken>\n")
 #define RPL_NICKSET Reply(0, "NICK :<client>\n")
 #define MGS_WALLOP Reply(0, "WALLOP <message>\n")
-#define MGS_JOIN Reply(0, "JOIN :<channel>\n")
+#define MGS_JOIN Reply(0, "JOIN :<>\n")
 
 #define ERR_ERROSAMENICKNAME Reply(434, "<client> :you already use this nickname\n")
 
