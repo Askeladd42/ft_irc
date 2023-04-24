@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 17:32:30 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/04/24 16:33:09 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/04/24 19:41:25 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ class Reply
 #define ERR_CANNOTSENDTOCHAN Reply(404, "<client> <channel> :Cannot send to channel\n")
 #define ERR_TOOMANYCHANNELS Reply(405, "<client> <channel> :You have joined too many channels\n")
 #define ERR_WASNOSUCHNICK Reply(406, "<client> :There was no such nickname\n")
+#define ERR_TOOMANYTARGETS Reply(407, "<client> :There are too many target\n")
 #define ERR_NOORIGIN Reply(409, "<client> :No origin specified\n")
 #define ERR_NORECIPIENT Reply(411, "<client> :No recipient given (<command>)\n")
 #define ERR_NOTEXTTOSEND Reply(412, "<client> :No text to send\n")
@@ -193,7 +194,8 @@ class Reply
 #define RPL_PONG Reply(0, "<client> :PONG <tocken>\n")
 #define RPL_NICKSET Reply(0, "NICK :<client>\n")
 #define MGS_WALLOP Reply(0, "WALLOP <message>\n")
-#define MGS_JOIN Reply(0, "JOIN :<>\n")
+#define MGS_JOIN Reply(0, "JOIN :<channel>\n")
+#define MSG_PRIVMSG Reply(0, "PRIVMSG <channel_or_client> :<message>\n")
 
 #define ERR_ERROSAMENICKNAME Reply(434, "<client> :you already use this nickname\n")
 

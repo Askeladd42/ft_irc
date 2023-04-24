@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:38:53 by mmercore          #+#    #+#             */
-/*   Updated: 2023/04/24 18:27:17 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/04/24 20:14:35 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -522,6 +522,16 @@ User	*Server::find_user(int fd)
 	return (NULL);
 }
 
+User	*Server::find_user_by_nickname(std::string nickname)
+{
+	for (std::vector<User *>::iterator it = _usr_list.begin(); it != _usr_list.end(); it++)
+	{
+		if ((*it)->get_nickname().compare(nickname) == 0)
+			return (*it);
+	}
+	return (NULL);
+}
+
 Channel	*Server::find_channel(std::string channel_name)
 {
 	for (std::vector<Channel *>::iterator it = _cha_list.begin(); it != _cha_list.end(); it++)
@@ -616,7 +626,7 @@ std::vector<std::string>	Server::pars_line(std::string &line)
 	return args;
 }
 
-void	Server::send_message(User *user, std::string message)
+void	Server::send_message(const User *user, std::string message)
 {
 	if (message.compare("") != 0)
 	{

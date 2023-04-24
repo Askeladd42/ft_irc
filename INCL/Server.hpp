@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmercore <mmercore@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:46:40 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/04/24 17:42:37 by mmercore         ###   ########.fr       */
+/*   Updated: 2023/04/24 20:33:13 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,12 +147,13 @@ class Server {
 		int			compilecommand(char *message, int fd);
 
 		User						*find_user(int fd);
+		User						*find_user_by_nickname(std::string nickname);
 		Channel						*find_channel(std::string channel_name);
 		void						run_buffer(int fd, std::string buffer);
 		std::vector<std::string>	pars_buffer(std::string &buffer);
 		void						run_line(User *user, std::string &line);
 		std::vector<std::string>	pars_line(std::string &line);
-		void						send_message(User *user, std::string message);
+		void						send_message(const User *user, std::string message);
 		std::vector<Reply>			command(User *user, std::string commandName, std::vector<std::string> args);
 		
 
@@ -200,6 +201,8 @@ class Server {
 		std::vector<Reply>			info(User *user, std::vector<std::string> args);
 		std::vector<Reply>			mode(User *user, std::vector<std::string> args);
 		std::vector<Reply>			privmsg(User *user, std::vector<std::string> args);
+		std::vector<Reply>			privmsg_channel(User *user, std::vector<std::string> &args, std::string &message);
+		std::vector<Reply>			privmsg_user(User *user, const User *target, std::string &message);
 		std::vector<Reply>			notice(User *user, std::vector<std::string> args);
 		std::vector<Reply>			who(User *user, std::vector<std::string> args);
 		std::vector<Reply>			whois(User *user, std::vector<std::string> args);
