@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/04/26 14:09:45 by plam             ###   ########.fr       */
+/*   Updated: 2023/04/26 18:05:43 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ std::vector<Reply>	Server::who(User *user, std::vector<std::string> args)
 						const std::vector<User *> ch_usr_list_ref = (*it)->get_ch_usr_list();
 						for (std::vector<User *>::const_iterator it_usr = ch_usr_list_ref.begin(); it_usr != ch_usr_list_ref.end(); it_usr++)
 						{
-							reply.push_back(RPL_WHOREPLY);
 							reply.push_back(RPL_WHOREPLY);
 							reply[reply.size()-1].add_arg((*it)->get_name(), "channel");
 							reply[reply.size()-1].add_arg((*it_usr)->get_username(), "user");
