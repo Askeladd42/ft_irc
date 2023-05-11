@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/04/25 18:05:24 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/05/09 16:13:58 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ static bool modestring_valid(std::string modestring)
 		return (false);
 	for (std::string::iterator it = modestring.begin() + 1; it != modestring.end(); it++)
 	{
-		if (!(*it >= 'a' && *it <= 'z') || (*it >= 'A' && *it <= 'Z'))
+		if (!((*it >= 'a' && *it <= 'z') || (*it >= 'A' && *it <= 'Z')))
 			return (false);
 	}
 	return (true);
@@ -143,6 +143,8 @@ static void	reply_channel_mode(Channel *chan, std::vector<std::string> &args, st
 		reply[reply.size() - 1].add_arg(m_args, "mode arguments");
 	}
 
+
+	// rely a faire :
 	// RPL_BANLIST
 	// RPL_ENDOFBANLIST
 	// RPL_EXCEPTLIST
