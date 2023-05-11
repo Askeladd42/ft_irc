@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/04/25 16:53:36 by plam             ###   ########.fr       */
+/*   Updated: 2023/05/11 17:08:20 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ Reply Example:
 
 std::vector<Reply>	Server::whois(User *user, std::vector<std::string> args)
 {
+	int	nick = 0;
 	std::vector<Reply> reply;
 	(void)user;							// get rid of this to make it work
 	(void)args;							// get rid of this to make it work
@@ -120,8 +121,11 @@ std::vector<Reply>	Server::whois(User *user, std::vector<std::string> args)
 				if ((*it_usr)->get_nickname().compare(args[0]))
 				{
 					reply.push_back(RPL_WHOISUSER);
-					reply[reply.size()-1].add_arg("channel to do", "channel");
 					reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "is logged in as");
+					reply[reply.size()-1].add_arg(user->get_nickname(), "");	//client
+					reply[reply.size()-1].add_arg((*it_usr)->get_username(), "username");
+					reply[reply.size()-1].add_arg((*it_usr)->get_hostname(), "hostname");
+					reply[reply.size()-1].add_arg((*it_usr)->get_realname(), "realname");
 				}
 				break ;
 			}
@@ -129,7 +133,7 @@ std::vector<Reply>	Server::whois(User *user, std::vector<std::string> args)
 		else
 			reply.push_back(ERR_NONICKNAMEGIVEN);
 	}
-	else if (args.size() == 2) 
+	else if (args.size() == 2)
 	{
 		if (args[0].empty() == false && (args[0].compare(this->get_name()) || args[0] == args[1]))
 		{
@@ -138,33 +142,48 @@ std::vector<Reply>	Server::whois(User *user, std::vector<std::string> args)
 				if ((*it_usr)->get_nickname().compare(args[0]))
 				{
 					reply.push_back(RPL_WHOISUSER);
-					reply[reply.size()-1].add_arg((*it_usr)->get_realname(), "is logged in as");
-				}
-			}
-			if (user->check_if_mode_is_used('o') == true)
-			{
-				reply.push_back(RPL_WHOISCERTFP);
-				reply.push_back(RPL_WHOISREGNICK);
-				reply.push_back(RPL_WHOISSERVER);
-				reply.push_back(RPL_WHOISOPERATOR);
-				reply.push_back(RPL_WHOISCHANNELS);
-				if (args[0][0] == '#')
-				{
-					args[0].erase(0, 1);
-					for (std::vector<Channel *>::iterator it = _cha_list.begin(); it != _cha_list.end(); it++)
+					reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "is logged in as");
+					reply[reply.size()-1].add_arg(user->get_nickname(), "");	//client
+					reply[reply.size()-1].add_arg((*it_usr)->get_username(), "username");
+					reply[reply.size()-1].add_arg((*it_usr)->get_hostname(), "hostname");
+					reply[reply.size()-1].add_arg((*it_usr)->get_realname(), "realname");
+					if (user->check_if_mode_is_used('o') == true)
 					{
-						if ((*it)->get_name().compare(args[0]))
-							reply[reply.size()-1].add_arg((*it)->get_name(), "channel");
-					}
-				}
-				else if (args[0] == args[1])
-				{
-					for (std::vector<Channel *>::iterator it = _cha_list.begin(); it != _cha_list.end(); it++)
-					{
-						const std::vector<User *> ch_usr_list_ref = (*it)->get_ch_usr_list();
-						for (std::vector<User *>::const_iterator it_usr = ch_usr_list_ref.begin(); it_usr != ch_usr_list_ref.end(); it_usr++)
-							if ((*it_usr)->get_nickname() == args[1])
-								reply[reply.size()-1].add_arg((*it)->get_name(), " ");
+						reply.push_back(RPL_WHOISCERTFP);
+						reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+						reply[reply.size()-1].add_arg(user->get_nickname(), "");	//client
+
+						reply.push_back(RPL_WHOISREGNICK);
+						reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+
+						reply.push_back(RPL_WHOISSERVER);
+						reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+						reply[reply.size()-1].add_arg(this->get_name(), "server");
+						reply[reply.size()-1].add_arg(this->get_version(), "server info");
+
+						reply.push_back(RPL_WHOISOPERATOR);
+						reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+
+						reply.push_back(RPL_WHOISCHANNELS);	// to se what is the prefix to add
+						if (args[0][0] == '#')
+						{
+							args[0].erase(0, 1);
+							for (std::vector<Channel *>::iterator it = _cha_list.begin(); it != _cha_list.end(); it++)
+							{
+								if ((*it)->get_name().compare(args[0]))
+									reply[reply.size()-1].add_arg((*it)->get_name(), "channel");
+							}
+						}
+						else if (args[0] == args[1])
+						{
+							for (std::vector<Channel *>::iterator it = _cha_list.begin(); it != _cha_list.end(); it++)
+							{
+								const std::vector<User *> ch_usr_list_ref = (*it)->get_ch_usr_list();
+								for (std::vector<User *>::const_iterator it_usr = ch_usr_list_ref.begin(); it_usr != ch_usr_list_ref.end(); it_usr++)
+									if ((*it_usr)->get_nickname() == args[1])
+										reply[reply.size()-1].add_arg((*it)->get_name(), " ");
+							}
+						}
 					}
 				}
 				//reply.push_back(RPL_WHOISSPECIAL);
@@ -181,6 +200,7 @@ std::vector<Reply>	Server::whois(User *user, std::vector<std::string> args)
 	else
 		reply.push_back(ERR_NOSUCHSERVER);
 	reply.push_back(RPL_ENDOFWHOIS);
+	reply[reply.size()-1].add_arg(args[nick], "nickname");
 	for (std::vector<Reply>::iterator it = reply.begin(); it != reply.end(); it++)
 	{
 		it->add_user(user);
