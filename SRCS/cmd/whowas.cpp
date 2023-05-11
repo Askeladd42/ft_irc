@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/05/11 17:13:44 by plam             ###   ########.fr       */
+/*   Updated: 2023/05/11 17:20:14 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,17 @@ std::vector<Reply>	Server::whowas(User *user, std::vector<std::string> args)
 					reply.push_back(ERR_WASNOSUCHNICK);
 					break ;
 				}
+				reply.push_back(RPL_WHOISSERVER);
+				reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+				reply[reply.size()-1].add_arg(this->get_name(), "server");
+				reply[reply.size()-1].add_arg(this->get_version(), "server info");
+
+				reply.push_back(RPL_WHOISACTUALLY);
+				reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nick");
+				reply[reply.size()-1].add_arg((*it_usr)->get_username(), "user");
+				reply[reply.size()-1].add_arg((*it_usr)->get_hostname(), "host");
+				reply[reply.size()-1].add_arg((*it_usr)->get_hostaddr(), "ip"); // temporary, not sure for it
 			}
-			reply.push_back(RPL_WHOISSERVER);
-			reply.push_back(RPL_WHOISACTUALLY);
 		}
 		else
 			reply.push_back(ERR_NONICKNAMEGIVEN);
