@@ -6,7 +6,7 @@
 /*   By: plam <plam@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/05/11 17:08:20 by plam             ###   ########.fr       */
+/*   Updated: 2023/05/15 17:49:39 by plam             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,12 @@ std::vector<Reply>	Server::whois(User *user, std::vector<std::string> args)
 						reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
 
 						reply.push_back(RPL_WHOISCHANNELS);	// to se what is the prefix to add
+						reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+						for (std::vector<Channel *>::const_iterator it_ch = _cha_list.begin(); it_ch != _cha_list.end(); it_ch++)
+						{
+							if ((*it_ch)->get_User(user->get_fd()) != NULL)
+								reply[reply.size()-1].add_arg((*it_ch)->get_name(), "");
+						}
 						if (args[0][0] == '#')
 						{
 							args[0].erase(0, 1);
@@ -186,14 +192,28 @@ std::vector<Reply>	Server::whois(User *user, std::vector<std::string> args)
 						}
 					}
 				}
+				// these messages are not treated for now, need more informations to add or to test before more completion
 				//reply.push_back(RPL_WHOISSPECIAL);
-				reply.push_back(RPL_WHOISACCOUNT);
+				//reply.push_back(RPL_WHOISACCOUNT); // see what is account
 				reply.push_back(RPL_WHOISACTUALLY);
+				reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+				reply[reply.size()-1].add_arg((*it_usr)->get_username(), "");
+				reply[reply.size()-1].add_arg((*it_usr)->get_hostname(), "");
+				reply[reply.size()-1].add_arg((*it_usr)->get_hostaddr(), ""); // change to user's IP address
 				reply.push_back(RPL_WHOISHOST);
+				reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
 				reply.push_back(RPL_WHOISMODES);
+				reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+				reply[reply.size()-1].add_arg((*it_usr)->get_usermode(), "usermodes");
 				reply.push_back(RPL_WHOISSECURE);
+				reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
 				reply.push_back(RPL_WHOISIDLE);
+				reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+				//reply[reply.size()-1].add_arg((*it_usr)->get_deltaTimePing(), "idleTime"); //seconds idle to modify
+				//reply[reply.size()-1].add_arg((*it_usr)->get_lastTimePing(), "signon"); // have to replace by signon delta time
 				reply.push_back(RPL_AWAY);
+				reply[reply.size()-1].add_arg((*it_usr)->get_nickname(), "nickname");
+				reply[reply.size()-1].add_arg((*it_usr)->get_status_message(), "status");
 			}
 		}
 	}
