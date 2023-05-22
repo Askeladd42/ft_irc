@@ -6,7 +6,7 @@
 /*   By: cmaginot <cmaginot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 18:15:54 by cmaginot          #+#    #+#             */
-/*   Updated: 2023/05/19 13:00:39 by cmaginot         ###   ########.fr       */
+/*   Updated: 2023/05/22 17:26:10 by cmaginot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,14 +153,44 @@ static void	reply_channel_mode(Channel *chan, std::vector<std::string> &args, st
 		reply[reply.size() - 1].add_arg(m_args, "mode arguments");
 	}
 
+	for (std::multimap<char, std::string>::const_iterator it = chan->get_channelmode().begin(); it != chan->get_channelmode().end(); it++)
+	{
+		if (it->first == 'b')
+		{
+			reply.push_back(RPL_BANLIST);
 
-	// rely a faire :
-	// RPL_BANLIST
-	// RPL_ENDOFBANLIST
-	// RPL_EXCEPTLIST
-	// RPL_ENDOFEXCEPTLIST
-	// RPL_INVITELIST
-	// RPL_ENDOFINVITELIST
+			reply[reply.size() - 1].add_arg(args[target], "channel");
+			reply[reply.size() - 1].add_arg(it->second, "mask");
+		}
+	}
+	reply.push_back(RPL_ENDOFBANLIST);
+	reply[reply.size() - 1].add_arg(args[target], "channel");
+
+	for (std::multimap<char, std::string>::const_iterator it = chan->get_channelmode().begin(); it != chan->get_channelmode().end(); it++)
+	{
+		if (it->first == 'e')
+		{
+			reply.push_back(RPL_EXCEPTLIST);
+
+			reply[reply.size() - 1].add_arg(args[target], "channel");
+			reply[reply.size() - 1].add_arg(it->second, "mask");
+		}
+	}
+	reply.push_back(RPL_ENDOFEXCEPTLIST);
+	reply[reply.size() - 1].add_arg(args[target], "channel");
+
+	for (std::multimap<char, std::string>::const_iterator it = chan->get_channelmode().begin(); it != chan->get_channelmode().end(); it++)
+	{
+		if (it->first == 'I')
+		{
+			reply.push_back(RPL_INVITELIST);
+
+			reply[reply.size() - 1].add_arg(args[target], "channel");
+			reply[reply.size() - 1].add_arg(it->second, "mask");
+		}
+	}
+	reply.push_back(RPL_ENDOFINVITELIST);
+	reply[reply.size() - 1].add_arg(args[target], "channel");
 }
 
 static void kick_after_ban(Server *serv, User *user, Channel *chan, std::string mask)
@@ -215,30 +245,40 @@ static void	apply_mode_on_channel(Server *serv, User *user, Channel *chan, std::
 			}
 			else if (com_mode.find(*it) != std::string::npos)
 			{
-				std::string mask = args[modestring + argument_ptr++];
-				if (is_addition == true && chan->check_if_complexe_mode_is_correct(*it, mask) == false)
+				if (args.size() > static_cast<size_t>(modestring + argument_ptr))
 				{
-					chan->add_complex_channelmode(*it, mask);
-					if (*it == 'b' && chan->check_if_complexe_mode_is_correct('e', mask) == false)
-						kick_after_ban(serv, user, chan, mask);
+					std::string mask = args[modestring + argument_ptr++];
+					if (is_addition == true && chan->check_if_complexe_mode_is_correct(*it, mask) == false)
+					{
+						chan->add_complex_channelmode(*it, mask);
+						if (*it == 'b' && chan->check_if_complexe_mode_is_correct('e', mask) == false && chan->check_if_complexe_mode_is_correct('o', mask) == false)
+							kick_after_ban(serv, user, chan, mask);
+					}
+					else if (is_addition == false && chan->check_if_complexe_mode_is_correct(*it, mask) == true)
+						chan->del_complex_channelmode(*it, mask);
 				}
-				else if (is_addition == false && chan->check_if_complexe_mode_is_correct(*it, mask) == true)
-					chan->del_complex_channelmode(*it, mask);
+				else
+					all_mode_are_valid = false;
 			}
 			else
 			{
-				if (is_addition == true)
+				if (args.size() > static_cast<size_t>(modestring + argument_ptr))
 				{
-					std::string s_value = args[modestring + argument_ptr++];
-					std::stringstream strstr;
-					int value;
-					strstr << s_value;
-					strstr >> value;
+					if (is_addition == true)
+					{
+						std::string s_value = args[modestring + argument_ptr++];
+						std::stringstream strstr;
+						int value;
+						strstr << s_value;
+						strstr >> value;
 
-					chan->add_specific_channelmode(*it, value);
+						chan->add_specific_channelmode(*it, value);
+					}
+					else if (is_addition == false && chan->check_if_specific_mode_is_used(*it) == true)
+						chan->del_specific_channelmode(*it);
 				}
-				else if (is_addition == false && chan->check_if_specific_mode_is_used(*it) == true)
-					chan->del_specific_channelmode(*it);
+				else
+					all_mode_are_valid = false;
 			}
 		}
 
